@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Library, Menu } from 'lucide-react';
-
+import { useTheme } from "next-themes"
+import { Moon, Sun } from "lucide-react"
 
 const Header = () => {
+    const { setTheme, theme } = useTheme()
     const [isOpenMenu, setIsOpenMenu] = useState(false);
     const [isOpenExploreMenu, setIsExploreMenu] = useState(false);
 
@@ -14,6 +16,15 @@ const Header = () => {
 
     const toggleExploreMenu = () => {
         setIsExploreMenu(!isOpenExploreMenu);
+    }
+
+    const handleSetTheme = () => {
+        if (theme == 'dark') {
+            setTheme('light');
+        }
+        else {
+            setTheme('dark')
+        }
     }
 
     return (
@@ -88,6 +99,14 @@ const Header = () => {
                         <div className={`hidden md:flex md:items-center md:space-x-4 text-[var(--foreground)] font-bold`}>
                             <a href="#" className="hover:text-blue-600 px-3 py-2 rounded-md text-sm">Sign Up</a>
                             <a href="/pages/auth" className="text-black bg-slate-100 hover:bg-gray-200 hover:bg-opacity-80 px-3 py-2 rounded-md text-sm cursor-pointer">Log in</a>
+                            <button onClick={handleSetTheme} >
+                                {
+                                    theme == 'dark' ?
+                                        (<Moon suppressHydrationWarning />)
+                                        :
+                                        (<Sun suppressHydrationWarning />)
+                                }
+                            </button>
                         </div>
 
                         {/* Hamburger Menu (hidden on larger screens) */}

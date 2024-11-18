@@ -14,7 +14,7 @@ type BookSlideProps = {
 
 export const BookSlide = ({ bookTitle }: BookSlideProps) => {
     return (
-        <div className='flex justify-center gap-[20px] bg-bookCard p-[20px] rounded-xl text-foreground'>
+        <div className='flex justify-center gap-[20px] bg-card p-[20px] rounded-xl text-foreground'>
             <div className='flex justify-center items-center my-auto w-[200px] rounded-xl'>
                 <Image src={sample_image} alt="Book Cover" className='rounded-xl' />
             </div>
@@ -70,7 +70,7 @@ export const TopBookSection = () => {
                     `
                 }
             </style>
-            <section className='block'>
+            <section className='block bg-background'>
                 <div className="flex mt-[30px] items-center justify-center">
                     <div className="bg-rainbow px-10 py-3 rounded-full">
                         <p className="text-xl md:text-2xl text-foreground font-bold">Top Books</p>
