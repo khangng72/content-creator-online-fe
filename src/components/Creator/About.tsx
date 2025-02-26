@@ -10,7 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { get_books } from "@/api/api";
+import { get_books } from "@/app/api/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

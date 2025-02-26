@@ -9,6 +9,7 @@
         "forgotPassword": "Forgot your Password?",
         "notHaveAccount": "Don't have an account?",
         "registerButton": "Register",
-        "or": "or"
+        "or": "or",
+        "loginFailed": "Login Failed. Your email or password may incorrect, please try again"
     }
 }

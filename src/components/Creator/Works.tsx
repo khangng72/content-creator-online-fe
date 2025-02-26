@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { get_author_works } from "@/api/api";
+import { get_author_works } from "@/app/api/api";
 import { TableOfContents } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Star } from "lucide-react";

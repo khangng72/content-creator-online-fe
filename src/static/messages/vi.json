@@ -9,6 +9,7 @@
         "forgotPassword": "Bạn quên mật khẩu?",
         "notHaveAccount": "Đăng ký tài khoản mới tại đây",
         "registerButton": "Đăng ký",
-        "or": "Hoặc"
+        "or": "Hoặc",
+        "loginFailed": "Đăng nhập thất bại. Email hoặc mật khẩu sai, vui lòng thử lại."
     }
 }

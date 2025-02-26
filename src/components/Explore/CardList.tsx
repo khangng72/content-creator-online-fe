@@ -20,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { get_books } from "@/api/api";
+import { get_books } from "@/app/api/api";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 

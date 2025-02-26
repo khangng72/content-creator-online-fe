@@ -24,6 +24,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const components: { title: string }[] = [
   {
@@ -93,7 +94,7 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isExploreMenuOpen, setIsExploreMenuOpen] = useState(false);
-  const isLogin = false;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleThemeChange = () => {
     if (theme === "dark") {
@@ -112,6 +113,19 @@ const Header = () => {
   };
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("/api/auth/status");
+        const { authenticated } = res.data;
+
+        setIsAuthenticated(authenticated);
+      } catch (error) {
+        console.log("Error checking auth: ", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
     setMounted(true);
   }, []);
 
@@ -165,7 +179,7 @@ const Header = () => {
             </div>
           </div>
           <div className="flex gap-3 items-center">
-            <div className={cn("flex gap-2", isLogin ? "hidden" : "")}>
+            <div className={cn("flex gap-2", isAuthenticated ? "hidden" : "")}>
               <Button>
                 <Link href="/auth/login">Login</Link>
               </Button>
@@ -182,7 +196,7 @@ const Header = () => {
                 )}
               </button>
             )}
-            <div className={(cn("flex"), isLogin ? "" : "hidden")}>
+            <div className={(cn("flex"), isAuthenticated ? "" : "hidden")}>
               <Avatar>
                 <AvatarImage
                   src="https://github.com/shadcn.png"

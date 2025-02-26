@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, Images } from "lucide-react";
-import { get_chapters } from "@/api/api";
+import { get_chapters } from "@/app/api/api";
 import TextareaAutosize from "react-textarea-autosize";
 
 const Page = () => {
