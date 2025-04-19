@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import Cookies from "js-cookie";
+import ManageUserStoryList from "../StoryManagement/StoryManagement";
 
 interface ApiUserData {
   id: string;
@@ -157,6 +158,7 @@ export default function UserProfile() {
           <TabsList className="w-full justify-start">
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="story-management">Story management</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -259,6 +261,13 @@ export default function UserProfile() {
                   </div>
                 </div>
               </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="story-management">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Story List</h3>
+              <ManageUserStoryList userId={profileData.id}/>
             </Card>
           </TabsContent>
 
