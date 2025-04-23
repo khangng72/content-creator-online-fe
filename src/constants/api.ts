@@ -28,8 +28,4 @@ export const GET_LATEST_CHAPTER_PAGED = "/chapter/latest";
 
 // User
 export const REGISTER = "/user/register";
-export const GET_USER = "/user/profile";
-
-// Comment
-export const GET_COMMENT_PAGED = "/comment/chapter";
-export const POST_COMMENT = "/comment/chapter";
+export const USER_PROFILE = "/user/profile";

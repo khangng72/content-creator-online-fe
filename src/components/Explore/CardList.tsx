@@ -80,7 +80,9 @@ const CardList = () => {
             </div>
 
             <DialogFooter>
-              <Button type="submit">Read Now</Button>
+              <Link href={`/read/${book.id}`} className="w-full">
+                <Button className="w-full">Read Now</Button>
+              </Link>
             </DialogFooter>
           </DialogContent>
 
@@ -120,15 +122,11 @@ const CardList = () => {
                   <p>{book.description}</p>
                 </CardContent>
                 <CardFooter className="pl-2 flex justify-start gap-1 mt-3">
-                  <span className="text-sm bg-secondary-foreground rounded-sm text-background px-2 m-auto">
-                    Horror
-                  </span>
-                  <span className="text-sm bg-secondary-foreground rounded-sm text-background px-2 m-auto">
-                    Family
-                  </span>
-                  <span className="text-sm bg-secondary-foreground rounded-sm text-background px-2 m-auto">
-                    Adventure
-                  </span>
+                  {book.genre.map((gen) => (
+                    <span key={gen} className="text-sm bg-secondary-foreground rounded-sm text-background px-2 m-auto">
+                      {gen}
+                    </span>
+                  ))}
                 </CardFooter>
               </div>
             </Card>

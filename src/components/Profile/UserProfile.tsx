@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import Cookies from "js-cookie";
+import { useState, useEffect } from 'react'
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
+import Cookies from 'js-cookie'
+import axios from 'axios'
+import { generateApi, USER_PROFILE } from "@/constants/api"
 
 interface ApiUserData {
   id: string;
@@ -48,27 +50,21 @@ export default function UserProfile() {
   const fetchUserProfile = async () => {
     try {
       setIsLoading(true);
-      const token = Cookies.get("token");
-
-      if (!token) {
-        throw new Error("Token not found");
+      const token = Cookies.get('token');
+  
+      if (!token) { 
+        throw new Error('Token not found');
       }
-
-      const headers = new Headers();
-      headers.append("Authorization", `Bearer ${token}`);
-      const response = await fetch("http://localhost:8080/user/profile", {
-        headers,
+  
+      const response = await axios.get(generateApi(USER_PROFILE), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data: ApiResponse = await response.json();
-
-      if (data.status === 200) {
+  
+      if (response.data.status === 200) {
         setProfileData({
-          ...data.result,
+          ...response.data.result,
           bio: "Frontend Developer | React Enthusiast",
           location: "San Francisco, CA",
           socialLinks: [
@@ -79,9 +75,9 @@ export default function UserProfile() {
       } else {
         throw new Error("Failed to fetch profile data");
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-      console.error(err); // Log lỗi để kiểm tra
+    } catch (err: any) {
+      console.error("Error details:", err.response?.data);
+      setError(err.response?.data?.message || err.message || 'An error occurred');
     } finally {
       setIsLoading(false);
     }
