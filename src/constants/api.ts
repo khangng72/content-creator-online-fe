@@ -27,3 +27,4 @@ export const GET_LATEST_CHAPTER_PAGED = "/chapter/latest";
 
 // User 
 export const REGISTER = "/user/register";
+export const USER_PROFILE = "/user/profile";
