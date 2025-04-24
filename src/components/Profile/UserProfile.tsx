@@ -10,8 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { generateApi, USER_PROFILE } from "@/constants/api"
-import axios from 'axios'
-import { generateApi, USER_PROFILE } from "@/constants/api"
 
 interface ApiUserData {
   id: string;
@@ -63,13 +61,6 @@ export default function UserProfile() {
           Authorization: `Bearer ${token}`
         }
       });
-      const response = await axios.get(generateApi(USER_PROFILE), {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-  
-      if (response.data.status === 200) {
       if (response.data.status === 200) {
         setProfileData({
           ...response.data.result,
@@ -87,9 +78,7 @@ export default function UserProfile() {
     } catch (err: any) {
       console.error("Error details:", err.response?.data);
       setError(err.response?.data?.message || err.message || 'An error occurred');
-    } catch (err: any) {
-      console.error("Error details:", err.response?.data);
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+
     } finally {
       setIsLoading(false);
     }
