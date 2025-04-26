@@ -1,19 +1,31 @@
-"use client";
-import React, { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import About from "@/components/Creator/About";
-import Works from "@/components/Creator/Works";
-import ReadLists from "@/components/Creator/ReadLists";
+'use client';
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import About from '@/components/Profile/About';
+import Works from '@/components/Profile/Works';
+import ReadLists from '@/components/Profile/ReadLists';
+import { Link } from '@/i18n/routing';
 
 const tabs = [
-  { label: "About", content: "Welcome to the Home tab!" },
-  { label: "Works", content: "This is the About tab content." },
-  { label: "Membership", content: "Reach us at the Contact tab." },
-  { label: "Read Lists", content: "Reach us at the Contact tab." },
+  { id: 'about', label: 'About', content: 'Welcome to the Home tab!' },
+  { id: 'works', label: 'Works', content: 'This is the About tab content.' },
+  {
+    id: 'following',
+    label: 'Following',
+    content: 'Reach us at the Contact tab.',
+  },
+  {
+    id: 'readLists',
+    label: 'Read Lists',
+    content: 'Reach us at the Contact tab.',
+  },
 ];
 
-export default function Page() {
-  const [activeTab, setActiveTab] = useState(0);
+interface MyProfileProps {
+  activeTab: string | null;
+}
+
+export default function MyProfile({ activeTab }: MyProfileProps) {
   return (
     <div className="py-[80px] flex-col justify-center items-center">
       <div className="flex flex-col items-center">
@@ -40,25 +52,28 @@ export default function Page() {
         <div className="w-[300px] sm:w-[500px] mt-3 py-2 px-3 bg-card rounded-xl">
           <div className="flex border-b border-gray-700">
             {tabs.map((tab, index) => (
-              <button
+              <Link
                 key={index}
-                onClick={() => setActiveTab(index)}
+                onClick={() => {
+                  console.log(tab.label);
+                }}
                 className={`flex-1 p-2 text-center text-sm md:text-medium ${
-                  activeTab === index
-                    ? "border-b-2 border-white text-white"
-                    : "text-gray-400 hover:text-white"
+                  activeTab === tab.id
+                    ? 'border-b-2 border-white text-white'
+                    : 'text-gray-400 hover:text-white'
                 }`}
+                href={'/myprofile/' + tab.id}
               >
                 {tab.label}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
       </div>
 
-      {activeTab === 0 ? <About /> : ""}
-      {activeTab === 1 ? <Works /> : ""}
-      {activeTab === 3 ? <ReadLists /> : ""}
+      {activeTab === 'about' ? <About /> : ''}
+      {activeTab === 'works' ? <Works /> : ''}
+      {activeTab === 'readLists' ? <ReadLists /> : ''}
     </div>
   );
 }
