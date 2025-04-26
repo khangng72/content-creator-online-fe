@@ -29,13 +29,7 @@ export default function DetailStory() {
       ],
     });
   }, [id]);
-
-  const [title, setTitle] = useState<string>(story?.title);
-  useEffect(() => {
-    if (story) {
-      setTitle(story.title);
-    }
-  }, [story]);
+  
   if (!story) {
     return <div>Loading...</div>;
   }
@@ -49,7 +43,7 @@ export default function DetailStory() {
           alt="story image"
           className="w-24 h-24 rounded-full mx-auto mb-2"
         />
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold">{story.title}</h2>
         <p className="text-sm text-gray-500">Number of like: 21</p>
       </Card>
 

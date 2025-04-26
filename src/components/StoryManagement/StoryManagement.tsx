@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { generateApi, GET_STORY_BY_USERID, GET_USER } from "@/constants/api";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface ApiUser {
   id: string;
@@ -38,7 +39,8 @@ export default function ManageUserStoryList() {
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const router = useRouter();
+  
   useEffect(() => {
     fetchUser();
   }, []);
@@ -118,6 +120,7 @@ export default function ManageUserStoryList() {
             <div
               key={index}
               className="cursor-pointer rounded-xl overflow-hidden shadow hover:shadow-lg transition-all bg-card"
+              onDoubleClick={() => router.push(`/en/mystory/${post.userId}`)}
             >
               <div className="w-full h-48 relative">
                 <Image
