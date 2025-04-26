@@ -1,5 +1,4 @@
-import React from 'react';
-import sample_image from '$/public/sample-7.jpg';
+import React, { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -9,96 +8,161 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { get_books } from '@/app/api/api';
+import { UserData } from '@/types/UserData';
+import DOMPurify from 'dompurify';
+import { formatDate } from '@/utils/FormatDate';
+import { generateApi, GET_LATEST_STORY_BY_USERID } from '@/constants/api';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { StarIcon } from 'lucide-react';
 
-const About = () => {
-  const books = get_books().slice(0, 7);
+interface AboutProps {
+  userData: UserData | null;
+}
+
+interface StoryData {
+  storyId: string;
+  storyTitle: string;
+}
+
+const About = ({ userData }: AboutProps) => {
+  const [latestStories, setLatestStories] = useState<StoryData[]>([]);
+
+  const fetchLatestStories = useCallback(async () => {
+    const token = Cookies.get('token');
+    const response = await axios.get(
+      generateApi(GET_LATEST_STORY_BY_USERID, userData?.id),
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.status === 200) {
+      setLatestStories(response.data);
+    } else {
+      console.error('Failed to fetch latest stories');
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData) {
+      fetchLatestStories();
+    }
+  }, [fetchLatestStories]);
+
+  if (!userData) {
+    return (
+      <div className="mt-5 text-xl flex flex-col items-center text-center font-bold">
+        Loading...
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start items-center gap-5 mt-3 mx-6">
+    <div className="flex flex-col lg:flex-row lg:justify-center lg:items-start items-center gap-3 mt-3">
       <div className="bg-card rounded-xl p-6 max-w-[600px] gap-3 flex flex-col text-small flex-1">
         {/* Introduction of the author */}
-        <div className="flex flex-col gap-3 text-justify">
-          <h1 className="font-bold text-2xl">About the Constantine</h1>
-          <p className="border-t pt-2 border-white">
-            I am the author of the year. I write supernatural story. Sometimes
-            good, sometimes bad, It is great to have you.
-          </p>
-          <Image src={sample_image} alt="s" className="rounded-xl" />
-          <p className="border-b pb-4 border-white">
-            Beneath the swirling galaxies and shadowy hues of the cosmos,
-            Constantine weaves tales that pulse with mystery, depth, and
-            boundless imagination. With a style as enigmatic as the stars
-            themselves, Constantine invites readers into worlds where reality
-            blurs, emotions soar, and every turn of the page reveals a universe
-            waiting to be discovered.
-          </p>
+        {userData.introduction && (
+          <div className="flex flex-col gap-3">
+            <h1 className="font-bold text-2xl">
+              {userData.firstName} {userData.lastName} want to tell something...
+            </h1>
+            <div
+              className="space-y-2 text-sm sm:text-base"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(userData.introduction),
+              }}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1">
+          <h1 className="font-bold text-2xl">Info</h1>
+          <ul className="space-y-1 text-sm sm:text-base">
+            <li>
+              {userData.firstName} {userData.lastName}
+            </li>
+            <li>{formatDate(userData.birthday)}</li>
+            <li>{userData.nationality}</li>
+            <li>{userData.gender}</li>
+          </ul>
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 max-w-[500px]">
-        <div className="text-center bg-card rounded-xl p-6">
-          <h2 className="font-bold text-xl">Donate for The author</h2>
-          <div className="mt-3">
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-xl">☕</span>
-              <span>x</span>
-              <button className="bg-black text-white rounded-full px-3 py-1">
-                1
-              </button>
-              <button className="bg-black text-white rounded-full px-3 py-1">
-                3
-              </button>
-              <button className="bg-black text-white rounded-full px-3 py-1">
-                5
-              </button>
-            </div>
-          </div>
-          <div className="mt-3">
-            <input
-              type="text"
-              placeholder="Name or @yoursocial"
-              className="border rounded p-2 w-full"
-            />
-            <textarea
-              placeholder="Say something nice..."
-              className="border rounded p-2 w-full mt-2"
-            ></textarea>
-          </div>
-          <button className="bg-rainbow text-white rounded-full px-6 py-3 mt-4">
-            Support $3
-          </button>
-        </div>
-
+      <div className="flex flex-col gap-5">
+        {/* High rated stories */}
         <div className="text-center bg-card rounded-xl p-6 flex flex-col items-center">
-          <h2 className="font-bold text-xl">Feature</h2>
+          <h1 className="font-bold text-2xl">High Rated Stories</h1>
           <Carousel
             opts={{
               align: 'start',
               loop: true,
             }}
-            className="w-full max-w-[250px] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[800px] mx-auto mb-[20px] overflow-visible relative"
+            className="w-[100vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw] mx-auto mb-[20px] overflow-visible relative"
           >
             <CarouselContent>
-              {books.map((book) => (
-                <CarouselItem
-                  key={book.id}
-                  className="pl-1 md:basis-1/2 lg:basis-1/3"
-                >
+              {latestStories.map((story) => (
+                <CarouselItem key={story.storyId}>
                   <a
                     href="https://tailwindcss.com/docs/responsive-design"
                     className="p-1"
                   >
-                    <Card className="hover:scale-110 duration-300">
+                    <Card className="hover:scale-110 duration-300 bg-secondary">
                       <CardContent className="items-center p-3 flex flex-col justify-center">
                         <Image
                           className="rounded-lg mb-2 w-[150px] h-[200px]"
-                          src={book.cover}
+                          src="/BookCover/sample_cover.jpeg"
+                          alt="book cover"
+                          width={150}
+                          height={200}
+                        />
+                        <div className="flex gap-1 justify-center mb-2">
+                          <StarIcon className="w-4 h-4" />
+                          <StarIcon className="w-4 h-4" />
+                          <StarIcon className="w-4 h-4" />
+                          <StarIcon className="w-4 h-4" />
+                          <StarIcon className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm bg-secondary-foreground rounded-sm text-background px-2">
+                          {story.storyTitle}
+                        </span>
+                      </CardContent>
+                    </Card>
+                  </a>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute -left-1 sm:-left-4 md:-left-10" />
+            <CarouselNext className="absolute -right-1 sm:-right-4 md:-right-10" />
+          </Carousel>
+        </div>
+
+        {/* latest stories */}
+        <div className="text-center bg-card rounded-xl p-6 flex flex-col items-center">
+          <h1 className="font-bold text-2xl">Latest Stories</h1>
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            className="w-[100vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw] mx-auto mb-[20px] overflow-visible relative"
+          >
+            <CarouselContent>
+              {latestStories.map((story) => (
+                <CarouselItem key={story.storyId}>
+                  <a
+                    href="https://tailwindcss.com/docs/responsive-design"
+                    className="p-1"
+                  >
+                    <Card className="hover:scale-110 duration-300 bg-secondary">
+                      <CardContent className="items-center p-3 flex flex-col justify-center">
+                        <Image
+                          className="rounded-lg mb-2 w-[150px] h-[200px]"
+                          src="/BookCover/sample_cover.jpeg"
                           alt="book cover"
                           width={150}
                           height={200}
                         />
                         <span className="text-sm bg-secondary-foreground rounded-sm text-background px-2">
-                          {book.genre[0]}
+                          {story.storyTitle}
                         </span>
                       </CardContent>
                     </Card>
