@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
-import { BookHeart, ChevronDown, LogOut, ShoppingCart } from "lucide-react";
+import { BookHeart, ChevronDown, LogOut, ShoppingCart } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
@@ -11,15 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import defaultAvatar from "$/public/default-avatar.jpeg";
-import axios from "axios";
-import { Link, usePathname, useRouter } from "@/i18n/routing";
-import { useLocale, useTranslations } from "next-intl";
-import vietnam_flag from "$/public/vietnam.png";
-import american_flag from "$/public/usa.png";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import defaultAvatar from '$/public/default-avatar.jpeg';
+import axios from 'axios';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { useLocale, useTranslations } from 'next-intl';
+import vietnam_flag from '$/public/vietnam.png';
+import american_flag from '$/public/usa.png';
 
 interface ProfileMenuProps {
   router: ReturnType<typeof useRouter>;
@@ -27,7 +27,7 @@ interface ProfileMenuProps {
 }
 
 const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
-  const t = useTranslations("AuthorizedHeader");
+  const t = useTranslations('AuthorizedHeader');
   const locale = useLocale();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(locale);
@@ -45,13 +45,13 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
 
   const handleLogout = async () => {
     try {
-      const logoutResult = await axios.post("/api/auth/logout");
+      const logoutResult = await axios.post('/api/auth/logout');
 
-      if (logoutResult.data["success"]) {
-        router.push("/");
+      if (logoutResult.data['success']) {
+        router.push('/');
       }
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
   };
 
@@ -67,9 +67,9 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
       }
     };
 
-    document.body.addEventListener("click", handleOnClickOutside);
+    document.body.addEventListener('click', handleOnClickOutside);
     return () => {
-      document.body.removeEventListener("click", handleOnClickOutside);
+      document.body.removeEventListener('click', handleOnClickOutside);
     };
   }, []);
 
@@ -102,10 +102,10 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           md:w-80 
           rounded-md flex-col px-5 pt-2 pb-4 space-y-3"
         >
-          <h2 className="font-bold text-md">{t("ProfileMenu.account")}</h2>
+          <h2 className="font-bold text-md">{t('ProfileMenu.account')}</h2>
           <Link
             className="flex items-center bg-secondary gap-3 px-3 py-1 rounded-md hover:bg-accent hover:cursor-pointer"
-            href="/profile"
+            href="/myprofile/about"
           >
             <Avatar>
               <AvatarImage src={defaultAvatar.src} alt="default-avatar" />
@@ -117,20 +117,20 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
             <BookHeart />
             <span className="font-semibold text-sm">
-              {t("ProfileMenu.myReadLists")}
+              {t('ProfileMenu.myReadLists')}
             </span>
           </div>
           <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
             <ShoppingCart />
             <span className="font-semibold text-sm">
-              {t("ProfileMenu.cart")}
+              {t('ProfileMenu.cart')}
             </span>
           </div>
 
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
-                {locale === "vi" ? (
+                {locale === 'vi' ? (
                   <Image
                     src={vietnam_flag}
                     alt="vietnam_flag"
@@ -145,7 +145,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
                 )}
 
                 <span className="font-semibold text-sm">
-                  {t("ProfileMenu.language")}
+                  {t('ProfileMenu.language')}
                 </span>
               </div>
             </DialogTrigger>
@@ -154,14 +154,14 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
               ref={languageDialogRef}
             >
               <DialogHeader>
-                <DialogTitle>{t("LanguageSettings.title")}</DialogTitle>
+                <DialogTitle>{t('LanguageSettings.title')}</DialogTitle>
                 <DialogDescription>
-                  {t("LanguageSettings.description")}
+                  {t('LanguageSettings.description')}
                 </DialogDescription>
               </DialogHeader>
               <div className="flex space-x-2 items-center justify-center sm:justify-start">
                 <label htmlFor="dropdown" className=" font-semibold">
-                  {t("LanguageSettings.chooseAnOption")}:
+                  {t('LanguageSettings.chooseAnOption')}:
                 </label>
                 <div className="relative">
                   <select
@@ -172,9 +172,9 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
                     onChange={(e) => setSelectedLocale(e.target.value)}
                   >
                     <option value="vi">
-                      {t("LanguageSettings.vietnamese")}
+                      {t('LanguageSettings.vietnamese')}
                     </option>
-                    <option value="en">{t("LanguageSettings.english")}</option>
+                    <option value="en">{t('LanguageSettings.english')}</option>
                   </select>
                   <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                     ▼
@@ -183,7 +183,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
               </div>
               <DialogFooter>
                 <Button onClick={handleSaveChangeLanguage}>
-                  {t("LanguageSettings.saveChange")}
+                  {t('LanguageSettings.saveChange')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -195,7 +195,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           >
             <LogOut />
             <span className="font-semibold text-sm">
-              {t("ProfileMenu.logout")}
+              {t('ProfileMenu.logout')}
             </span>
           </button>
         </div>

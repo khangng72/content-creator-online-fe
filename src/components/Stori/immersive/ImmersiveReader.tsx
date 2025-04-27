@@ -32,6 +32,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { generateApi, GET_STORY_BY_ID } from '@/constants/api';
 import Image from 'next/image';
+import DOMPurify from 'dompurify';
 
 interface ImmersiveReaderProps {
   story_id: string;
@@ -238,9 +239,14 @@ const ImmersiveReader = ({ story_id }: ImmersiveReaderProps) => {
                   className="w-[100vw] sm:w-[400px] mb-6 rounded-md"
                 />
               )}
-              <div className="whitespace-pre-line leading-relaxed">
-                {story.chapters[currentChapter].chapterContent}
-              </div>
+              <div
+                className="space-y-3"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    story.chapters[currentChapter].chapterContent
+                  ),
+                }}
+              ></div>
             </>
           ) : (
             <p>Loading chapter...</p>
