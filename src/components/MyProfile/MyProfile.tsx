@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import FollowerList from '../Profile/FollowerList';
+import FollowingList from '../Profile/FollowingList';
 
 const tabs = [
   { id: 'about', label: 'About' },
@@ -35,6 +36,7 @@ interface MyProfileProps {
 export default function MyProfile({ activeTab }: MyProfileProps) {
   const [myData, setMyData] = useState<UserData | null>(null);
   const [isFollowerDialogOpen, setIsFollowerDialogOpen] = useState(false);
+  const [isFollowingDialogOpen, setIsFollowingDialogOpen] = useState(false);
   const uploadAvatarRef = useRef<HTMLInputElement>(null);
 
   const fetchUserData = useCallback(async () => {
@@ -144,7 +146,10 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
           </li>
 
           <li className="flex flex-col items-center justify-center hover:font-bold hover:cursor-pointer">
-            <Dialog>
+            <Dialog
+              open={isFollowingDialogOpen}
+              onOpenChange={setIsFollowingDialogOpen}
+            >
               <DialogTrigger asChild>
                 <button className="flex flex-col items-center justify-center">
                   <span>{myData?.numberOfFollowing}</span>
@@ -154,8 +159,12 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Following</DialogTitle>
-                  <DialogDescription>....</DialogDescription>
+                  <DialogDescription className="hidden">....</DialogDescription>
                 </DialogHeader>
+                <FollowingList
+                  userData={myData}
+                  isOpen={isFollowingDialogOpen}
+                />
               </DialogContent>
             </Dialog>
           </li>
