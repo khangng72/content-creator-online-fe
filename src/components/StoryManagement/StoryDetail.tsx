@@ -158,7 +158,7 @@ export default function DetailStory() {
                   {storyTags.map((tag: string, index: number) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-secondary text-white rounded hover:bg-secondary/80"
+                      className="px-2 py-1 bg-secondary rounded hover:bg-secondary/80"
                     >
                       {tag}
                     </span>
