@@ -12,11 +12,19 @@ import Cookies from 'js-cookie';
 import { UserData } from '@/types/UserData';
 import StoriesByUser from '../Profile/StoriesByUser';
 import { CameraIcon } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import FollowerList from '../Profile/FollowerList';
 
 const tabs = [
   { id: 'about', label: 'About' },
   { id: 'stories', label: 'Stories' },
-  { id: 'following', label: 'Following' },
   { id: 'readLists', label: 'Read Lists' },
 ];
 
@@ -26,6 +34,7 @@ interface MyProfileProps {
 
 export default function MyProfile({ activeTab }: MyProfileProps) {
   const [myData, setMyData] = useState<UserData | null>(null);
+  const [isFollowerDialogOpen, setIsFollowerDialogOpen] = useState(false);
   const uploadAvatarRef = useRef<HTMLInputElement>(null);
 
   const fetchUserData = useCallback(async () => {
@@ -98,23 +107,60 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
             Edit
           </button>
         </div>
-        <ul className="grid grid-cols-3 w-[300px] sm:w-[400px] mt-2 bg-card rounded-xl py-1 text-sm sm:text-md">
-          <li className="flex flex-col items-center justify-center hover:font-bold hover:cursor-pointer">
-            <span>6</span>
-            <span>Works</span>
+        <ul className="grid grid-cols-3 w-[300px] sm:w-[400px] mt-2 bg-card rounded-md py-1 text-sm sm:text-md">
+          <li className="hover:font-bold hover:cursor-pointer">
+            <Link
+              href="/myprofile/stories"
+              className="flex flex-col items-center justify-center"
+            >
+              <span>{myData?.numberOfStories}</span>
+              <span>Stories</span>
+            </Link>
           </li>
 
           <li className="flex flex-col items-center justify-center hover:font-bold hover:cursor-pointer">
-            <span>13</span>
-            <span>Read Lists</span>
+            <Dialog
+              open={isFollowerDialogOpen}
+              onOpenChange={setIsFollowerDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <button className="flex flex-col items-center justify-center">
+                  <span>{myData?.numberOfFollowers}</span>
+                  <span>Followers</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="px-4">
+                <DialogHeader>
+                  <DialogTitle>
+                    {myData?.numberOfFollowers} Followers
+                  </DialogTitle>
+                  <DialogDescription className="hidden">
+                    Followers
+                  </DialogDescription>
+                </DialogHeader>
+                <FollowerList userData={myData} isOpen={isFollowerDialogOpen} />
+              </DialogContent>
+            </Dialog>
           </li>
 
           <li className="flex flex-col items-center justify-center hover:font-bold hover:cursor-pointer">
-            <span>10</span>
-            <span>Followers</span>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="flex flex-col items-center justify-center">
+                  <span>{myData?.numberOfFollowing}</span>
+                  <span>Following</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Following</DialogTitle>
+                  <DialogDescription>....</DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </li>
         </ul>
-        <div className="w-[95vw] sm:w-[500px] mt-3 py-2 px-3 bg-card rounded-xl">
+        <div className="w-[95vw] sm:w-[500px] mt-3 py-2 px-3 bg-card rounded-md">
           <div className="flex border-b border-gray-700">
             {tabs.map((tab, index) => (
               <Link

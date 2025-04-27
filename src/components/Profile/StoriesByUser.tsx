@@ -136,12 +136,12 @@ const StoriesByUser = ({ userData }: StoriesByUserProps) => {
               </DialogContent>
 
               <DialogTrigger>
-                <div className="flex flex-col items-center justify-center sm:flex-row gap-2 hover:scale-105 bg-card py-5 min-w-[250px] rounded-xl md:h-[300px]">
+                <div className="flex flex-col items-center justify-center sm:flex-row gap-2 hover:scale-105 bg-card py-5 min-w-[250px] rounded-md md:h-[300px]">
                   <div className="w-full sm:w-[40%] flex justify-center">
                     <Image
                       src="/BookCover/sample_cover.jpeg"
                       alt="pen pen"
-                      className="w-[130px] h-[200px] rounded-xl"
+                      className="w-[130px] h-[200px] rounded-md"
                       width={130}
                       height={200}
                     />

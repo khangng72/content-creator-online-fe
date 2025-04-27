@@ -9,4 +9,7 @@ export interface UserData {
   avatarUrl: string;
   backgroundUrl: string;
   introduction: string;
+  numberOfFollowers: number;
+  numberOfFollowing: number;
+  numberOfStories: number;
 }

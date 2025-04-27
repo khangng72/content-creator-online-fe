@@ -31,6 +31,7 @@ export const GET_LATEST_CHAPTER_PAGED = '/chapter/latest';
 // User
 export const REGISTER = '/user/register';
 export const GET_USER = '/user/profile';
+export const GET_FOLLOWERS_BY_USERID = '/user/followers';
 
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';
