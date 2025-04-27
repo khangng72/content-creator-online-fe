@@ -1,35 +1,77 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Badge } from "lucide-react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { generateApi } from "@/constants/api";
+import { useParams } from "next/navigation";
+
+interface ApiStoryByIdData {
+  releaseDate: string;
+  id: string,
+  createdDate: string;
+  releaseStatus: boolean;
+  storyTitle: string;
+  saleOnly: boolean;
+  salePrice: number | null;
+  numberOfLikes: number;
+  coverImageUri: string;
+  storyDescription: string;
+  tags: string;
+  averageRating: number,
+  userId: null
+}
 
 export default function DetailStory() {
-  const { id } = useParams();
-  const [story, setStory] = useState<any>(null);
+  const [story, setStory] = useState<ApiStoryByIdData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const loaderRef = useRef(null);
+  const [storyTags, setStoryTags] = useState<string[]>([]);
+  const router = useParams();
+  const story_id = router.story_id;
 
   useEffect(() => {
-    setStory({
-      title: "Tui là con chó",
-      description: "con chó là tui",
-      released: true,
-      releaseDate: "2024-09-17",
-      price: 200,
-      tags: ["hihi", "haha"],
-      parts: [
-        { title: "Con Chó Mập", published: true, date: "2024-09-17", views: 47, likes: 1, comments: 0 },
-        { title: "Untitled Part 2", published: false, date: "2024-12-12", views: 3, likes: 0, comments: 0 },
-        { title: "Untitled Part 3", published: false, date: "2024-12-12" },
-        { title: "Untitled Part 4", published: false, date: "2024-12-12" },
-      ],
-    });
-  }, [id]);
-  
+    if(story_id) {
+      fetchStoryById(story_id as string);
+    }
+  }, [story_id]);
+
+  useEffect(() => {
+    if (story?.tags) {
+      const tagsArray = story.tags.split(",").map((tag) => tag.trim()); // Tách chuỗi và loại bỏ khoảng trắng
+      setStoryTags(tagsArray);
+    }
+  }, [story]);
+
+  const fetchStoryById = async (storyId: string) => {
+    setLoading(true);
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("Token not found");
+      }
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${token}`);
+
+      const res = await axios.get(generateApi("/story", storyId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res.data;
+      setStory(data);
+    } catch (err) {
+      console.error("Error fetching story:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   if (!story) {
     return <div>Loading...</div>;
   }
@@ -43,8 +85,8 @@ export default function DetailStory() {
           alt="story image"
           className="w-24 h-24 rounded-full mx-auto mb-2"
         />
-        <h2 className="text-lg font-semibold">{story.title}</h2>
-        <p className="text-sm text-gray-500">Number of like: 21</p>
+        <h2 className="text-lg font-semibold">{story.storyTitle}</h2>
+        <p className="text-sm text-gray-500">Number of like: {story.numberOfLikes}</p>
       </Card>
 
       {/* Account Tabs */}
@@ -68,16 +110,16 @@ export default function DetailStory() {
             <CardContent className="grid gap-4">
               <div>
                 <label className="text-sm font-semibold">Title</label>
-                <Input value={story.title} onChange={(e) => setStory({ title: e.target.value })} />
+                <Input value={story.storyTitle} onChange={(e) => setStory((prev) => prev ? { ...prev, storyTitle: e.target.value } : null)} />
               </div>
 
               <div>
                 <label className="text-sm font-semibold">Description</label>
-                <Textarea value={story.description} onChange={(e) => setStory({ description: e.target.value })} />
+                <Textarea value={story.storyDescription} onChange={(e) => setStory((prev) => prev ? { ...prev, storyDescription: e.target.value } : null)} />
               </div>
               <div>
                 <label className="text-sm font-semibold">Release date</label>
-                <Input type="Date" value={story.releaseDate} onChange={(e) => setStory({ releaseDate: e.target.value })} />
+                <Input type="Date" value={story.releaseDate} onChange={(e) => setStory((prev) => prev ? { ...prev, releaseDate: e.target.value } : null)} />
               </div>
               <div>
                 <label className="text-sm font-semibold">Release status</label>
@@ -87,8 +129,8 @@ export default function DetailStory() {
                       type="radio"
                       name="releaseStatus"
                       value="true"
-                      checked={story.released === true}
-                      onChange={(e) => setStory({ released: e.target.value })}
+                      checked={story.releaseStatus === true}
+                      onChange={(e) => setStory((prev) => prev ? { ...prev, releaseStatus: e.target.value === "true" } : null)}
                       className="form-radio"
                     />
                     Yes
@@ -98,8 +140,8 @@ export default function DetailStory() {
                       type="radio"
                       name="releaseStatus"
                       value="false"
-                      checked={story.released === false}
-                      onChange={(e) => setStory({ released: e.target.value })}
+                      checked={story.releaseStatus === false}
+                      onChange={(e) => setStory((prev) => prev ? { ...prev, releaseStatus: e.target.value === "false" } : null)}
                       className="form-radio"
                     />
                     No
@@ -108,21 +150,23 @@ export default function DetailStory() {
               </div>
               <div>
                 <label className="text-sm font-semibold">Sale price</label>
-                <Input value={story.price} onChange={(e) => setStory({ price: e.target.value })} />
+                <Input value={story.salePrice??''} onChange={(e) => setStory((prev) => prev ? { ...prev, salePrice: e.target.value === '' ? null : Number(e.target.value) } : null)} />
               </div>
               <div>
                 <label className="text-sm font-semibold">Tags</label>
                 <div className="flex gap-2 flex-wrap">
-                  {story.tags?.map((tag: string, index: number) => (
-                    <Badge
+                  {storyTags.map((tag: string, index: number) => (
+                    <span
                       key={index}
-                      variant="secondary"
-                      className="hover:bg-secondary/80"
+                      className="px-2 py-1 bg-secondary text-white rounded hover:bg-secondary/80"
                     >
                       {tag}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
+              </div>
+              <div ref={loaderRef} className="text-center mt-10">
+                {loading && <p className="text-gray-500">Loading more information...</p>}
               </div>
               <Button className="mt-4 w-full">Edit</Button>
             </CardContent>
@@ -132,7 +176,7 @@ export default function DetailStory() {
         <TabsContent value="content">
           <Card className="p-6">
             <CardContent className="grid gap-4">
-              <div>
+              {/* <div>
                 <h2 className="text-2xl font-bold mb-4">Chapter list</h2>
                 <div className="space-y-2">
                   {story.parts?.map((part: any, idx: number) => (
@@ -152,7 +196,7 @@ export default function DetailStory() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </TabsContent>
