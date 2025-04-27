@@ -15,6 +15,7 @@ import { generateApi, GET_LATEST_STORY_BY_USERID } from '@/constants/api';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { StarIcon } from 'lucide-react';
+import { genderMap, nationalityMap } from '@/constants/common';
 
 interface AboutProps {
   userData: UserData | null;
@@ -46,7 +47,7 @@ const About = ({ userData }: AboutProps) => {
     if (userData) {
       fetchLatestStories();
     }
-  }, [fetchLatestStories]);
+  }, [fetchLatestStories, userData]);
 
   if (!userData) {
     return (
@@ -80,9 +81,15 @@ const About = ({ userData }: AboutProps) => {
             <li>
               {userData.firstName} {userData.lastName}
             </li>
-            <li>{formatDate(userData.birthday)}</li>
-            <li>{userData.nationality}</li>
-            <li>{userData.gender}</li>
+            <li> {`🎂 ${formatDate(userData.birthday)}`}</li>
+            <li>
+              {nationalityMap[userData.nationality] || '❤️'}
+              {` ${userData.nationality}`}
+            </li>
+            <li>
+              {genderMap[userData.gender]}
+              {` ${userData.gender}`}
+            </li>
           </ul>
         </div>
       </div>

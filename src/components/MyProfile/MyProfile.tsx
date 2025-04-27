@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import About from '@/components/Profile/About';
-import Works from '@/components/Profile/Works';
 import ReadLists from '@/components/Profile/ReadLists';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
@@ -11,20 +10,13 @@ import axios from 'axios';
 import { generateApi, GET_USER } from '@/constants/api';
 import Cookies from 'js-cookie';
 import { UserData } from '@/types/UserData';
+import StoriesByUser from '../Profile/StoriesByUser';
 
 const tabs = [
-  { id: 'about', label: 'About', content: 'Welcome to the Home tab!' },
-  { id: 'works', label: 'Works', content: 'This is the About tab content.' },
-  {
-    id: 'following',
-    label: 'Following',
-    content: 'Reach us at the Contact tab.',
-  },
-  {
-    id: 'readLists',
-    label: 'Read Lists',
-    content: 'Reach us at the Contact tab.',
-  },
+  { id: 'about', label: 'About' },
+  { id: 'stories', label: 'Stories' },
+  { id: 'following', label: 'Following' },
+  { id: 'readLists', label: 'Read Lists' },
 ];
 
 interface MyProfileProps {
@@ -62,11 +54,11 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
         >
           {myData?.backgroundUrl && (
             <Image
-              src="/4k-bg.jpg"
+              src={myData.backgroundUrl}
               alt="avatar"
               width={500}
               height={500}
-              className="w-full h-[250px] md:h-[500px] object-cover opacity-80"
+              className="w-full h-[250px] md:h-[500px] object-cover object-center opacity-80"
               quality={100}
               priority
             />
@@ -126,7 +118,7 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
       </div>
 
       {activeTab === 'about' ? <About userData={myData} /> : ''}
-      {activeTab === 'works' ? <Works /> : ''}
+      {activeTab === 'stories' ? <StoriesByUser userData={myData} /> : ''}
       {activeTab === 'readLists' ? <ReadLists /> : ''}
     </div>
   );

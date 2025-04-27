@@ -1,15 +1,16 @@
-"use client";
-import { Ref, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+'use client';
+import { Ref, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-import { Link } from "@/i18n/routing";
-import { CircleEllipsis, Link2, MessageCircle, StarIcon } from "lucide-react";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import StarsDialog from "./StarsDialog";
-import StoryPostDialog from "./StoryPostDialog";
-import { Post } from "@/types/Post";
+import { Link } from '@/i18n/routing';
+import { CircleEllipsis, Link2, MessageCircle, StarIcon } from 'lucide-react';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+import StarsDialog from './StarsDialog';
+import StoryPostDialog from './StoryPostDialog';
+import { Post } from '@/types/Post';
+import DOMPurify from 'dompurify';
 
-import { formatTimestamp } from "@/utils/FormatTimestamp";
+import { formatTimestamp } from '@/utils/FormatTimestamp';
 
 interface StoryPostProps {
   innerRef?: Ref<HTMLDivElement>;
@@ -27,11 +28,11 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
     post.numberOfComment
   );
 
-  let displayedText = post.chapterContent;
+  let displayedText = DOMPurify.sanitize(post.chapterContent);
 
   if (!expanded && shouldTruncate) {
     const words = post.chapterContent.match(/\S+\s*/g) || [];
-    displayedText = words.slice(0, 100).join("") + "... ";
+    displayedText = words.slice(0, 100).join('') + '... ';
   }
 
   const [starred, setStarred] = useState(false);
@@ -83,8 +84,13 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
         </div>
 
         <div className="mt-4">
-          <div className="text-sm text-justify whitespace-pre-wrap inline">
-            <p className="inline">{displayedText}</p>
+          <div className="text-sm inline">
+            <div
+              className="inline space-y-3"
+              dangerouslySetInnerHTML={{
+                __html: displayedText,
+              }}
+            ></div>
             {!expanded && shouldTruncate && (
               <button
                 className="font-bold hover:underline inline"
