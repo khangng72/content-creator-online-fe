@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '../ui/button';
 import {
@@ -19,6 +19,7 @@ import axios from 'axios';
 import { generateApi, GET_STORY_BY_USERID } from '@/constants/api';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
+import { useDebounce } from 'use-debounce';
 
 interface StoriesByUserProps {
   userData: UserData | null;
@@ -32,6 +33,16 @@ interface Story {
 
 const StoriesByUser = ({ userData }: StoriesByUserProps) => {
   const [stories, setStories] = useState<Story[] | null>(null);
+  const [searchText, setSearchText] = useState('');
+  const [query] = useDebounce(searchText, 500);
+
+  const filteredStories = useMemo(
+    () =>
+      stories?.filter((story) =>
+        story.storyTitle.toLowerCase().includes(query.toLowerCase())
+      ),
+    [query, stories]
+  );
 
   const fetchStories = useCallback(async () => {
     const token = Cookies.get('token');
@@ -58,18 +69,20 @@ const StoriesByUser = ({ userData }: StoriesByUserProps) => {
   return (
     <div className="flex flex-col justify-center items-center gap-5 p-5">
       <h1 className="text-xl font-bold border-b-3 border-foreground">
-        InkyPoe Works
+        Stories by {userData?.firstName} {userData?.lastName}
       </h1>
       <div className="flex justify-center items-center gap-2 min-w-[300px] sm:min-w-[400px] md:min-w-[500px]">
-        <Input type="text" placeholder="Search..." />
-        <Button type="submit" className="hover:scale-105 duration-300">
-          Search
-        </Button>
+        <Input
+          type="text"
+          placeholder="Search..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
       </div>
 
       <div className="grid gap-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 px-[20px] xl:px-[50px] 2xl:px-[100px]">
-        {stories &&
-          stories.map((story) => (
+        {filteredStories &&
+          filteredStories.map((story) => (
             <Dialog key={story.storyId}>
               <DialogContent className="max-w-[500px]">
                 <div className="flex items-center gap-4">
