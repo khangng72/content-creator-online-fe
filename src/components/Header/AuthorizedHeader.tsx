@@ -106,7 +106,7 @@ export const AuthorizedHeader = () => {
   }, []);
 
   return (
-    <header className="fixed w-full bg-card z-10">
+    <header className="fixed w-full bg-card z-20">
       <nav className="relative">
         <div className="flex justify-between items-center py-3 px-2 lg:px-5">
           <div className="flex">
