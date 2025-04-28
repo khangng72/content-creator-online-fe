@@ -20,7 +20,7 @@ interface ApiUser {
 }
 
 interface ApiStoryByUserIdData {
-  id: string;
+  storyId: string;
   releaseDate: string;
   createdDate: string;
   releaseStatus: boolean;
@@ -121,7 +121,7 @@ export default function ManageUserStoryList() {
             <div
               key={index}
               className="cursor-pointer rounded-xl overflow-hidden shadow hover:shadow-lg transition-all bg-card"
-              onDoubleClick={() => router.push(`/en/mystory/${post.id}`)}
+              onClick={() => router.push(`/en/mystory/${post.storyId}`)}
             >
               <div className="w-full h-48 relative">
                 <Image
@@ -139,7 +139,9 @@ export default function ManageUserStoryList() {
                 </h3>
                 <p className="text-xs text-gray-500 mb-2">{post.releaseDate}</p>
                 <p className="text-sm text-gray-700 mb-3">
-                  {post.storyDescription}
+                  {post.storyDescription.length > 100
+                    ? `${post.storyDescription.slice(0, 100)}...`
+                    : post.storyDescription}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {Array.isArray(post.tags) &&

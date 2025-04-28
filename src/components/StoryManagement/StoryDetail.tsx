@@ -13,7 +13,7 @@ import { useParams } from "next/navigation";
 
 interface ApiStoryByIdData {
   releaseDate: string;
-  id: string,
+  storyId: string,
   createdDate: string;
   releaseStatus: boolean;
   storyTitle: string;
@@ -27,8 +27,18 @@ interface ApiStoryByIdData {
   userId: null
 }
 
+interface ApiChaptersByStoryIdData {
+  chapterId: string,
+  chapterTitle: string,
+  chapterCreatedTime: string,
+  isPublished: boolean,
+  numberOfComment: number,
+  numberOfLikes: number
+}
+
 export default function DetailStory() {
   const [story, setStory] = useState<ApiStoryByIdData | null>(null);
+  const [chapters, setChapters] = useState<ApiChaptersByStoryIdData | null>(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
   const [storyTags, setStoryTags] = useState<string[]>([]);
@@ -47,6 +57,12 @@ export default function DetailStory() {
       setStoryTags(tagsArray);
     }
   }, [story]);
+
+  useEffect(() => {
+    if(story_id) {
+      fetchChaptersByStoryId(story_id as string);
+    }
+  }, [story_id]);
 
   const fetchStoryById = async (storyId: string) => {
     setLoading(true);
@@ -67,6 +83,30 @@ export default function DetailStory() {
       setStory(data);
     } catch (err) {
       console.error("Error fetching story:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const fetchChaptersByStoryId = async (storyId: string) => {
+    setLoading(true);
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("Token not found");
+      }
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${token}`);
+
+      const res = await axios.get(generateApi("/story", storyId + "/chapters"), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res.data;
+      setChapters(data);
+    } catch (err) {
+      console.error("Error fetching chapter:", err);
     } finally {
       setLoading(false);
     }
@@ -176,27 +216,27 @@ export default function DetailStory() {
         <TabsContent value="content">
           <Card className="p-6">
             <CardContent className="grid gap-4">
-              {/* <div>
+              <div>
                 <h2 className="text-2xl font-bold mb-4">Chapter list</h2>
                 <div className="space-y-2">
-                  {story.parts?.map((part: any, idx: number) => (
+                  {chapters?.map((chapter, idx: number) => (
                     <div
                       key={idx}
                       className="flex justify-between items-center p-4 border rounded shadow-sm hover:shadow-lg transition-all bg-card"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold">{part.title}</span>
-                        {!part.published && <span className="text-xs text-gray-400">(Draft)</span>}
+                        <span className="font-semibold">{chapter.chapterTitle}</span>
+                        {!chapter.isPublished && <span className="text-xs text-gray-400">(Draft)</span>}
                       </div>
                       <div className="text-sm text-gray-500 flex gap-4">
-                        {part.views !== undefined && <span>👁 {part.views}</span>}
-                        {part.likes !== undefined && <span>❤️ {part.likes}</span>}
-                        {part.comments !== undefined && <span>💬 {part.comments}</span>}
+                        {<span>👁 21</span>}
+                        {chapter.numberOfLikes !== undefined && <span className="lucide lucide-star">⭐ {chapter.numberOfLikes}</span>}
+                        {chapter.numberOfComment !== undefined && <span>💬 {chapter.numberOfComment}</span>}
                       </div>
                     </div>
                   ))}
                 </div>
-              </div> */}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
