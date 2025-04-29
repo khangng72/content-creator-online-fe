@@ -57,7 +57,7 @@ const ExploreByGenre = ({ genre_id }: ExploreByGenreProps) => {
     <div className=" w-full py-[70px] block">
       {/* Intro text */}
       <div className="text-center mt-3 mb-4">
-        <h1 className="font-bold bg-rainbow text-transparent bg-clip-text text-3xl">
+        <h1 className="font-bold bg-rainbow text-transparent bg-clip-text text-3xl md:text-4xl">
           Top {genre?.genreName} Stories
         </h1>
       </div>
