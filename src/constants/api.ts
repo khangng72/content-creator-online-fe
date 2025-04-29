@@ -16,6 +16,7 @@ export const API_AUTH_LOGIN = '/auth/login';
 
 // Genre
 export const GET_ALL_GENRES = '/genre/all';
+export const GET_GENRE_BY_ID = '/genre';
 
 // Story
 export const CREATE_STORY = '/story';
