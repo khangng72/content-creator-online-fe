@@ -18,22 +18,28 @@ interface StoryPostProps {
   post: Post;
 }
 
-const WORDS_LIMIT = Number(process.env.WORDS_LIMIT) || 100;
+const WORDS_LIMIT = Number(process.env.NEXT_PUBLIC_WORDS_LIMIT) || 100;
 
 const StoryPost = ({ innerRef, post }: StoryPostProps) => {
-  const wordCount = post.chapterContent.trim().length;
+  const wordCount = post.chapterContent
+    .replace(/\n/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
   const [expanded, setExpanded] = useState(false);
   const shouldTruncate = wordCount > WORDS_LIMIT;
   const [totalComment, setTotalComment] = useState<number>(
     post.numberOfComment
   );
 
-  let displayedText = DOMPurify.sanitize(post.chapterContent);
+  let rawText = post.chapterContent;
 
   if (!expanded && shouldTruncate) {
     const words = post.chapterContent.match(/\S+\s*/g) || [];
-    displayedText = words.slice(0, 100).join('') + '... ';
+    rawText = words.slice(0, WORDS_LIMIT).join('') + '</p>';
   }
+
+  const displayedText = DOMPurify.sanitize(rawText);
 
   const [starred, setStarred] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -73,14 +79,17 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
       </div>
 
       <div className="w-full block">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-bold">{post.storyTitle}</h2>
-          <div className="text-lg font-semibold flex items-centers">
-            <div className="bg-rainbow w-7 h-7 rounded-full mr-2 text-xs flex items-center justify-center text-white">
-              {post.chapterNumber}
-            </div>
-            <h3 className="inline">{post.chapterTitle}</h3>
-          </div>
+        <div className="flex flex-col gap-3">
+          <h2 className="text-2xl font-bold">Story: {post.storyTitle}</h2>
+
+          <Link
+            href={`/chapter/read/${post.chapterId}`}
+            className="hover:underline"
+          >
+            <h3 className="text-xl font-semibold">
+              Chapter {post.chapterNumber}: {post.chapterTitle}
+            </h3>
+          </Link>
         </div>
 
         <div className="mt-4">
@@ -90,15 +99,18 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
               dangerouslySetInnerHTML={{
                 __html: displayedText,
               }}
-            ></div>
+            />
             {!expanded && shouldTruncate && (
-              <button
-                className="font-bold hover:underline inline"
-                type="button"
-                onClick={() => setExpanded(!expanded)}
-              >
-                See more
-              </button>
+              <>
+                <span>... </span>
+                <button
+                  className="font-bold hover:underline inline"
+                  type="button"
+                  onClick={() => setExpanded(!expanded)}
+                >
+                  See more
+                </button>
+              </>
             )}
           </div>
         </div>

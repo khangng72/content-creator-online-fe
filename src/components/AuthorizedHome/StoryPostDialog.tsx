@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 import {
   Dialog,
@@ -8,38 +8,39 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from "@/i18n/routing";
+} from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Link } from '@/i18n/routing';
 import {
   ChevronDown,
   CircleEllipsis,
   Link2,
   MessageCircle,
   StarIcon,
-} from "lucide-react";
+} from 'lucide-react';
 
-import default_avatar from "$/public/default-avatar.jpeg";
-import StarsDialog from "./StarsDialog";
+import default_avatar from '$/public/default-avatar.jpeg';
+import StarsDialog from './StarsDialog';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from '../ui/dropdown-menu';
 
-import CommentSec from "./CommentSec";
-import { Post } from "@/types/Post";
-import { formatTimestamp } from "@/utils/FormatTimestamp";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { generateApi, GET_COMMENT_PAGED } from "@/constants/api";
-import { delay } from "@/utils/Delay";
-import { Logger } from "@/utils/Logger";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Comment } from "@/types/Comment";
-import CommentSecSkeleton from "./CommentSecSkeleton";
-import CommentInput from "./CommentInput";
+import CommentSec from './CommentSec';
+import { Post } from '@/types/Post';
+import { formatTimestamp } from '@/utils/FormatTimestamp';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { generateApi, GET_COMMENT_PAGED } from '@/constants/api';
+import { delay } from '@/utils/Delay';
+import { Logger } from '@/utils/Logger';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Comment } from '@/types/Comment';
+import CommentSecSkeleton from './CommentSecSkeleton';
+import CommentInput from './CommentInput';
+import DOMPurify from 'dompurify';
 
 interface StoryPostDialogProps {
   post: Post;
@@ -62,14 +63,14 @@ const StoryPostDialog = ({
   useEffect(() => {
     if (latestAddedCommentRef.current) {
       latestAddedCommentRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+        behavior: 'smooth',
+        block: 'center',
       });
     }
   }, [addedComment]);
 
   const fetchComments = async ({ pageParam }: { pageParam: number }) => {
-    const token = Cookies.get("token");
+    const token = Cookies.get('token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -92,11 +93,11 @@ const StoryPostDialog = ({
       return response.data.result;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        Logger.error("Error fetching comments:", "client");
+        Logger.error('Error fetching comments:', 'client');
         throw new Error(`Error fetching comments: ${error.message}`);
       } else {
-        Logger.error("Unexpected error:", "client");
-        throw new Error("Unexpected error occurred");
+        Logger.error('Unexpected error:', 'client');
+        throw new Error('Unexpected error occurred');
       }
     }
   };
@@ -163,20 +164,23 @@ const StoryPostDialog = ({
         </div>
 
         <div className="w-full block mt-5">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-2xl font-bold">{post.storyTitle}</h2>
-            <div className="text-lg font-semibold flex items-centers">
-              <div className="bg-rainbow w-7 h-7 rounded-full mr-2 text-xs flex items-center justify-center text-white">
-                {post.chapterNumber}
-              </div>
-              <h3 className="inline">{post.chapterTitle}</h3>
-            </div>
+          <div className="flex flex-col gap-3">
+            <h2 className="text-2xl font-bold">Story: {post.storyTitle}</h2>
+
+            <Link href="#" className="hover:underline">
+              <h3 className="text-xl font-semibold">
+                Chapter {post.chapterNumber}: {post.chapterTitle}
+              </h3>
+            </Link>
           </div>
 
           <div className="mt-4">
-            <div className="text-sm text-justify whitespace-pre-wrap inline">
-              <p className="inline">{post.chapterContent}</p>
-            </div>
+            <div
+              className="text-sm space-y-2"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.chapterContent),
+              }}
+            ></div>
           </div>
 
           <div className="flex items-center justify-between mt-5">
