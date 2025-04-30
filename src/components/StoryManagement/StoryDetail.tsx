@@ -38,7 +38,7 @@ interface ApiChaptersByStoryIdData {
 
 export default function DetailStory() {
   const [story, setStory] = useState<ApiStoryByIdData | null>(null);
-  const [chapters, setChapters] = useState<ApiChaptersByStoryIdData | null>(null);
+  const [chapters, setChapters] = useState<ApiChaptersByStoryIdData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
   const [storyTags, setStoryTags] = useState<string[]>([]);
