@@ -100,7 +100,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           -translate-x-1/2 
           bg-card w-[90%] 
           md:w-80 
-          rounded-md flex-col px-5 pt-2 pb-4 space-y-3"
+          rounded-md flex-col px-5 pt-2 pb-4 space-y-3 shadow-md"
         >
           <h2 className="font-bold text-md">{t('ProfileMenu.account')}</h2>
           <Link

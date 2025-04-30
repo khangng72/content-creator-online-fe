@@ -1,7 +1,17 @@
-import React from 'react';
+import SearchOption from '@/components/Explore/SearchOption';
 
-const SearchByUserPage = () => {
-  return <div>SearchByUserPage</div>;
+const SearchByUserPage = async ({
+  params,
+}: {
+  params: Promise<{ user_name: string }>;
+}) => {
+  const { user_name } = await params;
+
+  return (
+    <div className="pt-[60px] flex flex-col items-center">
+      <SearchOption searchOption="user" searchQuery={user_name} />
+    </div>
+  );
 };
 
 export default SearchByUserPage;

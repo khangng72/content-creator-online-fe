@@ -9,7 +9,6 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
-import { Input } from '@/components/ui/input';
 import {
   MoonIcon,
   SearchIcon,
@@ -68,9 +67,11 @@ export const AuthorizedHeader = () => {
       <nav className="relative">
         <div className="flex justify-between items-center py-3 px-2 lg:px-5">
           <div className="flex">
-            <span className="bg-rainbow text-transparent bg-clip-text text-[1.25rem] sm:text-[1.5rem] font-bold">
-              StoriVerse
-            </span>
+            <Link href="/">
+              <span className="bg-rainbow text-transparent bg-clip-text text-[1.25rem] sm:text-[1.5rem] font-bold">
+                StoriVerse
+              </span>
+            </Link>
           </div>
           <div className="hidden lg:flex gap-5">
             <NavigationMenu>
@@ -103,12 +104,18 @@ export const AuthorizedHeader = () => {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <SearchIcon />
-              <Input
-                className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-xl"
-                type="email"
-                placeholder="Email"
+              <input
+                className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-md focus:outline-none px-3 py-2 text-sm bg-secondary"
+                type="text"
+                placeholder="Search..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const query = (e.target as HTMLInputElement).value;
+                    router.push(`/explore/stori/${query}`);
+                  }
+                }}
               />
             </div>
           </div>

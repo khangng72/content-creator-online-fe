@@ -24,6 +24,7 @@ export const UPDATE_STORY_GENRE = '/story/updateGenre';
 export const GET_STORY_BY_USERID = '/story/post';
 export const GET_STORY_BY_ID = '/story';
 export const GET_LATEST_STORY_BY_USERID = '/story/post/latest';
+export const GET_STORY_BY_GENREID = '/story/genre';
 
 // Chapter
 export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';

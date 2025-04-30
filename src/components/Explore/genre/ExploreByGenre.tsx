@@ -18,6 +18,7 @@ const ExploreByGenre = ({ genre_id }: ExploreByGenreProps) => {
   const [genre, setGenre] = useState<Genre | null>(null);
   const [loadGenre, setLoadGenre] = useState(true);
   const [loadGenreError, setLoadGenreError] = useState(false);
+  const [query, setQuery] = useState<string>('');
 
   const fetchGenre = useCallback(async () => {
     try {
@@ -72,11 +73,13 @@ const ExploreByGenre = ({ genre_id }: ExploreByGenreProps) => {
           className="border-foreground focus:border-muted-foreground w-full py-2 px-3 rounded-md"
           type="text"
           placeholder="Find your favorite stories"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
       </div>
 
       {/* Card list */}
-      <CardList />
+      {genre && <CardList genreId={genre.genreId} query={query} />}
     </div>
   );
 };
