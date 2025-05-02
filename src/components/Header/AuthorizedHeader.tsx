@@ -9,7 +9,6 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
-import { Input } from '@/components/ui/input';
 import {
   MoonIcon,
   SearchIcon,
@@ -18,80 +17,38 @@ import {
   SunIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ProfileMenu from './ProfileMenu';
 import NotificationMenu from './NotificationMenu';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import axios from 'axios';
+import { generateApi, GET_ALL_GENRES } from '@/constants/api';
 
-const components: { title: string }[] = [
-  {
-    title: 'Romance',
-  },
-  {
-    title: 'Fantasy',
-  },
-  {
-    title: 'Historical Fiction',
-  },
-  {
-    title: 'Humor',
-  },
-  {
-    title: 'Science Fiction',
-  },
-  {
-    title: 'Non-Fiction',
-  },
-  {
-    title: 'Mystery',
-  },
-  {
-    title: 'Thriller',
-  },
-  {
-    title: 'Horror',
-  },
-  {
-    title: 'Adventure',
-  },
-  {
-    title: 'Dystopian',
-  },
-  {
-    title: 'Drama',
-  },
-  {
-    title: 'Young Adult',
-  },
-  {
-    title: "Children's Fiction",
-  },
-  {
-    title: 'Magical Realism',
-  },
-  {
-    title: 'Steampunk',
-  },
-  {
-    title: 'Cyberpunk',
-  },
-  {
-    title: 'Gothic Fiction',
-  },
-  {
-    title: 'Psychological Fiction',
-  },
-  {
-    title: 'Literary Fiction',
-  },
-];
+interface Genre {
+  genreId: string;
+  genreName: string;
+}
 
 export const AuthorizedHeader = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
+  const [genreList, setGenreList] = useState<Genre[]>([]);
   const router = useRouter();
   const pathname = usePathname();
+
+  const fetchGenreList = useCallback(async () => {
+    try {
+      const response = await axios.get(generateApi(GET_ALL_GENRES));
+
+      setGenreList(response.data.result);
+    } catch (error) {
+      console.error('Error fetching genre list:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGenreList();
+  }, [fetchGenreList]);
 
   const handleThemeChange = () => {
     if (theme === 'dark') {
@@ -110,9 +67,11 @@ export const AuthorizedHeader = () => {
       <nav className="relative">
         <div className="flex justify-between items-center py-3 px-2 lg:px-5">
           <div className="flex">
-            <span className="bg-rainbow text-transparent bg-clip-text text-[1.25rem] sm:text-[1.5rem] font-bold">
-              StoriVerse
-            </span>
+            <Link href="/">
+              <span className="bg-rainbow text-transparent bg-clip-text text-[1.25rem] sm:text-[1.5rem] font-bold">
+                StoriVerse
+              </span>
+            </Link>
           </div>
           <div className="hidden lg:flex gap-5">
             <NavigationMenu>
@@ -131,13 +90,13 @@ export const AuthorizedHeader = () => {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-3 lg:w-[600px] ">
-                      {components.map((component) => (
+                      {genreList.map((genre: Genre) => (
                         <Link
-                          key={component.title}
-                          href="/"
+                          key={genre.genreId}
+                          href={`/explore/genre/${genre.genreId}`}
                           className="text-[1rem] font-semibold hover:bg-accent py-1 px-2 rounded-sm"
                         >
-                          {component.title}
+                          {genre.genreName}
                         </Link>
                       ))}
                     </ul>
@@ -145,12 +104,18 @@ export const AuthorizedHeader = () => {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <SearchIcon />
-              <Input
-                className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-xl"
-                type="email"
-                placeholder="Email"
+              <input
+                className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-md focus:outline-none px-3 py-2 text-sm bg-secondary"
+                type="text"
+                placeholder="Search..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const query = (e.target as HTMLInputElement).value;
+                    router.push(`/explore/stori/${query}`);
+                  }
+                }}
               />
             </div>
           </div>

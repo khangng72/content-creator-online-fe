@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { BookHeart, ChevronDown, LogOut, ShoppingCart } from 'lucide-react';
 
@@ -20,6 +20,9 @@ import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { useLocale, useTranslations } from 'next-intl';
 import vietnam_flag from '$/public/vietnam.png';
 import american_flag from '$/public/usa.png';
+import { generateApi, GET_USER } from '@/constants/api';
+import Cookies from 'js-cookie';
+import { UserData } from '@/types/UserData';
 
 interface ProfileMenuProps {
   router: ReturnType<typeof useRouter>;
@@ -32,12 +35,27 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(locale);
 
+  const [myData, setMyData] = useState<UserData | null>(null);
+
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const languageDialogRef = useRef<HTMLDivElement>(null);
 
   const handleSaveChangeLanguage = () => {
     router.replace(pathname, { locale: selectedLocale });
   };
+
+  const fetchUserData = useCallback(async () => {
+    const token = Cookies.get('token');
+    const response = await axios.get(generateApi(GET_USER), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.status === 200) {
+      setMyData(response.data.result);
+    } else {
+      console.error('Failed to fetch user data');
+    }
+  }, []);
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
@@ -54,6 +72,10 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
       console.error('Logout failed:', error);
     }
   };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   useEffect(() => {
     const handleOnClickOutside = (event: MouseEvent) => {
@@ -100,7 +122,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           -translate-x-1/2 
           bg-card w-[90%] 
           md:w-80 
-          rounded-md flex-col px-5 pt-2 pb-4 space-y-3"
+          rounded-md flex-col px-5 pt-2 pb-4 space-y-3 shadow-md"
         >
           <h2 className="font-bold text-md">{t('ProfileMenu.account')}</h2>
           <Link
@@ -111,7 +133,9 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
               <AvatarImage src={defaultAvatar.src} alt="default-avatar" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <span className="font-semibold">Name of the User</span>
+            <span className="font-semibold">
+              {myData?.firstName} {myData?.lastName}{' '}
+            </span>
           </Link>
           <hr className="border-b-[0.5px] border-[#65686C]" />
           <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
