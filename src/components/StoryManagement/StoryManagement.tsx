@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { generateApi, GET_STORY_BY_USERID, GET_USER } from "@/constants/api";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface ApiUser {
   id: string;
@@ -19,6 +20,7 @@ interface ApiUser {
 }
 
 interface ApiStoryByUserIdData {
+  storyId: string;
   releaseDate: string;
   createdDate: string;
   releaseStatus: boolean;
@@ -38,7 +40,8 @@ export default function ManageUserStoryList() {
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const router = useRouter();
+  
   useEffect(() => {
     fetchUser();
   }, []);
@@ -118,6 +121,7 @@ export default function ManageUserStoryList() {
             <div
               key={index}
               className="cursor-pointer rounded-xl overflow-hidden shadow hover:shadow-lg transition-all bg-card"
+              onClick={() => router.push(`/en/mystory/${post.storyId}`)}
             >
               <div className="w-full h-48 relative">
                 <Image
@@ -135,7 +139,9 @@ export default function ManageUserStoryList() {
                 </h3>
                 <p className="text-xs text-gray-500 mb-2">{post.releaseDate}</p>
                 <p className="text-sm text-gray-700 mb-3">
-                  {post.storyDescription}
+                  {post.storyDescription.length > 100
+                    ? `${post.storyDescription.slice(0, 100)}...`
+                    : post.storyDescription}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {Array.isArray(post.tags) &&
