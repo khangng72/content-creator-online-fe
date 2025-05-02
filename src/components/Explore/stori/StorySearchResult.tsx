@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import React, { useState } from 'react';
-import CardList from '../genre/CardList';
+import StorySearchCardList from './StorySearchCardList';
 
 interface StorySearchResultProps {
   searchQuery: string;
@@ -114,7 +114,7 @@ const StorySearchResult = ({ searchQuery }: StorySearchResultProps) => {
         </Popover>
       </div>
 
-      <CardList genreId="1" query="" />
+      <StorySearchCardList query={searchQuery} />
     </div>
   );
 };
