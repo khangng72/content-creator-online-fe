@@ -1,58 +1,101 @@
+'use client';
+import Cookies from 'js-cookie';
 import { BookIcon, UserPlus, Users } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import axios from 'axios';
+import { generateApi, SEARCH_USER } from '@/constants/api';
+import { Logger } from '@/utils/Logger';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { UserData } from '@/types/UserData';
+import { useInView } from 'react-intersection-observer';
 
-const users = [
-  {
-    userId: 1,
-    userName: 'John Doe',
-    userAvatar: '/default-avatar.jpeg',
-    numberOfStories: 10,
-    numberOfFollowers: 100,
-    userDescription:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
-  {
-    userId: 2,
-    userName: 'Jane Doe',
-    userAvatar: '/default-avatar.jpeg',
-    numberOfStories: 10,
-    numberOfFollowers: 100,
-    userDescription:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
-  {
-    userId: 3,
-    userName: 'Adam Doe',
-    userAvatar: '/default-avatar.jpeg',
-    numberOfStories: 10,
-    numberOfFollowers: 100,
-    userDescription:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
-];
+interface UserSearchCardListsProps {
+  searchQuery: string;
+}
 
-const UserSearchCardLists = () => {
+const UserSearchCardLists = ({ searchQuery }: UserSearchCardListsProps) => {
+  const { ref, inView } = useInView();
+  const fetchUsers = async ({ pageParam }: { pageParam: number }) => {
+    const token = Cookies.get('token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await axios.get(
+        generateApi(
+          SEARCH_USER,
+          '',
+          `keyword=${searchQuery}&page=${pageParam}&size=20`
+        ),
+        {
+          headers,
+        }
+      );
+
+      return response.data.result;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        Logger.error('Error searching stories by query:', 'client');
+        throw new Error(`Error searching stories by query: ${error.message}`);
+      } else {
+        Logger.error('Unexpected error:', 'client');
+        throw new Error('Unexpected error occurred');
+      }
+    }
+  };
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['searchUser', searchQuery],
+      queryFn: fetchUsers,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, allPages) => {
+        const nextPage = lastPage.length ? allPages.length : undefined;
+        return nextPage;
+      },
+    });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const users = data?.pages?.flatMap((page: UserData) => page || []) ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-[20vh]">
+        <span className="text-2xl font-semibold">Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <div
       className="grid gap-5 justify-center my-6
             grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[90vw] xl:w-[80vw] mx-auto"
     >
-      {users.map((user) => {
+      {users.map((user, index) => {
         return (
           <div
-            key={user.userId}
+            key={user.id}
             className="flex gap-2 items-center bg-card rounded-md p-4 relative shadow-md"
+            ref={index + 1 === users.length ? ref : null}
           >
             <div>
               <Avatar className="w-[40px] h-[40px]">
-                <AvatarImage src={user.userAvatar} alt="@shadcn" />
+                <AvatarImage src={user.avatarUrl} alt="@shadcn" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
             <div className="flex justify-between items-center w-full">
               <div className="flex flex-col">
-                <span className="text-xl font-bold">{user.userName}</span>
+                <span className="text-xl font-bold">
+                  {user.firstName} {user.lastName}
+                </span>
                 <ul className="flex gap-3">
                   <li className="flex gap-1 items-center">
                     <BookIcon className="w-4 h-4 text-muted-foreground" />

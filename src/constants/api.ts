@@ -36,6 +36,7 @@ export const REGISTER = '/user/register';
 export const GET_USER = '/user/profile';
 export const GET_FOLLOWERS_BY_USERID = '/user/followers';
 export const GET_FOLLOWING_BY_USERID = '/user/following';
+export const SEARCH_USER = '/user/search';
 
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';

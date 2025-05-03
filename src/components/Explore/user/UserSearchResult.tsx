@@ -10,7 +10,7 @@ const UserSearchResult = ({ searchQuery }: UserSearchResultProps) => {
     <div className="w-full lg:w-[90vw flex flex-col items-center mt-[10px]">
       <h2 className="text-3xl font-semibold italic">"{searchQuery}"</h2>
 
-      <UserSearchCardLists />
+      <UserSearchCardLists searchQuery={searchQuery} />
     </div>
   );
 };
