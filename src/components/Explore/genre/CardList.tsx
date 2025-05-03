@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
-import { EyeIcon, PlusIcon, StarIcon, TableOfContents } from 'lucide-react';
+import { EyeIcon, PlusIcon, TableOfContents } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Cookies from 'js-cookie';
 import { generateApi, GET_STORY_BY_GENREID } from '@/constants/api';
 import axios from 'axios';
 import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import StarRating from '../StarRating';
+import { BasicStoryInfo } from '@/types/Story';
 
 const readingLists = [
   { id: 1, title: 'Read list title 1' },
@@ -18,13 +20,6 @@ const readingLists = [
 interface CardListProps {
   genreId: string;
   query: string;
-}
-
-interface Story {
-  storyId: string;
-  storyTitle: string;
-  storyDescription: string;
-  coverImageUri: string;
 }
 
 const CardList = ({ genreId, query }: CardListProps) => {
@@ -72,7 +67,8 @@ const CardList = ({ genreId, query }: CardListProps) => {
     }
   };
 
-  const stories = data?.pages?.flatMap((page: Story) => page || []) ?? [];
+  const stories =
+    data?.pages?.flatMap((page: BasicStoryInfo) => page || []) ?? [];
 
   const filteredStories = stories.filter((story) =>
     story.storyTitle.toLowerCase().includes(query.toLowerCase())
@@ -98,13 +94,24 @@ const CardList = ({ genreId, query }: CardListProps) => {
               key={story.storyId}
               className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative"
             >
-              <Image
-                src="/BookCover/sample_cover.jpeg"
-                alt={story.storyTitle}
-                width={200}
-                height={300}
-                className="rounded-lg mb-4 w-[150px] h-[210px]"
-              />
+              {story.coverImageUri ? (
+                <Image
+                  src="/BookCover/sample_cover.jpeg"
+                  alt={story.storyTitle}
+                  width={200}
+                  height={300}
+                  className="rounded-lg mb-4 w-[150px] h-[210px]"
+                />
+              ) : (
+                <div className="w-[150px] h-[210px] bg-secondary flex flex-col justify-center items-center mb-4 px-4 gap-3">
+                  <span className="text-4xl">
+                    {story.storyTitle.slice(0, 1)}
+                  </span>
+                  <span className="text-md text-center">
+                    Cover is coming soon
+                  </span>
+                </div>
+              )}
 
               <Link href="#">
                 <h2 className="text-xl font-semibold hover:underline">
@@ -112,25 +119,24 @@ const CardList = ({ genreId, query }: CardListProps) => {
                 </h2>
               </Link>
               <Link href="#" className="text-muted-foreground hover:underline">
-                by author
+                by {story.userPost}
               </Link>
               <div className="flex gap-2 justify-center items-center">
                 <div className="flex gap-1 items-center">
                   <EyeIcon className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">4</span>
+                  <span className="text-sm text-muted-foreground">
+                    {story.numberOfViews}
+                  </span>
                 </div>
                 <div className="flex gap-1 items-center">
                   <TableOfContents className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">5</span>
+                  <span className="text-sm text-muted-foreground">
+                    {story.numberOfChapters}
+                  </span>
                 </div>
               </div>
-              <div className="flex gap-2 items-center mt-2">
-                <StarIcon className="w-4 h-4" />
-                <StarIcon className="w-4 h-4" />
-                <StarIcon className="w-4 h-4" />
-                <StarIcon className="w-4 h-4" />
-                <StarIcon className="w-4 h-4" />
-              </div>
+              <StarRating rating={story.averageRating} size={20} />
+
               <div className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl">
                 <p>{story.storyDescription.slice(0, 255)}...</p>
               </div>
@@ -172,10 +178,10 @@ const CardList = ({ genreId, query }: CardListProps) => {
           );
         })}
       </div>
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-center mt-6">
         {hasNextPage && (
           <button
-            className="bg-foreground text-background px-2 py-1 rounded-md active:scale-95"
+            className="bg-foreground text-background px-2 py-1 rounded-md active:scale-95 text-xl"
             onClick={handleLoadMore}
           >
             Load More
