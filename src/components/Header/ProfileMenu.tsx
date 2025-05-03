@@ -149,12 +149,15 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
             </span>
           </Link>
           <hr className="border-b-[0.5px] border-[#65686C]" />
-          <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
+          <Link
+            className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer"
+            href="/my_library"
+          >
             <BookHeart />
             <span className="font-semibold text-sm">
-              {t('ProfileMenu.myReadLists')}
+              {t('ProfileMenu.myLibrary')}
             </span>
-          </div>
+          </Link>
           <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
             <ShoppingCart />
             <span className="font-semibold text-sm">

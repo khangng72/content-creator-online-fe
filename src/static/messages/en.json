@@ -1,32 +1,32 @@
 {
-    "Login": {
-        "title": "Login",
-        "about": "If you are already a member, easily log in",
-        "email": "Email",
-        "password": "Password",
-        "loginButton": "Login",
-        "loginButtonWithGoogle": "Login with Google",
-        "forgotPassword": "Forgot your Password?",
-        "notHaveAccount": "Don't have an account?",
-        "registerButton": "Register",
-        "or": "or",
-        "loginFailed": "Login Failed. Your email or password may incorrect, please try again"
+  "Login": {
+    "title": "Login",
+    "about": "If you are already a member, easily log in",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Login",
+    "loginButtonWithGoogle": "Login with Google",
+    "forgotPassword": "Forgot your Password?",
+    "notHaveAccount": "Don't have an account?",
+    "registerButton": "Register",
+    "or": "or",
+    "loginFailed": "Login Failed. Your email or password may incorrect, please try again"
+  },
+  "AuthorizedHeader": {
+    "ProfileMenu": {
+      "account": "Account",
+      "myLibrary": "My Library",
+      "cart": "Cart",
+      "language": "Language",
+      "logout": "Logout"
     },
-    "AuthorizedHeader": {
-        "ProfileMenu": {
-            "account": "Account",
-            "myReadLists": "My Read Lists",
-            "cart": "Cart",
-            "language": "Language",
-            "logout": "Logout"
-        },
-        "LanguageSettings": {
-            "title": "Language Settings",
-            "description": "This changes only affects the language of the interface.",
-            "vietnamese": "Vietnamese",
-            "english": "English",
-            "chooseAnOption": "Choose an option",
-            "saveChange": "Save Change"
-        }
+    "LanguageSettings": {
+      "title": "Language Settings",
+      "description": "This changes only affects the language of the interface.",
+      "vietnamese": "Vietnamese",
+      "english": "English",
+      "chooseAnOption": "Choose an option",
+      "saveChange": "Save Change"
     }
+  }
 }

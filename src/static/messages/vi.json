@@ -1,32 +1,32 @@
 {
-    "Login": {
-        "title": "Đăng Nhập",
-        "about": "Hãy đăng nhập để khám phá những câu chuyện tuyệt vời",
-        "email": "Email",
-        "password": "Mật khẩu",
-        "loginButton": "Đăng Nhập",
-        "loginButtonWithGoogle": "Đăng nhập với Google",
-        "forgotPassword": "Bạn quên mật khẩu?",
-        "notHaveAccount": "Đăng ký tài khoản mới tại đây",
-        "registerButton": "Đăng ký",
-        "or": "Hoặc",
-        "loginFailed": "Đăng nhập thất bại. Email hoặc mật khẩu sai, vui lòng thử lại."
+  "Login": {
+    "title": "Đăng Nhập",
+    "about": "Hãy đăng nhập để khám phá những câu chuyện tuyệt vời",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "loginButton": "Đăng Nhập",
+    "loginButtonWithGoogle": "Đăng nhập với Google",
+    "forgotPassword": "Bạn quên mật khẩu?",
+    "notHaveAccount": "Đăng ký tài khoản mới tại đây",
+    "registerButton": "Đăng ký",
+    "or": "Hoặc",
+    "loginFailed": "Đăng nhập thất bại. Email hoặc mật khẩu sai, vui lòng thử lại."
+  },
+  "AuthorizedHeader": {
+    "ProfileMenu": {
+      "account": "Tài Khoản",
+      "myLibrary": "Thư Viện Của Tôi",
+      "cart": "Giỏ hàng",
+      "language": "Ngôn ngữ",
+      "logout": "Đăng xuất"
     },
-    "AuthorizedHeader": {
-        "ProfileMenu": {
-            "account": "Tài Khoản",
-            "myReadLists": "Danh sách đọc",
-            "cart": "Giỏ hàng",
-            "language": "Ngôn ngữ",
-            "logout": "Đăng xuất"
-        },
-        "LanguageSettings": {
-            "title": "Cài đặt Ngôn ngữ",
-            "description": "Thay đổi này chỉ ảnh hưởng đến ngôn ngữ của giao diện.",
-            "vietnamese": "Tiếng Việt",
-            "english": "Tiếng Anh",
-            "chooseAnOption": "Chọn Ngôn ngữ",
-            "saveChange": "Lưu thay đổi"
-        }
+    "LanguageSettings": {
+      "title": "Cài đặt Ngôn ngữ",
+      "description": "Thay đổi này chỉ ảnh hưởng đến ngôn ngữ của giao diện.",
+      "vietnamese": "Tiếng Việt",
+      "english": "Tiếng Anh",
+      "chooseAnOption": "Chọn Ngôn ngữ",
+      "saveChange": "Lưu thay đổi"
     }
+  }
 }
