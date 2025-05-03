@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   NavigationMenu,
@@ -8,9 +8,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { Link } from "@/i18n/routing";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/navigation-menu';
+import { Link } from '@/i18n/routing';
+import { Input } from '@/components/ui/input';
 import {
   ChevronDown,
   ChevronUp,
@@ -18,71 +18,71 @@ import {
   MoonIcon,
   SearchIcon,
   SunIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 const components: { title: string }[] = [
   {
-    title: "Romance",
+    title: 'Romance',
   },
   {
-    title: "Fantasy",
+    title: 'Fantasy',
   },
   {
-    title: "Historical Fiction",
+    title: 'Historical Fiction',
   },
   {
-    title: "Humor",
+    title: 'Humor',
   },
   {
-    title: "Science Fiction",
+    title: 'Science Fiction',
   },
   {
-    title: "Non-Fiction",
+    title: 'Non-Fiction',
   },
   {
-    title: "Mystery",
+    title: 'Mystery',
   },
   {
-    title: "Thriller",
+    title: 'Thriller',
   },
   {
-    title: "Horror",
+    title: 'Horror',
   },
   {
-    title: "Adventure",
+    title: 'Adventure',
   },
   {
-    title: "Dystopian",
+    title: 'Dystopian',
   },
   {
-    title: "Drama",
+    title: 'Drama',
   },
   {
-    title: "Young Adult",
+    title: 'Young Adult',
   },
   {
     title: "Children's Fiction",
   },
   {
-    title: "Magical Realism",
+    title: 'Magical Realism',
   },
   {
-    title: "Steampunk",
+    title: 'Steampunk',
   },
   {
-    title: "Cyberpunk",
+    title: 'Cyberpunk',
   },
   {
-    title: "Gothic Fiction",
+    title: 'Gothic Fiction',
   },
   {
-    title: "Psychological Fiction",
+    title: 'Psychological Fiction',
   },
   {
-    title: "Literary Fiction",
+    title: 'Literary Fiction',
   },
 ];
 
@@ -93,10 +93,10 @@ const Header = () => {
   const [isExploreMenuOpen, setIsExploreMenuOpen] = useState(false);
 
   const handleThemeChange = () => {
-    if (theme === "dark") {
-      setTheme("light");
+    if (theme === 'dark') {
+      setTheme('light');
     } else {
-      setTheme("dark");
+      setTheme('dark');
     }
   };
 
@@ -156,8 +156,8 @@ const Header = () => {
               <SearchIcon />
               <Input
                 className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-xl"
-                type="email"
-                placeholder="Email"
+                type="text"
+                placeholder="Search..."
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ const Header = () => {
             </div>
             {mounted && (
               <button onClick={handleThemeChange}>
-                {theme === "dark" ? (
+                {theme === 'dark' ? (
                   <MoonIcon className="hover:cursor-pointer text-yellow-300 font-" />
                 ) : (
                   <SunIcon className="hover:cursor-pointer text-red-500" />
@@ -191,7 +191,7 @@ const Header = () => {
 
         <div
           className={`lg:hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen ? "max-h-200 opacity-100" : "max-h-0 opacity-0"
+            isMobileMenuOpen ? 'max-h-200 opacity-100' : 'max-h-0 opacity-0'
           } overflow-hidden`}
         >
           <div className={`px-2 pt-2 pb-3 space-y-1 font-bold`}>
@@ -214,8 +214,8 @@ const Header = () => {
             <div
               className={`lg:hidden transition-all duration-300 ease-in-out ${
                 isExploreMenuOpen
-                  ? "max-h-200 opacity-100"
-                  : "max-h-0 opacity-0"
+                  ? 'max-h-200 opacity-100'
+                  : 'max-h-0 opacity-0'
               } overflow-auto`}
             >
               <div className="flex-col  pl-6 font-medium">
