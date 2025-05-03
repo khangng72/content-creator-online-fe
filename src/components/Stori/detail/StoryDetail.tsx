@@ -249,7 +249,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
                         className="rounded-lg w-[150px] h-[210px]"
                       />
                     ) : (
-                      <div className="w-[150px] h-[210px] bg-secondary flex flex-col justify-center items-center mb-4 px-4 gap-3">
+                      <div className="w-[150px] h-[210px] bg-muted-foreground flex flex-col justify-center items-center mb-4 px-4 gap-3 rounded-md">
                         <span className="text-4xl">
                           {suggestion.storyTitle.slice(0, 1)}
                         </span>
