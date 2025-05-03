@@ -31,6 +31,7 @@ export const GET_BASIC_INFO_STORY = '/story/basicInfo';
 // Chapter
 export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';
 export const GET_LATEST_CHAPTER_PAGED = '/chapter/latest';
+export const GET_BASIC_CHAPTERS_INFO_BY_STORY_ID = '/chapter/story';
 
 // User
 export const REGISTER = '/user/register';
