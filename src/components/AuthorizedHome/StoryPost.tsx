@@ -80,7 +80,11 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
 
       <div className="w-full block">
         <div className="flex flex-col gap-3">
-          <h2 className="text-2xl font-bold">Story: {post.storyTitle}</h2>
+          <h2 className="text-2xl font-bold">
+            <Link href={`/stori/${post.storyId}`} className="hover:underline">
+              Story: {post.storyTitle}
+            </Link>
+          </h2>
 
           <Link
             href={`/chapter/read/${post.chapterId}`}

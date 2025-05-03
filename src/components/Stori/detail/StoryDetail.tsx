@@ -120,13 +120,21 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
     <div className="py-[66px] flex flex-col items-center">
       <div className="w-full bg-card flex flex-col items-center md:flex-row md:justify-center gap-7 p-5 shadow-md">
         <div>
-          <Image
-            src={story.coverImageUri}
-            alt="jus a placeholder"
-            width={150}
-            height={210}
-            className="rounded-md w-[225px] h-[315px]"
-          />
+          {story.coverImageUri ? (
+            <Image
+              src={story.coverImageUri}
+              alt="jus a placeholder"
+              width={150}
+              height={210}
+              className="rounded-md w-[225px] h-[315px]"
+              priority={true}
+            />
+          ) : (
+            <div className="w-[225px] h-[315px] bg-muted-foreground flex flex-col justify-center items-center mb-4 px-4 gap-3 rounded-md">
+              <span className="text-4xl">{story.storyTitle.slice(0, 1)}</span>
+              <span className="text-md text-center">Cover is coming soon</span>
+            </div>
+          )}
         </div>
         <div className="flex flex-col">
           <h1 className="text-4xl font-extrabold bg-rainbow w-fit text-transparent bg-clip-text">
@@ -247,6 +255,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
                         width={200}
                         height={300}
                         className="rounded-lg w-[150px] h-[210px]"
+                        priority={true}
                       />
                     ) : (
                       <div className="w-[150px] h-[210px] bg-muted-foreground flex flex-col justify-center items-center mb-4 px-4 gap-3 rounded-md">

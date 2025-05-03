@@ -6,6 +6,7 @@ export interface Post {
   chapterCreatedTime: string;
 
   storyTitle: string;
+  storyId: string;
 
   userFirstName: string;
   userLastName: string;
