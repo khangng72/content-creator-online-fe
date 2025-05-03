@@ -151,7 +151,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           <hr className="border-b-[0.5px] border-[#65686C]" />
           <Link
             className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer"
-            href="/my_library"
+            href="/my_library/reading_lists"
           >
             <BookHeart />
             <span className="font-semibold text-sm">
