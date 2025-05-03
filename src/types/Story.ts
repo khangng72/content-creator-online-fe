@@ -1,3 +1,5 @@
+import { Genre } from './Genre';
+
 export interface BasicStoryInfo {
   storyId: string;
   storyTitle: string;
@@ -7,4 +9,5 @@ export interface BasicStoryInfo {
   numberOfViews: number;
   numberOfChapters: number;
   averageRating: number;
+  genres: Genre[];
 }
