@@ -76,7 +76,7 @@ const UserSearchCardLists = ({ searchQuery }: UserSearchCardListsProps) => {
   return (
     <div
       className="grid gap-5 justify-center my-6
-            grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[90vw] xl:w-[80vw] mx-auto"
+            grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[98vw] xl:w-[80vw] mx-auto"
     >
       {users.map((user, index) => {
         return (

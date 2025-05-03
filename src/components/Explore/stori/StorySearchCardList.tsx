@@ -100,7 +100,7 @@ const StorySearchCardList = ({ query }: CardListProps) => {
               >
                 {story.coverImageUri ? (
                   <Image
-                    src="/BookCover/sample_cover.jpeg"
+                    src={story.coverImageUri}
                     alt={story.storyTitle}
                     width={200}
                     height={300}
