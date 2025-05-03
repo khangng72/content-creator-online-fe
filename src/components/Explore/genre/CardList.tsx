@@ -96,11 +96,11 @@ const CardList = ({ genreId, query }: CardListProps) => {
             >
               {story.coverImageUri ? (
                 <Image
-                  src="/BookCover/sample_cover.jpeg"
+                  src={story.coverImageUri}
                   alt={story.storyTitle}
                   width={200}
                   height={300}
-                  className="rounded-lg mb-4 w-[150px] h-[210px]"
+                  className="rounded-lg mb-4 w-[150px] h-[210px] shadow-md"
                 />
               ) : (
                 <div className="w-[150px] h-[210px] bg-secondary flex flex-col justify-center items-center mb-4 px-4 gap-3">
