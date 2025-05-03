@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import defaultAvatar from '$/public/default-avatar.jpeg';
 import axios from 'axios';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { useLocale, useTranslations } from 'next-intl';
@@ -102,8 +101,14 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
         onClick={toggleProfileMenu}
       >
         <Avatar>
-          <AvatarImage src={defaultAvatar.src} alt="default-avatar" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage
+            src={myData?.avatarUrl}
+            alt={`${myData?.firstName} ${myData?.lastName} avatar`}
+          />
+          <AvatarFallback>
+            {myData?.firstName.charAt(0)}
+            {myData?.lastName.charAt(0)}
+          </AvatarFallback>
         </Avatar>
         <div className="rounded-full bg-foreground absolute top-6 left-6">
           <ChevronDown className="text-background" strokeWidth={1} size={18} />
@@ -130,8 +135,14 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
             href="/myprofile/about"
           >
             <Avatar>
-              <AvatarImage src={defaultAvatar.src} alt="default-avatar" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage
+                src={myData?.avatarUrl}
+                alt={`${myData?.firstName} ${myData?.lastName} avatar`}
+              />
+              <AvatarFallback>
+                {myData?.firstName.charAt(0)}
+                {myData?.lastName.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <span className="font-semibold">
               {myData?.firstName} {myData?.lastName}{' '}
