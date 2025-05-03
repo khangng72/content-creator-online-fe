@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
-import { EyeIcon, PlusIcon, StarIcon, TableOfContents } from 'lucide-react';
+import { EyeIcon, PlusIcon, TableOfContents } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Cookies from 'js-cookie';
 import { generateApi, SEARCH_STORY } from '@/constants/api';
 import axios from 'axios';
 import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { BasicStoryInfo } from '@/types/Story';
+import StarRating from '../StarRating';
+import { useInView } from 'react-intersection-observer';
 
 const readingLists = [
   { id: 1, title: 'Read list title 1' },
@@ -19,15 +22,9 @@ interface CardListProps {
   query: string;
 }
 
-interface Story {
-  storyId: string;
-  storyTitle: string;
-  storyDescription: string;
-  coverImageUri: string;
-}
-
 const StorySearchCardList = ({ query }: CardListProps) => {
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { ref, inView } = useInView();
 
   const fetchStories = async ({ pageParam }: { pageParam: number }) => {
     const token = Cookies.get('token');
@@ -59,23 +56,25 @@ const StorySearchCardList = ({ query }: CardListProps) => {
     }
   };
 
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['searchStory', query],
-    queryFn: fetchStories,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      const nextPage = lastPage.length ? allPages.length : undefined;
-      return nextPage;
-    },
-  });
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['searchStory', query],
+      queryFn: fetchStories,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, allPages) => {
+        const nextPage = lastPage.length ? allPages.length : undefined;
+        return nextPage;
+      },
+    });
 
-  const handleLoadMore = () => {
-    if (hasNextPage) {
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const stories = data?.pages?.flatMap((page: Story) => page || []) ?? [];
+  const stories =
+    data?.pages?.flatMap((page: BasicStoryInfo) => page || []) ?? [];
 
   if (isLoading) {
     return (
@@ -88,23 +87,35 @@ const StorySearchCardList = ({ query }: CardListProps) => {
   return (
     <>
       <div
-        className="grid gap-5 justify-center mt-6
+        className="grid gap-5 justify-center my-6
                   grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[90vw] xl:w-[80vw] mx-auto"
       >
         {stories &&
-          stories.map((story: Story) => {
+          stories.map((story: BasicStoryInfo, index) => {
             return (
               <div
                 key={story.storyId}
                 className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative"
+                ref={index + 1 === stories.length ? ref : null}
               >
-                <Image
-                  src="/BookCover/sample_cover.jpeg"
-                  alt="Book Cover"
-                  width={200}
-                  height={300}
-                  className="rounded-lg mb-4 w-[150px] h-[210px]"
-                />
+                {story.coverImageUri ? (
+                  <Image
+                    src="/BookCover/sample_cover.jpeg"
+                    alt={story.storyTitle}
+                    width={200}
+                    height={300}
+                    className="rounded-lg mb-4 w-[150px] h-[210px]"
+                  />
+                ) : (
+                  <div className="w-[150px] h-[210px] bg-secondary flex flex-col justify-center items-center mb-4 px-4 gap-3">
+                    <span className="text-4xl">
+                      {story.storyTitle.slice(0, 1)}
+                    </span>
+                    <span className="text-md text-center">
+                      Cover is coming soon
+                    </span>
+                  </div>
+                )}
 
                 <Link href="#">
                   <h2 className="text-xl font-semibold hover:underline">
@@ -115,24 +126,24 @@ const StorySearchCardList = ({ query }: CardListProps) => {
                   href="#"
                   className="text-muted-foreground hover:underline"
                 >
-                  by Author Name
+                  by {story.userPost}
                 </Link>
                 <div className="flex gap-2 justify-center items-center">
                   <div className="flex gap-1 items-center">
                     <EyeIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">4</span>
+                    <span className="text-sm text-muted-foreground">
+                      {story.numberOfViews}
+                    </span>
                   </div>
                   <div className="flex gap-1 items-center">
                     <TableOfContents className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">5</span>
+                    <span className="text-sm text-muted-foreground">
+                      {story.numberOfChapters}
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-2 items-center mt-2">
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
+                  <StarRating rating={story.averageRating} size={20} />
                 </div>
                 <div className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl">
                   <p>{story.storyDescription.slice(0, 255)}...</p>
@@ -174,16 +185,6 @@ const StorySearchCardList = ({ query }: CardListProps) => {
               </div>
             );
           })}
-      </div>
-      <div className="flex justify-center mt-5">
-        {hasNextPage && (
-          <button
-            className="bg-foreground text-background px-2 py-1 rounded-md active:scale-95"
-            onClick={handleLoadMore}
-          >
-            Load More
-          </button>
-        )}
       </div>
     </>
   );

@@ -8,7 +8,8 @@ import { generateApi, GET_STORY_BY_GENREID } from '@/constants/api';
 import axios from 'axios';
 import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import StarRating from './StarRating';
+import StarRating from '../StarRating';
+import { BasicStoryInfo } from '@/types/Story';
 
 const readingLists = [
   { id: 1, title: 'Read list title 1' },
@@ -19,17 +20,6 @@ const readingLists = [
 interface CardListProps {
   genreId: string;
   query: string;
-}
-
-interface Story {
-  storyId: string;
-  storyTitle: string;
-  storyDescription: string;
-  coverImageUri: string;
-  userPost: string;
-  numberOfViews: number;
-  numberOfChapters: number;
-  averageRating: number;
 }
 
 const CardList = ({ genreId, query }: CardListProps) => {
@@ -77,7 +67,8 @@ const CardList = ({ genreId, query }: CardListProps) => {
     }
   };
 
-  const stories = data?.pages?.flatMap((page: Story) => page || []) ?? [];
+  const stories =
+    data?.pages?.flatMap((page: BasicStoryInfo) => page || []) ?? [];
 
   const filteredStories = stories.filter((story) =>
     story.storyTitle.toLowerCase().includes(query.toLowerCase())
