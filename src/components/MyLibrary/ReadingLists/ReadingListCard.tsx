@@ -9,7 +9,6 @@ import {
 import { Ellipsis } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { generateApi, GET_TOP_STORY_BY_READING_LIST_ID } from '@/constants/api';
-import { GET } from '@/app/api/auth/status/route';
 import axios from 'axios';
 import { BasicStoryInfo } from '@/types/Story';
 
@@ -29,7 +28,11 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
     const token = Cookies.get('token');
     try {
       const response = await axios.get(
-        generateApi(GET_TOP_STORY_BY_READING_LIST_ID, readList.read_list_id),
+        generateApi(
+          GET_TOP_STORY_BY_READING_LIST_ID,
+          readList.read_list_id,
+          'amount=5'
+        ),
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -64,22 +67,28 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
       <div className="flex justify-between items-center mt-2">
         <div className="flex gap-2">
           {topStories &&
-            topStories.map((story: BasicStoryInfo) => {
+            topStories.map((story: BasicStoryInfo, index) => {
+              let visibilityClass = 'hidden';
+
+              if (index < 3) {
+                visibilityClass = 'block';
+              } else if (index === 3) {
+                visibilityClass = 'hidden lg:block';
+              } else if (index === 4) {
+                visibilityClass = 'hidden xl:block';
+              }
               return (
-                <div
-                  className="flex flex-col justify-center item-center"
-                  key={story.storyId}
-                >
+                <div className={visibilityClass} key={story.storyId}>
                   {story.coverImageUri ? (
                     <Image
                       src={story.coverImageUri}
                       alt="cover"
                       width={100}
                       height={100}
-                      className="rounded-md w-[65px] h-[91px] md:w-[150px] md:h-[210px] object-cover"
+                      className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] object-cover"
                     />
                   ) : (
-                    <div className="rounded-md w-[65px] h-[91px] md:w-[150px] md:h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
+                    <div className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
                       {story.storyTitle.slice(0, 25)}...
                     </div>
                   )}
