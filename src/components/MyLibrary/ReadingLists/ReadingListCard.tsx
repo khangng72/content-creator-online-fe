@@ -1,5 +1,5 @@
 import { ReadList } from '@/types/ReadList';
-import React, { use, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
   Popover,
@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Link } from '@/i18n/routing';
 
 interface ReadingListCardProps {
   readList: ReadList;
@@ -36,8 +37,6 @@ const ReadingListCard = ({
   fetchReadLists,
 }: ReadingListCardProps) => {
   const [topStories, setTopStories] = useState<BasicStoryInfo[] | null>(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const fetchTopStories = useCallback(async () => {
     const token = Cookies.get('token');
@@ -54,14 +53,10 @@ const ReadingListCard = ({
       if (response.status === 200) {
         setTopStories(response.data.result);
       } else {
-        setError(true);
         console.error('Error fetching reading lists:', response.data.message);
       }
     } catch (error) {
-      setError(true);
       console.error('Error fetching reading lists:', error);
-    } finally {
-      setLoading(false);
     }
   }, [readList]);
 
@@ -76,11 +71,9 @@ const ReadingListCard = ({
       if (response.status === 200) {
         console.log('Read list deleted successfully');
       } else {
-        setError(true);
         console.error('Error deleting read list:', response.data.message);
       }
     } catch (error) {
-      setError(true);
       console.error('Error deleting read list:', error);
     } finally {
       fetchReadLists();
@@ -94,9 +87,11 @@ const ReadingListCard = ({
   return (
     <li className="flex flex-col bg-card p-3 md:p-5 rounded-md shadow-md">
       <div className="flex flex-col gap-[1px]">
-        <h1 className="text-lg md:text-xl font-bold flex max-w-[300px]  md:max-w-[500px] hover:underline">
-          <span>{readList.read_list_title}</span>
-        </h1>
+        <Link href={`/my_library/reading_lists/${readList.read_list_id}`}>
+          <h1 className="text-lg md:text-xl font-bold flex max-w-[300px]  md:max-w-[500px] hover:underline">
+            <span>{readList.read_list_title}</span>
+          </h1>
+        </Link>
         <p className="text-xs md:text-base text-muted-foreground">
           {readList.number_of_stories} stories
         </p>

@@ -1,27 +1,13 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import LibraryOptions from '../LibraryOptions';
-import Image from 'next/image';
-import { Ellipsis, PlusIcon } from 'lucide-react';
 import axios from 'axios';
 import { generateApi, GET_READING_LIST_BY_CURRENT_USER } from '@/constants/api';
 import Cookies from 'js-cookie';
-import { set } from 'zod';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+
 import { ReadList } from '@/types/ReadList';
 import ReadingListCard from './ReadingListCard';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+
 import CreateNewReadList from './CreateNewReadList';
 
 const ReadingLists = () => {
