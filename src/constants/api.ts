@@ -43,3 +43,6 @@ export const SEARCH_USER = '/user/search';
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';
 export const POST_COMMENT = '/comment/chapter';
+
+// Reading List
+export const GET_READING_LIST_BY_CURRENT_USER = '/read_list/current_user';
