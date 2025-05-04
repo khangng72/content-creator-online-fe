@@ -14,6 +14,7 @@ import axios from 'axios';
 import {
   DELETE_STORIES_BY_READING_LIST_ID,
   generateApi,
+  GET_READ_LIST_BY_ID,
   GET_STORIES_BY_READING_LIST_ID,
 } from '@/constants/api';
 import Cookies from 'js-cookie';
@@ -28,6 +29,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { ReadList } from '@/types/ReadList';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 
 interface SpecificReadListProps {
   readListId: string;
@@ -36,6 +46,8 @@ interface SpecificReadListProps {
 const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [stories, setStories] = useState<BasicStoryInfo[] | null>(null);
+  const [error, setError] = useState(false);
+  const [readListInfo, setReadListInfo] = useState<ReadList | null>(null);
 
   const [selectedStories, setSelectedStories] = useState<string[]>([]);
 
@@ -53,7 +65,27 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
         setStories(response.data.result);
       }
     } catch (error) {
+      setError(true);
       console.error('Error fetching stories:', error);
+    }
+  }, [readListId]);
+
+  const fetchReadListInfo = useCallback(async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(
+        generateApi(GET_READ_LIST_BY_ID, readListId),
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        setReadListInfo(response.data);
+      }
+    } catch (error) {
+      setError(true);
+      console.error('Error fetching read list info:', error);
     }
   }, [readListId]);
 
@@ -95,6 +127,18 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
     fetchStories();
   }, [fetchStories]);
 
+  useEffect(() => {
+    fetchReadListInfo();
+  }, [fetchReadListInfo]);
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-lg">Error Loading Stories</p>
+      </div>
+    );
+  }
+
   if (!stories) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -114,22 +158,65 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
             <ChevronLeft className="w-3 h-3 md:w-5 md:h-5" />
             <span className="text-xs md:text-base">My Library</span>
           </Link>
-          <div className="flex flex-col text-right max-w-[70%]">
-            <h1 className="text-base md:text-3xl font-bold bg-rainbow text-transparent bg-clip-text">
-              Read List title
+          <div className="flex flex-col items-end text-right max-w-[70%]">
+            <h1 className="text-xl md:text-3xl font-bold bg-rainbow text-transparent bg-clip-text w-fit">
+              {readListInfo?.read_list_title}
             </h1>
+            <p className="text-sm md:text-base text-muted-foreground font-bold">
+              {readListInfo?.read_list_description}
+            </p>
             <p className="text-xs md:text-sm text-muted-foreground">
-              Read list description
+              {readListInfo?.number_of_stories} stories
             </p>
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-2 px-4">
-          <button className="w-[120px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm flex justify-between items-center">
-            <span>Edit Info</span>
-            <SquarePen className="w-4 h-4" />
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-[120px] md:w-[150px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm md:text-base flex justify-between items-center">
+                <span>Edit Info</span>
+                <SquarePen className="w-4 h-4" />
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-lg font-semibold text-left">
+                  Edit Read List Info
+                </DialogTitle>
+                <DialogDescription className="hidden">
+                  <p className="text-sm text-muted-foreground">
+                    You can edit the title and description of your read list
+                    here.
+                  </p>
+                </DialogDescription>
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="text"
+                    id="readListTitle"
+                    defaultValue={readListInfo?.read_list_title}
+                    className="px-2 py-1 rounded-md border border-accent"
+                    placeholder="Read List Title"
+                  />
+                  <textarea
+                    defaultValue={readListInfo?.read_list_description}
+                    className="px-2 py-1 rounded-md border border-accent"
+                    placeholder="Read List Description"
+                  />
+                </div>
+                <div className="flex justify-end pt-[10px]">
+                  <button
+                    className="px-3 py-2 bg-rainbow rounded-md hover:opacity-80"
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
           <button
-            className="w-[120px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm flex justify-between items-center"
+            className="w-[120px] md:w-[150px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm md:text-base flex justify-between items-center"
             onClick={() => setSelectMode(true)}
           >
             <span>Select Story</span>
