@@ -151,7 +151,7 @@ const ReadingListCard = ({
                       <AlertDialogTrigger asChild>
                         <button>Delete</button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent>
+                      <AlertDialogContent className="bg-card">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-lg font-normal text-left">
                             Are you sure want to delete{' '}
@@ -203,7 +203,7 @@ const ReadingListCard = ({
                       <AlertDialogTrigger asChild>
                         <button>Delete</button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent>
+                      <AlertDialogContent className="bg-card">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-lg font-normal text-left">
                             Are you sure want to delete{' '}

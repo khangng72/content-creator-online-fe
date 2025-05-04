@@ -48,3 +48,4 @@ export const POST_COMMENT = '/comment/chapter';
 export const GET_READING_LIST_BY_CURRENT_USER = '/read_list/current_user';
 export const GET_TOP_STORY_BY_READING_LIST_ID = '/read_list/top_stories';
 export const DELETE_READING_LIST_BY_ID = '/read_list';
+export const CREATE_READING_LIST = '/read_list/new';

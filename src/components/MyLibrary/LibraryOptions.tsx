@@ -13,7 +13,7 @@ interface LibraryOptionsProps {
 const LibraryOptions = ({ currentTab }: LibraryOptionsProps) => {
   return (
     <div className="pt-[100px] w-[95vw] flex flex-col md:w-[80vw]  m-auto">
-      <h1 className="md:px-0 text-5xl font-extrabold w-fit bg-rainbow text-transparent bg-clip-text">
+      <h1 className="md:px-0 text-4xl md:text-5xl font-extrabold w-fit bg-rainbow text-transparent bg-clip-text">
         Library
       </h1>
       <div className="w-full mt-3 py-2 rounded-md">

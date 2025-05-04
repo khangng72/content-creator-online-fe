@@ -14,6 +14,15 @@ import {
 } from '@/components/ui/popover';
 import { ReadList } from '@/types/ReadList';
 import ReadingListCard from './ReadingListCard';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import CreateNewReadList from './CreateNewReadList';
 
 const ReadingLists = () => {
   const [readingLists, setReadingLists] = useState<ReadList[]>([]);
@@ -73,10 +82,8 @@ const ReadingLists = () => {
       <LibraryOptions currentTab="reading_lists" />
 
       <div className="w-[95vw] md:w-[80vw] flex flex-col items-start mx-auto my-5">
-        <button className="bg-rainbow px-3 py-2 text-sm flex gap-2 rounded-md mb-5 active:scale-95 transition-all duration-200">
-          <span>New Reading List</span>
-          <PlusIcon className="w-5 h-5" />
-        </button>
+        <CreateNewReadList fetchReadLists={fetchReadLists} />
+
         <ul className="flex flex-col gap-5 w-full">
           {readingLists.map((list) => {
             return (
