@@ -68,8 +68,6 @@ const ReadingLists = () => {
     );
   }
 
-  console.log('Reading Lists:', readingLists);
-
   return (
     <>
       <LibraryOptions currentTab="reading_lists" />
@@ -81,7 +79,13 @@ const ReadingLists = () => {
         </button>
         <ul className="flex flex-col gap-5 w-full">
           {readingLists.map((list) => {
-            return <ReadingListCard readList={list} key={list.read_list_id} />;
+            return (
+              <ReadingListCard
+                readList={list}
+                key={list.read_list_id}
+                fetchReadLists={fetchReadLists}
+              />
+            );
           })}
         </ul>
       </div>

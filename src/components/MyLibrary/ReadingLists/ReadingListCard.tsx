@@ -8,23 +8,38 @@ import {
 } from '@/components/ui/popover';
 import { Ellipsis } from 'lucide-react';
 import Cookies from 'js-cookie';
-import { generateApi, GET_TOP_STORY_BY_READING_LIST_ID } from '@/constants/api';
+import {
+  DELETE_READING_LIST_BY_ID,
+  generateApi,
+  GET_TOP_STORY_BY_READING_LIST_ID,
+} from '@/constants/api';
 import axios from 'axios';
 import { BasicStoryInfo } from '@/types/Story';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface ReadingListCardProps {
   readList: ReadList;
+  fetchReadLists: () => Promise<void>;
 }
-const ReadingListCard = ({ readList }: ReadingListCardProps) => {
+const ReadingListCard = ({
+  readList,
+  fetchReadLists,
+}: ReadingListCardProps) => {
   const [topStories, setTopStories] = useState<BasicStoryInfo[] | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchTopStories = useCallback(async () => {
-    console.log(
-      'Fetching top stories for reading list:',
-      readList.read_list_id
-    );
     const token = Cookies.get('token');
     try {
       const response = await axios.get(
@@ -49,6 +64,28 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
       setLoading(false);
     }
   }, [readList]);
+
+  const handleDeleteReadList = async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.delete(
+        generateApi(DELETE_READING_LIST_BY_ID, readList.read_list_id),
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200) {
+        console.log('Read list deleted successfully');
+      } else {
+        setError(true);
+        console.error('Error deleting read list:', response.data.message);
+      }
+    } catch (error) {
+      setError(true);
+      console.error('Error deleting read list:', error);
+    } finally {
+      fetchReadLists();
+    }
+  };
 
   useEffect(() => {
     fetchTopStories();
@@ -86,6 +123,7 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
                       width={100}
                       height={100}
                       className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] object-cover"
+                      priority
                     />
                   ) : (
                     <div className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
@@ -109,7 +147,34 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
                   <span>Edit</span>
                 </li>
                 <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                  <span>Delete</span>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button>Delete</button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-lg font-normal text-left">
+                          Are you sure want to delete{' '}
+                          <span className="italic font-bold">
+                            "{readList.read_list_title}"
+                          </span>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogDescription className="text-left">
+                        This action cannot be undone. This will permanently
+                        delete your read list from our servers.
+                      </AlertDialogDescription>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-500 hover:bg-red-500 hover:opacity-80"
+                          onClick={handleDeleteReadList}
+                        >
+                          Accept
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </li>
               </ul>
             </div>
