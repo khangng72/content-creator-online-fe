@@ -93,18 +93,18 @@ const ReadingListCard = ({
 
   return (
     <li className="flex flex-col bg-card p-3 md:p-5 rounded-md shadow-md">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-lg md:text-xl font-bold flex gap-1 max-w-[300px]  md:max-w-[500px] hover:underline">
+      <div className="flex flex-col gap-[1px]">
+        <h1 className="text-lg md:text-xl font-bold flex max-w-[300px]  md:max-w-[500px] hover:underline">
           <span>{readList.read_list_title}</span>
         </h1>
-        <p className="text-sm md:text-base text-muted-foreground">
+        <p className="text-xs md:text-base text-muted-foreground">
           {readList.number_of_stories} stories
         </p>
       </div>
-      <div className="flex justify-between items-center mt-2">
-        <div className="flex gap-2">
-          {topStories &&
-            topStories.map((story: BasicStoryInfo, index) => {
+      {topStories && topStories.length > 0 ? (
+        <div className="flex justify-between items-center mt-2">
+          <div className="flex gap-2">
+            {topStories.map((story: BasicStoryInfo, index) => {
               let visibilityClass = 'hidden';
 
               if (index < 3) {
@@ -133,54 +133,107 @@ const ReadingListCard = ({
                 </div>
               );
             })}
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="px-3 py-1 rounded-md bg-background hover:bg-accent hover:cursor-pointer">
+                <Ellipsis className="w-5 h-5" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="bg-card max-w-[200px]">
+              <div className="w-[200px]">
+                <ul className="flex flex-col text-xs sm:text-sm gap-4">
+                  <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
+                    <span>Edit</span>
+                  </li>
+                  <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button>Delete</button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-lg font-normal text-left">
+                            Are you sure want to delete{' '}
+                            <span className="italic font-bold">
+                              "{readList.read_list_title}"
+                            </span>
+                          </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogDescription className="text-left">
+                          This action cannot be undone. This will permanently
+                          delete your read list from our servers.
+                        </AlertDialogDescription>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-500 hover:bg-red-500 hover:opacity-80"
+                            onClick={handleDeleteReadList}
+                          >
+                            Accept
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </li>
+                </ul>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="px-3 py-1 rounded-md bg-background hover:bg-accent hover:cursor-pointer">
-              <Ellipsis className="w-5 h-5" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="bg-card max-w-[200px]">
-            <div className="w-[200px]">
-              <ul className="flex flex-col text-xs sm:text-sm gap-4">
-                <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                  <span>Edit</span>
-                </li>
-                <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button>Delete</button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-lg font-normal text-left">
-                          Are you sure want to delete{' '}
-                          <span className="italic font-bold">
-                            "{readList.read_list_title}"
-                          </span>
-                        </AlertDialogTitle>
-                      </AlertDialogHeader>
-                      <AlertDialogDescription className="text-left">
-                        This action cannot be undone. This will permanently
-                        delete your read list from our servers.
-                      </AlertDialogDescription>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-red-500 hover:bg-red-500 hover:opacity-80"
-                          onClick={handleDeleteReadList}
-                        >
-                          Accept
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </li>
-              </ul>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+      ) : (
+        <div className="flex justify-between items-center mt-2">
+          <div className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
+            No Stories Added
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="px-3 py-1 rounded-md bg-background hover:bg-accent hover:cursor-pointer">
+                <Ellipsis className="w-5 h-5" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="bg-card max-w-[200px]">
+              <div className="w-[200px]">
+                <ul className="flex flex-col text-xs sm:text-sm gap-4">
+                  <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
+                    <span>Edit</span>
+                  </li>
+                  <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button>Delete</button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-lg font-normal text-left">
+                            Are you sure want to delete{' '}
+                            <span className="italic font-bold">
+                              "{readList.read_list_title}"
+                            </span>
+                          </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogDescription className="text-left">
+                          This action cannot be undone. This will permanently
+                          delete your read list from our servers.
+                        </AlertDialogDescription>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-500 hover:bg-red-500 hover:opacity-80"
+                            onClick={handleDeleteReadList}
+                          >
+                            Accept
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </li>
+                </ul>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
     </li>
   );
 };
