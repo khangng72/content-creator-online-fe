@@ -52,3 +52,4 @@ export const CREATE_READING_LIST = '/read_list/new';
 export const GET_STORIES_BY_READING_LIST_ID = '/read_list/stories';
 export const DELETE_STORIES_BY_READING_LIST_ID = '/read_list/delete_stories';
 export const GET_READ_LIST_BY_ID = '/read_list/specific';
+export const UPDATE_READ_LIST = '/read_list/update';

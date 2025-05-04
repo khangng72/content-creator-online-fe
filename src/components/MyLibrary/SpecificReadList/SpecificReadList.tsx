@@ -1,12 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import {
-  ChevronLeft,
-  SquareMousePointer,
-  SquarePen,
-  Trash2,
-} from 'lucide-react';
+import { ChevronLeft, SquareMousePointer, Trash2 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import StoryCard from './StoryCard';
 import { BasicStoryInfo } from '@/types/Story';
@@ -30,14 +25,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { ReadList } from '@/types/ReadList';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { DialogTrigger } from '@radix-ui/react-dialog';
+
+import EditReadListInfo from './EditReadListInfo';
 
 interface SpecificReadListProps {
   readListId: string;
@@ -171,50 +160,10 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-2 px-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="w-[120px] md:w-[150px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm md:text-base flex justify-between items-center">
-                <span>Edit Info</span>
-                <SquarePen className="w-4 h-4" />
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="text-lg font-semibold text-left">
-                  Edit Read List Info
-                </DialogTitle>
-                <DialogDescription className="hidden">
-                  <p className="text-sm text-muted-foreground">
-                    You can edit the title and description of your read list
-                    here.
-                  </p>
-                </DialogDescription>
-                <div className="flex flex-col gap-2">
-                  <input
-                    type="text"
-                    id="readListTitle"
-                    defaultValue={readListInfo?.read_list_title}
-                    className="px-2 py-1 rounded-md border border-accent"
-                    placeholder="Read List Title"
-                  />
-                  <textarea
-                    defaultValue={readListInfo?.read_list_description}
-                    className="px-2 py-1 rounded-md border border-accent"
-                    placeholder="Read List Description"
-                  />
-                </div>
-                <div className="flex justify-end pt-[10px]">
-                  <button
-                    className="px-3 py-2 bg-rainbow rounded-md hover:opacity-80"
-                    type="button"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-
+          <EditReadListInfo
+            readListInfo={readListInfo}
+            fetchReadListInfo={fetchReadListInfo}
+          />
           <button
             className="w-[120px] md:w-[150px] px-2 py-1 bg-foreground text-background hover:opacity-80 rounded-md text-sm md:text-base flex justify-between items-center"
             onClick={() => setSelectMode(true)}
