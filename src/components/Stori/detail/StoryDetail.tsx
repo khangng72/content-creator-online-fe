@@ -10,11 +10,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { BasicStoryInfo } from '@/types/Story';
 import Image from 'next/image';
-import { BookOpen, Eye, List, PlusIcon, Scroll, Star } from 'lucide-react';
+import { BookOpen, Eye, Lightbulb, List, PlusIcon, Scroll } from 'lucide-react';
 import StarRating from '@/components/Explore/StarRating';
 import { BasicChapterInfo } from '@/types/BasicChapterInfo';
 import { formatTimestamp } from '@/utils/FormatTimestamp';
 import { Link } from '@/i18n/routing';
+import StoriImage from '@/components/ui/StoriImage';
+import AddStoryToList from '@/components/common/AddStoryToList';
 
 const mockSuggestions = [
   {
@@ -57,7 +59,6 @@ interface StoryDetailProps {
 const StoryDetail = ({ storyId }: StoryDetailProps) => {
   const [story, setStory] = useState<BasicStoryInfo | null>(null);
   const [chapters, setChapters] = useState<BasicChapterInfo[]>([]);
-  const [storyGenres, setStoryGenres] = useState<string[]>([]);
 
   const fetchChapters = useCallback(async () => {
     try {
@@ -142,7 +143,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
           </h1>
           <h2 className="text-xl mt-[10px]">{story.userPost}</h2>
           <ul className="flex gap-2 mt-3">
-            <li className="flex flex-col items-center text-muted-foreground bg-background py-1 w-[100px] rounded-md text-xs">
+            <li className="flex flex-col items-center text-muted-foreground bg-accent py-1 w-[100px] rounded-md text-xs">
               <div className="flex gap-1 items-center">
                 <Eye className="w-5 h-5" />
                 <span>Views</span>
@@ -150,7 +151,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
               <span>{story.numberOfViews}</span>
             </li>
 
-            <li className="flex flex-col items-center text-muted-foreground bg-background py-1 w-[100px] rounded-md text-xs">
+            <li className="flex flex-col items-center text-muted-foreground bg-accent py-1 w-[100px] rounded-md text-xs">
               <div className="flex gap-1 items-center">
                 <List className="w-5 h-5" />
                 <span>Chapters</span>
@@ -165,14 +166,27 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
             </button>
           </div>
 
-          <div className="mt-[50px] flex gap-[3px] scale-90 md:scale-100 w-full justify-center md:justify-start">
-            <button className="flex gap-2 items-center bg-[#8b5cf6] justify-center rounded-l-md py-2 px-10 hover:opacity-80">
-              <BookOpen className="w-5 h-5" />
-              <span>Start reading</span>
-            </button>
-            <button className="flex gap-3 items-center bg-[#8b5cf6] justify-center rounded-r-md py-2 px-5 hover:opacity-80">
-              <PlusIcon className="w-6 h-6" />
-            </button>
+          <div className="flex flex-col items-start gap-3 mt-[20px]">
+            <div className="flex scale-90 md:scale-100 w-full justify-center md:justify-start">
+              <Link
+                className="py-2 w-[200px] bg-[#8b5cf6] rounded-md flex gap-2 items-center justify-center hover:opacity-80"
+                href={`/immersiveRead/${storyId}`}
+              >
+                <Lightbulb className="w-5 h-5" />
+                <span>Immersive Read</span>
+              </Link>
+            </div>
+            <div className="flex gap-[3px] scale-90 md:scale-100 w-full justify-center md:justify-start">
+              <button className="flex gap-2 items-center bg-background justify-center rounded-l-md py-2 w-[200px] hover:opacity-80">
+                <BookOpen className="w-5 h-5" />
+                <span>Start reading</span>
+              </button>
+              <AddStoryToList storyId={storyId}>
+                <button className="flex gap-3 items-center bg-background justify-center rounded-r-md py-2 px-5 hover:opacity-80">
+                  <PlusIcon className="w-6 h-6" />
+                </button>
+              </AddStoryToList>
+            </div>
           </div>
         </div>
       </div>
@@ -248,25 +262,10 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
                   key={suggestion.storyId}
                 >
                   <div>
-                    {suggestion.coverImageUri ? (
-                      <Image
-                        src={suggestion.coverImageUri}
-                        alt={'sample_cover'}
-                        width={200}
-                        height={300}
-                        className="rounded-lg w-[150px] h-[210px]"
-                        priority={true}
-                      />
-                    ) : (
-                      <div className="w-[150px] h-[210px] bg-muted-foreground flex flex-col justify-center items-center mb-4 px-4 gap-3 rounded-md">
-                        <span className="text-4xl">
-                          {suggestion.storyTitle.slice(0, 1)}
-                        </span>
-                        <span className="text-md text-center">
-                          Cover is coming soon
-                        </span>
-                      </div>
-                    )}
+                    <StoriImage
+                      source={suggestion.coverImageUri}
+                      storyTitle={suggestion.storyTitle}
+                    />
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-xl font-bold">

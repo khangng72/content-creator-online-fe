@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from '@/i18n/routing';
-import Image from 'next/image';
 import { EyeIcon, PlusIcon, TableOfContents } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Cookies from 'js-cookie';
@@ -10,6 +9,7 @@ import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import StarRating from '../StarRating';
 import { BasicStoryInfo } from '@/types/Story';
+import StoriImage from '@/components/ui/StoriImage';
 
 const readingLists = [
   { id: 1, title: 'Read list title 1' },
@@ -94,27 +94,13 @@ const CardList = ({ genreId, query }: CardListProps) => {
               key={story.storyId}
               className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative"
             >
-              {story.coverImageUri ? (
-                <Image
-                  src={story.coverImageUri}
-                  alt={story.storyTitle}
-                  width={200}
-                  height={300}
-                  className="rounded-lg mb-4 w-[150px] h-[210px] shadow-md"
-                />
-              ) : (
-                <div className="w-[150px] h-[210px] bg-secondary flex flex-col justify-center items-center mb-4 px-4 gap-3">
-                  <span className="text-4xl">
-                    {story.storyTitle.slice(0, 1)}
-                  </span>
-                  <span className="text-md text-center">
-                    Cover is coming soon
-                  </span>
-                </div>
-              )}
+              <StoriImage
+                source={story.coverImageUri}
+                storyTitle={story.storyTitle}
+              />
 
-              <Link href="#">
-                <h2 className="text-xl font-semibold hover:underline">
+              <Link href={`/stori/${story.storyId}`}>
+                <h2 className="text-xl font-semibold hover:underline mt-3">
                   {story.storyTitle}
                 </h2>
               </Link>
