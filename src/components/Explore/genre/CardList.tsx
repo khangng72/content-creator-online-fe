@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { EyeIcon, PlusIcon, TableOfContents } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Cookies from 'js-cookie';
 import { generateApi, GET_STORY_BY_GENREID } from '@/constants/api';
 import axios from 'axios';
@@ -10,12 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import StarRating from '../StarRating';
 import { BasicStoryInfo } from '@/types/Story';
 import StoriImage from '@/components/ui/StoriImage';
-
-const readingLists = [
-  { id: 1, title: 'Read list title 1' },
-  { id: 2, title: 'Read list title 2' },
-  { id: 3, title: 'Read list title 3' },
-];
+import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 
 interface CardListProps {
   genreId: string;
@@ -23,8 +16,6 @@ interface CardListProps {
 }
 
 const CardList = ({ genreId, query }: CardListProps) => {
-  const [selectedListId, setSelectedListId] = useState<number | null>(null);
-
   const fetchStories = async ({ pageParam }: { pageParam: number }) => {
     const token = Cookies.get('token');
     const headers = {
@@ -127,39 +118,11 @@ const CardList = ({ genreId, query }: CardListProps) => {
                 <p>{story.storyDescription.slice(0, 255)}...</p>
               </div>
 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="absolute -top-3 -right-2 bg-secondary hover:bg-muted-foreground rounded-full p-1 border-[1px] border-foreground">
-                    <PlusIcon />
-                  </button>
-                </DialogTrigger>
-                <DialogContent>
-                  <div className="flex flex-col gap-2">
-                    <h3 className="text-xl font-semibold">
-                      Add to your Read lists
-                    </h3>
-
-                    <div className="flex flex-col gap-2 border-b-[0.5px] border-muted-foreground pb-4">
-                      {readingLists.map((readingList) => {
-                        return (
-                          <div
-                            className="flex justify-between items-center gap-2 py-2 hover:cursor-pointer hover:bg-secondary px-3 rounded-md"
-                            key={readingList.id}
-                            onClick={() => setSelectedListId(readingList.id)}
-                          >
-                            <span>{readingList.title}</span>
-                            <input
-                              type="radio"
-                              className="w-5 h-5"
-                              checked={selectedListId === readingList.id}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <AddStoryToList storyId={story.storyId}>
+                <button className="absolute -top-3 -right-2 bg-secondary hover:bg-muted-foreground rounded-full p-1 border-[1px] border-foreground">
+                  <PlusIcon />
+                </button>
+              </AddStoryToList>
             </div>
           );
         })}

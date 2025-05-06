@@ -109,6 +109,7 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
     } finally {
       setSelectedStories([]);
       setSelectMode(false);
+      fetchReadListInfo();
     }
   };
 

@@ -139,7 +139,11 @@ const ReadingListCard = ({
               <div className="w-[200px]">
                 <ul className="flex flex-col text-xs sm:text-sm gap-4">
                   <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                    <span>Edit</span>
+                    <Link
+                      href={`/my_library/reading_lists/${readList.read_list_id}`}
+                    >
+                      View
+                    </Link>
                   </li>
                   <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
                     <AlertDialog>
