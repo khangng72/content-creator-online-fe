@@ -16,7 +16,7 @@ import { BasicChapterInfo } from '@/types/BasicChapterInfo';
 import { formatTimestamp } from '@/utils/FormatTimestamp';
 import { Link } from '@/i18n/routing';
 import StoriImage from '@/components/ui/StoriImage';
-import AddStoryToList from '@/components/common/AddStoryToList';
+import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 
 const mockSuggestions = [
   {

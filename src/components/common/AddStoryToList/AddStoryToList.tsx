@@ -8,16 +8,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
+} from '../../ui/dialog';
 import { ReadList } from '@/types/ReadList';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import {
+  ADD_STORY_TO_MANY_READ_LIST,
   CREATE_READING_LIST,
   generateApi,
   GET_READING_LIST_BY_CURRENT_USER,
 } from '@/constants/api';
 import { Plus } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import SuccessToast from './SuccessToast';
+import ErrorToast from './ErrorToast';
 
 interface AddStoryToListProps {
   children: React.ReactNode;
@@ -32,6 +36,8 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
   const [error, setError] = useState(false);
   const [newListName, setNewListName] = useState('');
   const [open, setOpen] = useState(false);
+
+  const { toast } = useToast();
 
   const fetchReadLists = useCallback(async () => {
     const token = Cookies.get('token');
@@ -75,8 +81,39 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
     );
   };
 
-  const saveStoryToReadList = async (readList_List: string[]) => {
+  const saveStoryToReadList = async (read_list_ids: string[]) => {
     const token = Cookies.get('token');
+
+    try {
+      const response = await axios.post(
+        generateApi(ADD_STORY_TO_MANY_READ_LIST, storyId),
+        {
+          read_list_ids,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        console.error('Error saving story to read list:', response.statusText);
+        return;
+      }
+
+      toast({
+        description: <SuccessToast />,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error('Error saving story to read list:', error);
+      toast({
+        description: <ErrorToast />,
+        duration: 2000,
+      });
+    }
   };
 
   const handleToggleDialog = () => {
@@ -121,6 +158,10 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
 
       saveStoryToReadList(readList_list);
     } catch (error) {
+      toast({
+        description: <ErrorToast />,
+        duration: 2000,
+      });
       console.error('Error creating new read list:', error);
     } finally {
       handleToggleDialog();
@@ -168,8 +209,6 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
     );
   }
 
-  console.log('selectedListIds', selectedListIds);
-
   return (
     <Dialog open={open} onOpenChange={handleToggleDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -181,7 +220,7 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
           </DialogDescription>
         </DialogHeader>
         {readLists && readLists.length > 0 && (
-          <ul className="flex flex-col w-full gap-2">
+          <ul className="flex flex-col w-full gap-2 max-h-[60vh] overflow-y-auto">
             {readLists.map((list) => (
               <li
                 className="flex justify-between items-center gap-2 py-2 hover:cursor-pointer hover:bg-accent px-3 rounded-md"
@@ -237,6 +276,18 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
               </div>
             </div>
           )}
+        </div>
+        <div className="w-full flex justify-end">
+          <button
+            className="bg-[#8b5cf6] rounded-md px-3 py-2 hover:opacity-80 text-sm"
+            type="button"
+            onClick={() => {
+              saveStoryToReadList(selectedListIds);
+              handleToggleDialog();
+            }}
+          >
+            Done
+          </button>
         </div>
       </DialogContent>
     </Dialog>
