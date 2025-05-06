@@ -17,6 +17,7 @@ import { formatTimestamp } from '@/utils/FormatTimestamp';
 import { Link } from '@/i18n/routing';
 import StoriImage from '@/components/ui/StoriImage';
 import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
+import RateStory from '@/components/common/RateStory/RateStory';
 
 const mockSuggestions = [
   {
@@ -161,9 +162,15 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
           </ul>
           <div className="mt-5 flex flex-col items-start gap-2">
             <StarRating rating={story.averageRating} />
-            <button className="text-sm bg-background px-3 py-1 rounded-md hover:opacity-80 text-muted-foreground">
-              Rate This Story
-            </button>
+            <RateStory
+              storyId={storyId}
+              storyTitle={story.storyTitle}
+              fetchStoryInfo={fetchStoryDetail}
+            >
+              <button className="text-sm bg-background px-3 py-1 rounded-md hover:opacity-80 text-muted-foreground">
+                Rate This Story
+              </button>
+            </RateStory>
           </div>
 
           <div className="flex flex-col items-start gap-3 mt-[20px]">
