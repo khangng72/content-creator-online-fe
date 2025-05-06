@@ -37,7 +37,7 @@ const StoryCard = ({
     <div className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative shadow-md">
       <StoriImage source={story.coverImageUri} storyTitle={story.storyTitle} />
 
-      <Link href="#">
+      <Link href={`/stori/${story.storyId}`}>
         <h2 className="text-xl font-semibold hover:underline">
           {story.storyTitle}
         </h2>
