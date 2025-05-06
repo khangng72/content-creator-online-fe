@@ -1,14 +1,12 @@
-import { Link } from '@/i18n/routing';
-import { EyeIcon, PlusIcon, TableOfContents } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { generateApi, GET_STORY_BY_GENREID } from '@/constants/api';
 import axios from 'axios';
 import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import StarRating from '../StarRating';
+
 import { BasicStoryInfo } from '@/types/Story';
-import StoriImage from '@/components/ui/StoriImage';
-import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
+
+import StoryCard from '@/components/common/Stori/StoryCard';
 
 interface CardListProps {
   genreId: string;
@@ -80,51 +78,7 @@ const CardList = ({ genreId, query }: CardListProps) => {
                 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[90vw] xl:w-[80vw] mx-auto"
       >
         {filteredStories.map((story) => {
-          return (
-            <div
-              key={story.storyId}
-              className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative"
-            >
-              <StoriImage
-                source={story.coverImageUri}
-                storyTitle={story.storyTitle}
-              />
-
-              <Link href={`/stori/${story.storyId}`}>
-                <h2 className="text-xl font-semibold hover:underline mt-3">
-                  {story.storyTitle}
-                </h2>
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:underline">
-                by {story.userPost}
-              </Link>
-              <div className="flex gap-2 justify-center items-center">
-                <div className="flex gap-1 items-center">
-                  <EyeIcon className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {story.numberOfViews}
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <TableOfContents className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {story.numberOfChapters}
-                  </span>
-                </div>
-              </div>
-              <StarRating rating={story.averageRating} size={20} />
-
-              <div className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl">
-                <p>{story.storyDescription.slice(0, 255)}...</p>
-              </div>
-
-              <AddStoryToList storyId={story.storyId}>
-                <button className="absolute -top-3 -right-2 bg-secondary hover:bg-muted-foreground rounded-full p-1 border-[1px] border-foreground">
-                  <PlusIcon />
-                </button>
-              </AddStoryToList>
-            </div>
-          );
+          return <StoryCard key={story.storyId} story={story} />;
         })}
       </div>
       <div className="flex justify-center mt-6">

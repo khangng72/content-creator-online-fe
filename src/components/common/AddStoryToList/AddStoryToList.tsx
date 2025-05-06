@@ -175,7 +175,7 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
 
   if (error) {
     return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={handleToggleDialog}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader className="flex flex-col items-center">
@@ -194,7 +194,7 @@ const AddStoryToList = ({ children, storyId }: AddStoryToListProps) => {
 
   if (isLoading) {
     return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={handleToggleDialog}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="text-center">
           <DialogHeader className="flex flex-col items-center">

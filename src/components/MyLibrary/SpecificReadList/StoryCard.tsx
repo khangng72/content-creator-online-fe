@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
-import Image from 'next/image';
+
 import { Link } from '@/i18n/routing';
 import { Check, EyeIcon, TableOfContents } from 'lucide-react';
 import StarRating from '@/components/Explore/StarRating';
 import { cn } from '@/lib/utils';
 import { BasicStoryInfo } from '@/types/Story';
+import StoriImage from '@/components/ui/StoriImage';
 
 interface StoryCardProps {
   selectMode: boolean;
@@ -34,20 +35,7 @@ const StoryCard = ({
 
   return (
     <div className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative shadow-md">
-      {story.coverImageUri ? (
-        <Image
-          src={story.coverImageUri}
-          alt="cover"
-          width={100}
-          height={100}
-          className="rounded-md md:w-[150px] md:h-[210px] object-cover"
-          priority
-        />
-      ) : (
-        <div className="rounded-md w-[150px] h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
-          {story.storyTitle}
-        </div>
-      )}
+      <StoriImage source={story.coverImageUri} storyTitle={story.storyTitle} />
 
       <Link href="#">
         <h2 className="text-xl font-semibold hover:underline">
