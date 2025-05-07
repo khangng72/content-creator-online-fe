@@ -9,7 +9,6 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { BasicStoryInfo } from '@/types/Story';
-import Image from 'next/image';
 import { BookOpen, Eye, Lightbulb, List, PlusIcon, Scroll } from 'lucide-react';
 import StarRating from '@/components/Explore/StarRating';
 import { BasicChapterInfo } from '@/types/BasicChapterInfo';
@@ -120,26 +119,16 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
 
   return (
     <div className="py-[66px] flex flex-col items-center">
-      <div className="w-full bg-card flex flex-col items-center md:flex-row md:justify-center gap-7 p-5 shadow-md">
+      <div className="w-full bg-card flex flex-col items-center md:flex-row md:justify-center gap-5 p-5 shadow-md">
         <div>
-          {story.coverImageUri ? (
-            <Image
-              src={story.coverImageUri}
-              alt="jus a placeholder"
-              width={150}
-              height={210}
-              className="rounded-md w-[225px] h-[315px]"
-              priority={true}
-            />
-          ) : (
-            <div className="w-[225px] h-[315px] bg-muted-foreground flex flex-col justify-center items-center mb-4 px-4 gap-3 rounded-md">
-              <span className="text-4xl">{story.storyTitle.slice(0, 1)}</span>
-              <span className="text-md text-center">Cover is coming soon</span>
-            </div>
-          )}
+          <StoriImage
+            source={story.coverImageUri}
+            storyTitle={story.storyTitle}
+            className="w-[220px] h-[330px]"
+          />
         </div>
-        <div className="flex flex-col">
-          <h1 className="text-4xl font-extrabold bg-rainbow w-fit text-transparent bg-clip-text">
+        <div className="flex flex-col items-center md:items-start">
+          <h1 className="text-4xl font-extrabold bg-rainbow w-fit text-transparent bg-clip-text text-center md:text-left">
             {story.storyTitle}
           </h1>
           <h2 className="text-xl mt-[10px]">{story.userPost}</h2>
@@ -198,9 +187,9 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
         </div>
       </div>
 
-      <div className=" mt-[30px] flex flex-col md:flex-row w-full xl:w-[80vw] items-start justify-center gap-4">
+      <div className=" mt-[30px] flex flex-col lg:flex-row w-full xl:w-[80vw] items-start justify-center gap-4">
         {/* story detail card */}
-        <div className="flex flex-col bg-card w-full md:w-[60%] p-4 md:px-6 rounded-md shadow-md gap-5">
+        <div className="flex flex-col bg-card w-full lg:w-[60%] p-4 md:px-6 rounded-md shadow-md gap-5">
           {/* basic info */}
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl font-extrabold mb-2 w-fit bg-rainbow text-transparent bg-clip-text">
@@ -257,7 +246,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
         </div>
 
         {/* suggestion card */}
-        <div className="bg-card w-full md:w-[40%] flex flex-col p-4 shadow-md rounded-md">
+        <div className="bg-card w-full lg:w-[40%] flex flex-col p-4 shadow-md rounded-md">
           <h3 className="text-2xl font-extrabold mb-2 w-fit bg-rainbow text-transparent bg-clip-text">
             You may also like
           </h3>
