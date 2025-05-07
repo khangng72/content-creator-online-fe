@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { Bell } from 'lucide-react';
 
 const NotificationMenu = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -19,9 +19,9 @@ const NotificationMenu = () => {
       }
     };
 
-    document.body.addEventListener("click", handleOnClickOutside);
+    document.body.addEventListener('click', handleOnClickOutside);
     return () => {
-      document.body.removeEventListener("click", handleOnClickOutside);
+      document.body.removeEventListener('click', handleOnClickOutside);
     };
   }, []);
 
@@ -31,9 +31,9 @@ const NotificationMenu = () => {
         className="relative hover:opacity-80 hover:cursor-pointer"
         onClick={toggleNotification}
       >
-        <Bell />
+        <Bell className="w-5 h-5 md:w-7 md:h-7" />
         <div className="w-5 h-5 flex items-center justify-center rounded-full bg-red-500 absolute bottom-3 left-3">
-          <span className="text-[9px] font-serif font-semibold">122</span>
+          <span className="text-[10px]">122</span>
         </div>
       </button>
       {isNotificationOpen && (

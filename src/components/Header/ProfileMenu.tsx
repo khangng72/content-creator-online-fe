@@ -100,7 +100,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
         className="relative hover:opacity-80 hover:cursor-pointer"
         onClick={toggleProfileMenu}
       >
-        <Avatar>
+        <Avatar className="w-[32px] h-[32px] md:w-[40px] md:h-[40px] relative overflow-visible">
           <AvatarImage
             src={myData?.avatarUrl}
             alt={`${myData?.firstName} ${myData?.lastName} avatar`}
@@ -109,10 +109,13 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
             {myData?.firstName.charAt(0)}
             {myData?.lastName.charAt(0)}
           </AvatarFallback>
+          <div className="rounded-full bg-foreground absolute top-5 left-5 md:top-6 md:left-7">
+            <ChevronDown
+              className="text-background w-3 h-3 md:w-4 md:h-4"
+              strokeWidth={1}
+            />
+          </div>
         </Avatar>
-        <div className="rounded-full bg-foreground absolute top-6 left-6">
-          <ChevronDown className="text-background" strokeWidth={1} size={18} />
-        </div>
       </button>
 
       {isProfileMenuOpen && (

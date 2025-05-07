@@ -119,13 +119,12 @@ export const AuthorizedHeader = () => {
               />
             </div>
           </div>
-          <div className="flex gap-5 items-center">
+          <div className="flex gap-3 md:gap-5 items-center">
             <Popover>
               <PopoverTrigger asChild>
-                <button className="flex gap-2 items-center">
+                <button className="flex gap-1 md:gap-2 items-center text-sm md:text-base hover:underline">
                   <span>Write</span>
-                  <SquarePen size={18} className="block sm:hidden" />
-                  <SquarePen className="hidden sm:block" />
+                  <SquarePen className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="bg-card max-w-[200px]">
@@ -146,9 +145,9 @@ export const AuthorizedHeader = () => {
                 className="hover:cursor-pointer hover:opacity-80"
               >
                 {theme === 'dark' ? (
-                  <MoonIcon className="text-yellow-300" />
+                  <MoonIcon className="text-yellow-300 w-5 h-5 md:w-7 md:h-7" />
                 ) : (
-                  <SunIcon className="text-red-500" />
+                  <SunIcon className="text-red-500 w-5 h-5 md:w-7 md:h-7" />
                 )}
               </button>
             )}
