@@ -17,6 +17,7 @@ import { Link } from '@/i18n/routing';
 import StoriImage from '@/components/ui/StoriImage';
 import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 import RateStory from '@/components/common/RateStory/RateStory';
+import DOMPurify from 'dompurify';
 
 const mockSuggestions = [
   {
@@ -197,9 +198,12 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
             </h3>
             <div>
               <span className="font-bold">Description:</span>
-              <p className="text-sm text-muted-foreground">
-                {story.storyDescription}
-              </p>
+              <div
+                className="text-sm text-muted-foreground flex flex-col gap-2"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(story.storyDescription),
+                }}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <span className="font-bold">Genre:</span>
