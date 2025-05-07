@@ -14,8 +14,8 @@ const StoriImage = ({ source, storyTitle, className }: StoriImageProps) => {
     return (
       <div
         className={cn(
-          'flex flex-col justify-center items-center bg-accent rounded-md  px-3 text-xs',
-          className ? className : 'w-[160px] h-[240px]'
+          'flex flex-col justify-center items-center bg-accent rounded-md  px-3',
+          className ? className : 'w-[160px] h-[240px] text-xs'
         )}
       >
         <span className="font-bold">{storyTitle}</span>
@@ -43,8 +43,8 @@ const StoriImage = ({ source, storyTitle, className }: StoriImageProps) => {
       ) : (
         <div
           className={cn(
-            'flex flex-col justify-center items-center bg-accent rounded-md  px-3 text-xs',
-            className ? className : 'w-[160px] h-[240px]'
+            'flex flex-col justify-center items-center bg-accent rounded-md  px-3',
+            className ? className : 'w-[160px] h-[240px] text-xs'
           )}
         >
           {storyTitle}

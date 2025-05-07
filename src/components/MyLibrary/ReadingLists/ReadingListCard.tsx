@@ -1,6 +1,5 @@
 import { ReadList } from '@/types/ReadList';
 import React, { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
 import {
   Popover,
   PopoverContent,
@@ -27,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Link } from '@/i18n/routing';
+import StoriImage from '@/components/ui/StoriImage';
 
 interface ReadingListCardProps {
   readList: ReadList;
@@ -102,29 +102,20 @@ const ReadingListCard = ({
             {topStories.map((story: BasicStoryInfo, index) => {
               let visibilityClass = 'hidden';
 
-              if (index < 3) {
+              if (index < 2) {
                 visibilityClass = 'block';
-              } else if (index === 3) {
+              } else if (index === 2) {
                 visibilityClass = 'hidden lg:block';
-              } else if (index === 4) {
+              } else {
                 visibilityClass = 'hidden xl:block';
               }
               return (
                 <div className={visibilityClass} key={story.storyId}>
-                  {story.coverImageUri ? (
-                    <Image
-                      src={story.coverImageUri}
-                      alt="cover"
-                      width={100}
-                      height={100}
-                      className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] object-cover"
-                      priority
-                    />
-                  ) : (
-                    <div className="rounded-md w-[75px] h-[105px] md:w-[150px] md:h-[210px] bg-accent flex justify-center items-center px-3 text-[10px] md:text-sm italic text-muted-foreground">
-                      {story.storyTitle.slice(0, 25)}...
-                    </div>
-                  )}
+                  <StoriImage
+                    source={story.coverImageUri}
+                    storyTitle={story.storyTitle}
+                    className="w-[100px] h-[150px] md:w-[160px] md:h-[240px] text-[10px] sm:text-xs"
+                  />
                 </div>
               );
             })}
