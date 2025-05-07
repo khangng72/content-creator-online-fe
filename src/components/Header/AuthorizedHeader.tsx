@@ -11,6 +11,7 @@ import {
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import {
   MoonIcon,
+  Search,
   SearchIcon,
   SquarePen,
   SquarePlus,
@@ -68,8 +69,8 @@ export const AuthorizedHeader = () => {
         <div className="flex justify-between items-center py-3 px-2 lg:px-5">
           <div className="flex">
             <Link href="/">
-              <span className="bg-rainbow text-transparent bg-clip-text text-[1.25rem] sm:text-[1.5rem] font-bold">
-                StoriVerse
+              <span className="bg-rainbow text-transparent bg-clip-text text-base sm:text-xl font-bold">
+                <span>StoriVerse</span>
               </span>
             </Link>
           </div>
@@ -120,6 +121,8 @@ export const AuthorizedHeader = () => {
             </div>
           </div>
           <div className="flex gap-3 md:gap-5 items-center">
+            <Search className="w-5 h-5 lg:hidden" />
+
             <Popover>
               <PopoverTrigger asChild>
                 <button className="flex gap-1 md:gap-2 items-center text-sm md:text-base hover:underline">
