@@ -54,6 +54,7 @@ export const DELETE_STORIES_BY_READING_LIST_ID = '/read_list/delete_stories';
 export const GET_READ_LIST_BY_ID = '/read_list/specific';
 export const UPDATE_READ_LIST = '/read_list/update';
 export const ADD_STORY_TO_MANY_READ_LIST = '/read_list/add_story';
+export const GET_READING_LIST_BY_USER_ID = '/read_list/user';
 
 // User Story Rating
 export const CREATE_USER_STORY_RATING = '/rate_story';

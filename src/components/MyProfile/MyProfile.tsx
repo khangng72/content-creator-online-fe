@@ -193,7 +193,7 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
 
       {activeTab === 'about' ? <About userData={myData} /> : ''}
       {activeTab === 'stories' ? <StoriesByUser userData={myData} /> : ''}
-      {activeTab === 'readLists' ? <ReadLists /> : ''}
+      {activeTab === 'readLists' ? <ReadLists userData={myData} /> : ''}
     </div>
   );
 }
