@@ -130,7 +130,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           -translate-x-1/2 
           bg-card w-[90%] 
           md:w-80 
-          rounded-md flex-col px-5 pt-2 pb-4 space-y-3 shadow-md"
+          rounded-md flex-col px-5 pt-2 pb-4 space-y-3 shadow-md border-[0.5px] border-accent"
         >
           <h2 className="font-bold text-md">{t('ProfileMenu.account')}</h2>
           <Link
@@ -231,7 +231,7 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
           </Dialog>
 
           <button
-            className="flex items-center bg-red-500  gap-3 px-3 py-2 rounded-md hover:bg-red-400 hover:cursor-pointer w-full"
+            className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer w-full"
             onClick={handleLogout}
           >
             <LogOut />
