@@ -20,7 +20,7 @@ interface SpecificReadListProps {
   readListId: string;
 }
 
-const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
+const ReadListDetail = ({ readListId }: SpecificReadListProps) => {
   const [stories, setStories] = useState<BasicStoryInfo[] | null>(null);
   const [error, setError] = useState(false);
   const [readListInfo, setReadListInfo] = useState<ReadList | null>(null);
@@ -126,4 +126,4 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
   );
 };
 
-export default SpecificReadList;
+export default ReadListDetail;

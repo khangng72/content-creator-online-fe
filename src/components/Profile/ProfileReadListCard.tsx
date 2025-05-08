@@ -49,7 +49,7 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
   return (
     <li className="flex flex-col bg-card p-3 md:p-5 rounded-md shadow-md">
       <div className="flex flex-col gap-[1px]">
-        <Link href={`/read_list/${readList.read_list_id}`}>
+        <Link href={`/read_list_detail/${readList.read_list_id}`}>
           <h1 className="text-lg md:text-xl font-bold flex max-w-[300px]  md:max-w-[500px] hover:underline">
             <span>{readList.read_list_title}</span>
           </h1>
@@ -92,7 +92,7 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
               <div className="w-[200px]">
                 <ul className="flex flex-col text-xs sm:text-sm gap-4">
                   <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                    <Link href={`/read_list/${readList.read_list_id}`}>
+                    <Link href={`/read_list_detail/${readList.read_list_id}`}>
                       View
                     </Link>
                   </li>
