@@ -4,8 +4,8 @@ import { UserData } from '@/types/UserData';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { generateApi, GET_READING_LIST_BY_USER_ID } from '@/constants/api';
-import ReadingListCard from '../MyLibrary/ReadingLists/ReadingListCard';
 import { ReadList } from '@/types/ReadList';
+import ProfileReadListCard from './ProfileReadListCard';
 
 interface ReadListsProps {
   userData: UserData | null;
@@ -40,17 +40,6 @@ const ReadLists = ({ userData }: ReadListsProps) => {
     fetchReadLists();
   }, [fetchReadLists]);
 
-  if (!userData) {
-    return (
-      <div className="flex flex-col items-center justify-center font-bold text-xl mt-3">
-        <div className="flex gap-2 items-center">
-          <span>Cannot load user data</span>
-          <Frown className="w-7 h-7" />
-        </div>
-      </div>
-    );
-  }
-
   if (loading) {
     <div className="flex flex-col items-center justify-center font-bold text-xl mt-3">
       <div className="flex gap-2 items-center">
@@ -72,18 +61,14 @@ const ReadLists = ({ userData }: ReadListsProps) => {
   return (
     <div className="flex flex-col justify-center items-center gap-5 p-5">
       <h1 className="text-xl font-bold border-b-3 border-foreground">
-        Read Lists by {userData.firstName} {userData.lastName}
+        Read Lists by {userData?.firstName} {userData?.lastName}
       </h1>
       <div className="flex flex-col gap-5 w-full lg:w-[80vw] xl:w-[75vw] 2xl:w-[60vw]">
         {readLists && (
           <ul className="flex flex-col gap-5 w-full">
             {readLists.map((list: ReadList) => {
               return (
-                <ReadingListCard
-                  readList={list}
-                  key={list.read_list_id}
-                  fetchReadLists={fetchReadLists}
-                />
+                <ProfileReadListCard readList={list} key={list.read_list_id} />
               );
             })}
           </ul>

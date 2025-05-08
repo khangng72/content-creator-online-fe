@@ -76,7 +76,7 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
               priority
             />
           )}
-          <button className="absolute top-3 right-5 max-w-[100px] sm:max-w-none px-3 py-1 text-sm bg-secondary rounded-md active:scale-95">
+          <button className="absolute top-3 right-3 max-w-[100px] sm:max-w-none px-3 py-1 text-xs sm:text-sm bg-secondary rounded-md active:scale-95">
             Change Background
           </button>
         </div>
