@@ -94,7 +94,7 @@ const About = ({ userData }: AboutProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 w-[100vw] sm:w-[40vw] lg:w-[30vw] xl:w-[20vw]">
         {/* High rated stories */}
         <div className="text-center bg-card rounded-xl p-6 flex flex-col items-center">
           <h1 className="font-bold text-2xl">High Rated Stories</h1>
@@ -103,7 +103,7 @@ const About = ({ userData }: AboutProps) => {
               align: 'start',
               loop: true,
             }}
-            className="w-[100vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw] mx-auto mb-[20px] overflow-visible relative"
+            className="w-full mx-auto mb-[20px] overflow-visible relative"
           >
             <CarouselContent>
               {latestStories.map((story) => (
@@ -143,14 +143,14 @@ const About = ({ userData }: AboutProps) => {
         </div>
 
         {/* latest stories */}
-        <div className="text-center bg-card rounded-xl p-6 flex flex-col items-center">
+        {/* <div className="text-center bg-card rounded-xl p-6 flex flex-col items-center w-[100vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw]">
           <h1 className="font-bold text-2xl">Latest Stories</h1>
           <Carousel
             opts={{
               align: 'start',
               loop: true,
             }}
-            className="w-[100vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw] mx-auto mb-[20px] overflow-visible relative"
+            className="w-full mx-auto mb-[20px] overflow-visible relative"
           >
             <CarouselContent>
               {latestStories.map((story) => (
@@ -180,7 +180,7 @@ const About = ({ userData }: AboutProps) => {
             <CarouselPrevious className="absolute -left-1 sm:-left-4 md:-left-10" />
             <CarouselNext className="absolute -right-1 sm:-right-4 md:-right-10" />
           </Carousel>
-        </div>
+        </div> */}
       </div>
     </div>
   );
