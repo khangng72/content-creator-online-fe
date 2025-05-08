@@ -60,7 +60,7 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
 
         {addToList && (
           <AddStoryToList storyId={story.storyId}>
-            <button className="absolute -top-3 -right-2 bg-secondary hover:bg-muted-foreground rounded-full p-1 border-[1px] border-foreground">
+            <button className="absolute -top-3 -right-2 bg-secondary hover:bg-accent rounded-full p-1 border-[1px] border-foreground">
               <PlusIcon />
             </button>
           </AddStoryToList>

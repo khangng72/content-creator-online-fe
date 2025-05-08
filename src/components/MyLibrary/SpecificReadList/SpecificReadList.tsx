@@ -139,7 +139,7 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
 
   return (
     <>
-      <div className="py-[100px] w-[98vw] md:w-[80vw] flex flex-col mx-auto">
+      <div className="py-[100px] w-[95vw] xl:w-[80vw] flex flex-col mx-auto">
         <div className="flex px-4 justify-between py-2 border-b-2 border-accent w-full text-muted-foreground">
           <Link
             className="text-muted-foreground hover:underline flex gap-1 items-center"
@@ -176,7 +176,7 @@ const SpecificReadList = ({ readListId }: SpecificReadListProps) => {
 
         <div
           className="grid gap-5 justify-center mt-6 
-                grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[90vw] xl:w-[80vw] mx-auto"
+                grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 mx-auto"
         >
           {stories.map((story: BasicStoryInfo) => {
             return (
