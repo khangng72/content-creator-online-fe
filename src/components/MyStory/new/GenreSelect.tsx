@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Genre } from "@/types/Genre";
+import { cn } from '@/lib/utils';
+import { Genre } from '@/types/Genre';
 
 interface GenreSelectProps {
   genreList: Genre[] | null;
@@ -43,15 +43,15 @@ const GenreSelect = ({
       )}
 
       {genreList && (
-        <div className="px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[50vh] overflow-auto pb-2">
+        <div className="px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[50vh] overflow-auto pb-2 scroll-container">
           {genreList.map((genre) => {
             return (
               <label
                 className={cn(
-                  "rounded-md px-2 py-2 hover:cursor-pointer",
+                  'rounded-md px-2 py-2 hover:cursor-pointer',
                   selectedGenres.includes(genre)
-                    ? "bg-rainbow"
-                    : "bg-background"
+                    ? 'bg-rainbow'
+                    : 'bg-background'
                 )}
                 key={genre.genreName}
               >

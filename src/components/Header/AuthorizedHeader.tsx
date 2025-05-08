@@ -11,7 +11,6 @@ import {
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import {
   MoonIcon,
-  Search,
   SearchIcon,
   SquarePen,
   SquarePlus,
@@ -24,16 +23,18 @@ import NotificationMenu from './NotificationMenu';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import axios from 'axios';
 import { generateApi, GET_ALL_GENRES } from '@/constants/api';
-
-interface Genre {
-  genreId: string;
-  genreName: string;
-}
+import MobileExplore from './MobileExplore';
+import { useDebounce } from 'use-debounce';
+import { KeyboardEvent } from 'react';
+import { Genre } from '@/types/Genre';
 
 export const AuthorizedHeader = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [genreList, setGenreList] = useState<Genre[]>([]);
+  const [textSearch, setTextSearch] = useState<string>('');
+  const searchQuery = useDebounce(textSearch, 200)[0];
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -46,6 +47,12 @@ export const AuthorizedHeader = () => {
       console.error('Error fetching genre list:', error);
     }
   }, []);
+
+  const handleEnterSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      router.push(`/explore/stori/${searchQuery}`);
+    }
+  };
 
   useEffect(() => {
     fetchGenreList();
@@ -111,17 +118,21 @@ export const AuthorizedHeader = () => {
                 className="md:w-[200px] lg:w-[400px] xl:w-[600px] rounded-md focus:outline-none px-3 py-2 text-sm bg-secondary"
                 type="text"
                 placeholder="Search..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    const query = (e.target as HTMLInputElement).value;
-                    router.push(`/explore/stori/${query}`);
-                  }
+                value={textSearch}
+                onChange={(e) => {
+                  setTextSearch(e.target.value);
                 }}
+                onKeyDown={handleEnterSearch}
               />
             </div>
           </div>
           <div className="flex gap-3 md:gap-5 items-center">
-            <Search className="w-5 h-5 lg:hidden" />
+            <MobileExplore
+              textSearch={textSearch}
+              setTextSearch={setTextSearch}
+              handleEnterSearch={handleEnterSearch}
+              genreList={genreList}
+            />
 
             <Popover>
               <PopoverTrigger asChild>
