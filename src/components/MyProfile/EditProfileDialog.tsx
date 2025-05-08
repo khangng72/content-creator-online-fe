@@ -1,38 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserData } from '@/types/UserData';
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { NationalitySelector } from './NationalitySelector';
 import { GenderSelector } from './GenderSelector';
+import { EditorContent, useEditor } from '@tiptap/react';
+import Placeholder from '@tiptap/extension-placeholder';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import Highlight from '@tiptap/extension-highlight';
 
 interface EditProfileDialogProps {
   userData: UserData | null;
 }
 
 const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Highlight,
+      Placeholder.configure({
+        placeholder: 'Write your chapter here...',
+      }),
+    ],
+    content: '<p></p>',
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: true,
+    editorProps: {
+      attributes: {
+        class:
+          'bg-card border border-accent p-2 rounded-md focus:outline-none text-sm',
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (editor && userData?.introduction) {
+      editor.commands.setContent(userData.introduction);
+    }
+  }, [editor, userData]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className="w-[100px] py-1 text-sm bg-card rounded-md active:scale-95">
           Edit Profile
         </button>
       </DialogTrigger>
-      <DialogContent className="rounded-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="rounded-md ">
         <DialogHeader>
           <DialogTitle className="font-extrabold bg-rainbow text-transparent bg-clip-text w-fit">
             Edit Profile
           </DialogTitle>
           <DialogDescription className="hidden">Edit Profile</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-3">
-          <div className="w-full flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col gap-3 max-h-[75vh] overflow-y-auto">
+          <div className="w-full flex flex-col sm:flex-row gap-3 text-sm">
             <div className="w-full flex flex-col gap-[2px]">
               <label className="text-sm font-bold" htmlFor="firstName">
                 First Name
@@ -83,12 +116,20 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
             <input
               type="date"
               id="birthday"
-              className="w-full bg-card border border-accent rounded-md p-2"
+              className="w-full bg-card border border-accent rounded-md p-2 text-sm"
               defaultValue={userData?.birthday}
-              placeholder="Enter your first name"
             />
           </div>
+          <div className="w-full flex flex-col gap-[2px]">
+            <label className="text-sm font-bold">Introduction</label>
+            <EditorContent editor={editor} />
+          </div>
         </div>
+        <DialogFooter>
+          <button className="px-3 py-1 text-sm bg-rainbow active:scale-95 rounded-md">
+            Save
+          </button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

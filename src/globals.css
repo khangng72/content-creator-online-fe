@@ -199,3 +199,7 @@
   height: 0;
   pointer-events: none;
 }
+
+.tiptap p+p {
+  margin-top: 2px;
+}

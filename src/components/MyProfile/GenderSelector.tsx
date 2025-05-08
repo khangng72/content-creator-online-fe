@@ -23,7 +23,7 @@ export function GenderSelector() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="flex justify-between items-center bg-card px-2 py-2 rounded-md border border-accent ">
+        <button className="flex justify-between items-center bg-card px-2 py-2 rounded-md border border-accent text-sm">
           {selected || 'Select gender'}
           <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
         </button>
