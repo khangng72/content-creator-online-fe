@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { BasicStoryInfo } from '@/types/Story';
 import axios from 'axios';
 import {
+  CLONE_READ_LIST,
   generateApi,
   GET_READ_LIST_BY_ID,
   GET_STORIES_BY_READING_LIST_ID,
@@ -15,6 +16,9 @@ import { ReadList } from '@/types/ReadList';
 
 import StoryCard from '../common/Stori/StoryCard';
 import { Link } from '@/i18n/routing';
+import { useToast } from '@/hooks/use-toast';
+import AddToLibrarySuccessToast from './AddToLibrarySuccessToast';
+import AddToLibraryFailToast from './AddToLibraryFailToast';
 
 interface SpecificReadListProps {
   readListId: string;
@@ -24,6 +28,7 @@ const ReadListDetail = ({ readListId }: SpecificReadListProps) => {
   const [stories, setStories] = useState<BasicStoryInfo[] | null>(null);
   const [error, setError] = useState(false);
   const [readListInfo, setReadListInfo] = useState<ReadList | null>(null);
+  const { toast } = useToast();
 
   const fetchStories = useCallback(async () => {
     const token = Cookies.get('token');
@@ -43,6 +48,39 @@ const ReadListDetail = ({ readListId }: SpecificReadListProps) => {
       console.error('Error fetching stories:', error);
     }
   }, [readListId]);
+
+  const handleAddToLibrary = async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.post(
+        generateApi(CLONE_READ_LIST, readListId),
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          description: <AddToLibrarySuccessToast />,
+          variant: 'default',
+          duration: 1000,
+        });
+      } else {
+        toast({
+          description: <AddToLibraryFailToast />,
+          variant: 'default',
+          duration: 1000,
+        });
+      }
+    } catch (error) {
+      console.error('Error adding to library:', error);
+      toast({
+        description: <AddToLibraryFailToast />,
+        variant: 'default',
+      });
+    }
+  };
 
   const fetchReadListInfo = useCallback(async () => {
     const token = Cookies.get('token');
@@ -108,7 +146,11 @@ const ReadListDetail = ({ readListId }: SpecificReadListProps) => {
               </Link>
             </div>
           </div>
-          <button className="px-3 py-1 bg-rainbow rounded-md h-fit text-white text-xs md:text-sm active:scale-95">
+          <button
+            className="px-3 py-1 bg-rainbow rounded-md h-fit text-white text-xs md:text-sm active:scale-95"
+            type="button"
+            onClick={handleAddToLibrary}
+          >
             Add to your library
           </button>
         </div>

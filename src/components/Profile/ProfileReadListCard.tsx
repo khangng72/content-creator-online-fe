@@ -7,12 +7,19 @@ import {
 } from '@/components/ui/popover';
 import { Ellipsis } from 'lucide-react';
 import Cookies from 'js-cookie';
-import { generateApi, GET_TOP_STORY_BY_READING_LIST_ID } from '@/constants/api';
+import {
+  CLONE_READ_LIST,
+  generateApi,
+  GET_TOP_STORY_BY_READING_LIST_ID,
+} from '@/constants/api';
 import axios from 'axios';
 import { BasicStoryInfo } from '@/types/Story';
 
 import { Link } from '@/i18n/routing';
 import StoriImage from '@/components/ui/StoriImage';
+import { toast } from '@/hooks/use-toast';
+import AddToLibrarySuccessToast from '../ReadListDetail/AddToLibrarySuccessToast';
+import AddToLibraryFailToast from '../ReadListDetail/AddToLibraryFailToast';
 
 interface ReadingListCardProps {
   readList: ReadList;
@@ -41,6 +48,39 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
       console.error('Error fetching reading lists:', error);
     }
   }, [readList]);
+
+  const handleAddToLibrary = async (readListId: string) => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.post(
+        generateApi(CLONE_READ_LIST, readListId),
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          description: <AddToLibrarySuccessToast />,
+          variant: 'default',
+          duration: 1000,
+        });
+      } else {
+        toast({
+          description: <AddToLibraryFailToast />,
+          variant: 'default',
+          duration: 1000,
+        });
+      }
+    } catch (error) {
+      console.error('Error adding to library:', error);
+      toast({
+        description: <AddToLibraryFailToast />,
+        variant: 'default',
+      });
+    }
+  };
 
   useEffect(() => {
     fetchTopStories();
@@ -97,7 +137,12 @@ const ReadingListCard = ({ readList }: ReadingListCardProps) => {
                     </Link>
                   </li>
                   <li className="flex gap-2 items-center hover:underline hover:cursor-pointer">
-                    <button>Add to your library</button>
+                    <button
+                      type="button"
+                      onClick={() => handleAddToLibrary(readList.read_list_id)}
+                    >
+                      Add to your library
+                    </button>
                   </li>
                 </ul>
               </div>
