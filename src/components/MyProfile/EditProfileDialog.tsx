@@ -1,12 +1,16 @@
 import React from 'react';
+import { UserData } from '@/types/UserData';
+
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
-import { UserData } from '@/types/UserData';
+} from '@/components/ui/dialog';
+import { NationalitySelector } from './NationalitySelector';
+import { GenderSelector } from './GenderSelector';
 
 interface EditProfileDialogProps {
   userData: UserData | null;
@@ -20,13 +24,15 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
           Edit Profile
         </button>
       </DialogTrigger>
-      <DialogContent className="rounded-md">
-        <DialogTitle className="font-extrabold bg-rainbow text-transparent bg-clip-text w-fit">
-          Edit Profile
-        </DialogTitle>
-        <DialogDescription className="hidden">Edit Profile</DialogDescription>
-        <div className="flex flex-col gap-2">
-          <div className="w-full flex flex-col sm:flex-row gap-2">
+      <DialogContent className="rounded-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="font-extrabold bg-rainbow text-transparent bg-clip-text w-fit">
+            Edit Profile
+          </DialogTitle>
+          <DialogDescription className="hidden">Edit Profile</DialogDescription>
+        </DialogHeader>
+        <div className="flex flex-col gap-3">
+          <div className="w-full flex flex-col sm:flex-row gap-3">
             <div className="w-full flex flex-col gap-[2px]">
               <label className="text-sm font-bold" htmlFor="firstName">
                 First Name
@@ -34,7 +40,7 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
               <input
                 type="text"
                 id="firstName"
-                className="w-full bg-card border border-gray-300 rounded-md p-2"
+                className="w-full bg-card border border-accent rounded-md p-2"
                 defaultValue={userData?.firstName}
                 placeholder="Enter your first name"
               />
@@ -47,11 +53,40 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
               <input
                 type="text"
                 id="lastName"
-                className="w-full bg-card border border-gray-300 rounded-md p-2"
+                className="w-full bg-card border border-accent rounded-md p-2"
                 defaultValue={userData?.lastName}
                 placeholder="Enter your last name"
               />
             </div>
+          </div>
+
+          <div className="w-full flex flex-col sm:flex-row gap-3">
+            <div className="w-full md:w-1/2 flex flex-col gap-[2px]">
+              <label className="text-sm font-bold" htmlFor="gender">
+                Gender
+              </label>
+              <GenderSelector />
+            </div>
+
+            <div className="w-full md:w-1/2 flex flex-col gap-[2px]">
+              <label className="text-sm font-bold" htmlFor="nationality">
+                Nationality
+              </label>
+              <NationalitySelector />
+            </div>
+          </div>
+
+          <div className="w-full flex flex-col gap-[2px]">
+            <label className="text-sm font-bold" htmlFor="birthday">
+              Birthday
+            </label>
+            <input
+              type="date"
+              id="birthday"
+              className="w-full bg-card border border-accent rounded-md p-2"
+              defaultValue={userData?.birthday}
+              placeholder="Enter your first name"
+            />
           </div>
         </div>
       </DialogContent>
