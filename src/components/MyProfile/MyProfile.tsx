@@ -106,7 +106,7 @@ export default function MyProfile({ activeTab }: MyProfileProps) {
           {myData ? `${myData.firstName} ${myData.lastName}` : 'Loading...'}
         </h1>
         <div className="mt-2">
-          <EditProfileDialog userData={myData} />
+          <EditProfileDialog userData={myData} fetchUserData={fetchUserData} />
         </div>
         <ul className="grid grid-cols-3 w-[300px] sm:w-[400px] mt-2 bg-card rounded-md py-1 text-sm sm:text-md">
           <li className="hover:font-bold hover:cursor-pointer">

@@ -17,18 +17,28 @@ import Placeholder from '@tiptap/extension-placeholder';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
+import { useToast } from '@/hooks/use-toast';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { generateApi, UPDATE_USER } from '@/constants/api';
 
 interface EditProfileDialogProps {
   userData: UserData | null;
+  fetchUserData: () => Promise<void>;
 }
 
-const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
+const EditProfileDialog = ({
+  userData,
+  fetchUserData,
+}: EditProfileDialogProps) => {
   const [open, setOpen] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthday, setBirthday] = useState('');
   const [gender, setGender] = useState('');
   const [nationality, setNationality] = useState('');
+
+  const { toast } = useToast();
 
   const editor = useEditor({
     extensions: [
@@ -49,6 +59,74 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
       },
     },
   });
+
+  const handleSaveUpdate = async () => {
+    if (!firstName) {
+      toast({
+        title: 'Error',
+        description: 'First name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!lastName) {
+      toast({
+        title: 'Error',
+        description: 'Last name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const token = Cookies.get('token');
+
+    try {
+      const updateData = {
+        firstName,
+        lastName,
+        gender,
+        nationality,
+        birthday,
+        introduction: editor?.getHTML(),
+      };
+
+      const response = await axios.put(
+        generateApi(UPDATE_USER, userData?.id),
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          title: 'Success',
+          description: 'Profile updated successfully',
+          variant: 'default',
+        });
+        fetchUserData();
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to update profile',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile',
+        variant: 'destructive',
+      });
+    } finally {
+      setOpen(false);
+    }
+  };
 
   useEffect(() => {
     if (editor && userData?.introduction) {
@@ -152,7 +230,11 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
           </div>
         </div>
         <DialogFooter>
-          <button className="px-3 py-1 text-sm bg-rainbow active:scale-95 rounded-md">
+          <button
+            className="px-3 py-1 text-sm bg-rainbow active:scale-95 rounded-md"
+            type="button"
+            onClick={handleSaveUpdate}
+          >
             Save
           </button>
         </DialogFooter>

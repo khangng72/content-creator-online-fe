@@ -39,6 +39,7 @@ export const GET_USER = '/user/profile';
 export const GET_FOLLOWERS_BY_USERID = '/user/followers';
 export const GET_FOLLOWING_BY_USERID = '/user/following';
 export const SEARCH_USER = '/user/search';
+export const UPDATE_USER = '/user/update';
 
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';
