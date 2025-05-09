@@ -24,6 +24,12 @@ interface EditProfileDialogProps {
 
 const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [nationality, setNationality] = useState('');
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -50,6 +56,20 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
     }
   }, [editor, userData]);
 
+  useEffect(() => {
+    if (userData) {
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setBirthday(userData.birthday);
+      setGender(userData.gender);
+      setNationality(userData.nationality);
+    }
+
+    if (editor && userData?.introduction) {
+      editor.commands.setContent(userData.introduction);
+    }
+  }, [userData, open, editor]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -74,7 +94,8 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
                 type="text"
                 id="firstName"
                 className="w-full bg-card border border-accent rounded-md p-2"
-                defaultValue={userData?.firstName}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Enter your first name"
               />
             </div>
@@ -87,7 +108,8 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
                 type="text"
                 id="lastName"
                 className="w-full bg-card border border-accent rounded-md p-2"
-                defaultValue={userData?.lastName}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 placeholder="Enter your last name"
               />
             </div>
@@ -98,14 +120,17 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
               <label className="text-sm font-bold" htmlFor="gender">
                 Gender
               </label>
-              <GenderSelector />
+              <GenderSelector gender={gender} setGender={setGender} />
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col gap-[2px]">
               <label className="text-sm font-bold" htmlFor="nationality">
                 Nationality
               </label>
-              <NationalitySelector />
+              <NationalitySelector
+                nationality={nationality}
+                setNationality={setNationality}
+              />
             </div>
           </div>
 
@@ -117,7 +142,8 @@ const EditProfileDialog = ({ userData }: EditProfileDialogProps) => {
               type="date"
               id="birthday"
               className="w-full bg-card border border-accent rounded-md p-2 text-sm"
-              defaultValue={userData?.birthday}
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
             />
           </div>
           <div className="w-full flex flex-col gap-[2px]">

@@ -16,10 +16,11 @@ const ReadLists = ({ userData }: ReadListsProps) => {
   const [error, setError] = useState(false);
 
   const fetchReadLists = useCallback(async () => {
+    const token = Cookies.get('token');
     try {
       const response = await axios.get(
         generateApi(GET_READING_LIST_BY_USER_ID, userData?.id),
-        { headers: { Authorization: `Bearer ${Cookies.get('token')}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.status === 200) {
@@ -29,7 +30,7 @@ const ReadLists = ({ userData }: ReadListsProps) => {
         setError(true);
       }
     } catch (error) {
-      console.error('Error fetching read lists:', error);
+      console.error('Error fetching read lists bug:', error);
       setError(true);
     } finally {
       setLoading(false);
@@ -37,8 +38,10 @@ const ReadLists = ({ userData }: ReadListsProps) => {
   }, [userData]);
 
   useEffect(() => {
-    fetchReadLists();
-  }, [fetchReadLists]);
+    if (userData) {
+      fetchReadLists();
+    }
+  }, [fetchReadLists, userData]);
 
   if (loading) {
     <div className="flex flex-col items-center justify-center font-bold text-xl mt-3">

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Popover,
   PopoverTrigger,
@@ -17,14 +16,20 @@ import {
   CommandItem,
 } from '../ui/command';
 
-export function NationalitySelector() {
-  const [selected, setSelected] = useState<string | null>(null);
+interface NationalitySelectorProps {
+  nationality: string;
+  setNationality: (nationality: string) => void;
+}
 
+export function NationalitySelector({
+  nationality,
+  setNationality,
+}: NationalitySelectorProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="flex justify-between items-center bg-card px-2 py-2 rounded-md border border-accent text-sm">
-          {selected || 'Select nationality'}
+          {nationality || 'Select nationality'}
           <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
         </button>
       </PopoverTrigger>
@@ -38,7 +43,7 @@ export function NationalitySelector() {
               <CommandItem
                 key={value}
                 onSelect={() => {
-                  setSelected(value);
+                  setNationality(value);
                 }}
                 className="flex items-center justify-between hover:cursor-pointer"
               >
@@ -49,7 +54,7 @@ export function NationalitySelector() {
                 <Check
                   className={cn(
                     'mr-2 h-4 w-4',
-                    selected === value ? 'opacity-100' : 'opacity-0'
+                    nationality === value ? 'opacity-100' : 'opacity-0'
                   )}
                 />
               </CommandItem>
