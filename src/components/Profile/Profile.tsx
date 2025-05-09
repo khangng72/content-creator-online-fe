@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import About from '@/components/Profile/About';
 import ReadLists from '@/components/Profile/ReadLists';
@@ -11,7 +11,6 @@ import { generateApi, GET_USER_BY_ID, VERIFY_USER } from '@/constants/api';
 import Cookies from 'js-cookie';
 import { UserData } from '@/types/UserData';
 import StoriesByUser from '../Profile/StoriesByUser';
-import { CameraIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,8 @@ import {
 } from '../ui/dialog';
 import FollowerList from '../Profile/FollowerList';
 import FollowingList from '../Profile/FollowingList';
+
+import FollowFeature from './FollowFeature';
 
 const tabs = [
   { id: 'about', label: 'About' },
@@ -38,7 +39,6 @@ export default function MyProfile({ activeTab, userId }: MyProfileProps) {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isFollowerDialogOpen, setIsFollowerDialogOpen] = useState(false);
   const [isFollowingDialogOpen, setIsFollowingDialogOpen] = useState(false);
-  const uploadAvatarRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
@@ -115,30 +115,13 @@ export default function MyProfile({ activeTab, userId }: MyProfileProps) {
             <AvatarImage src={userData?.avatarUrl} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <input
-            className="hidden"
-            type="file"
-            accept="image/*"
-            ref={uploadAvatarRef}
-          />
-          <button
-            className="absolute right-0 bottom-0 bg-card p-1 rounded-full hover:opacity-70 hover:cursor-pointer"
-            type="button"
-            onClick={() => {
-              uploadAvatarRef.current?.click();
-            }}
-          >
-            <CameraIcon className="w-4 h-4" />
-          </button>
         </div>
         <h1 className="font-bold text-xls md:text-2xl underline">
           {userData
             ? `${userData.firstName} ${userData.lastName}`
             : 'Loading...'}
         </h1>
-        {/* <div className="mt-2">
-          <EditProfileDialog userData={userData} fetchUserData={fetchUserData} />
-        </div> */}
+        <FollowFeature userId={userId} />
         <ul className="grid grid-cols-3 w-[300px] sm:w-[400px] mt-2 bg-card rounded-md py-1 text-sm sm:text-md">
           <li className="hover:font-bold hover:cursor-pointer">
             <Link

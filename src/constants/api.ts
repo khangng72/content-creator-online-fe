@@ -42,6 +42,8 @@ export const GET_FOLLOWING_BY_USERID = '/user/following';
 export const SEARCH_USER = '/user/search';
 export const UPDATE_USER = '/user/update';
 export const VERIFY_USER = '/user/verify';
+export const CHECK_IF_CURRENT_USER_FOLLOW_GIVEN_ID =
+  '/user/check_if_have_followed';
 
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';
