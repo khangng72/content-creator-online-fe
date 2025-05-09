@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { BookHeart, ChevronDown, LogOut, ShoppingCart } from 'lucide-react';
+import { BookHeart, ChevronDown, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -161,12 +161,6 @@ const ProfileMenu = ({ router, pathname }: ProfileMenuProps) => {
               {t('ProfileMenu.myLibrary')}
             </span>
           </Link>
-          <div className="flex items-center bg-secondary  gap-3 px-3 py-2 rounded-md hover:bg-accent hover:cursor-pointer">
-            <ShoppingCart />
-            <span className="font-semibold text-sm">
-              {t('ProfileMenu.cart')}
-            </span>
-          </div>
 
           <Dialog>
             <DialogTrigger asChild>
