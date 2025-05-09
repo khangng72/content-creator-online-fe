@@ -58,6 +58,7 @@ import { useDebounce } from 'use-debounce';
 import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 import LikeChapter from './LikeChapter';
 import ContinueButton from './ContinueButton';
+import Image from 'next/image';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -405,6 +406,17 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
           {currentChapter?.chapterTitle}
         </h2>
         <ChapterStatistics currentChapter={currentChapter} />
+        <div>
+          {currentChapter?.chapterImageUri && (
+            <Image
+              src={currentChapter?.chapterImageUri}
+              alt={currentChapter?.chapterTitle}
+              width={600}
+              height={400}
+              className="rounded-md w-[300px] h-[200px] md:w-[450px] md:h-[300px]"
+            />
+          )}
+        </div>
 
         <div
           className="flex flex-col py-5 bg-background w-[92vw] sm:w-[90vw] md:w-[80vw] xl:w-[70vw] 2xl:w-[50vw] rounded-xl gap-5"

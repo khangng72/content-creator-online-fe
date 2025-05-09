@@ -3,6 +3,7 @@ export interface Chapter {
   chapterTitle: string;
   chapterDescription: string;
   chapterContent: string;
+  chapterImageUri: string;
 
   chapterNumber: number;
   createdTime: string;
