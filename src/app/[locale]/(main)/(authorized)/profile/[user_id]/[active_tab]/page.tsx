@@ -1,3 +1,4 @@
+import Profile from '@/components/Profile/Profile';
 import React from 'react';
 
 const UserProfilePage = async ({
@@ -6,11 +7,7 @@ const UserProfilePage = async ({
   params: Promise<{ user_id: string; active_tab: string }>;
 }) => {
   const { user_id, active_tab } = await params;
-  return (
-    <div className="pt-[100px]">
-      {user_id} {active_tab}
-    </div>
-  );
+  return <Profile userId={user_id} activeTab={active_tab} />;
 };
 
 export default UserProfilePage;

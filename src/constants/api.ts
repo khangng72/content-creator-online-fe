@@ -36,6 +36,7 @@ export const GET_BASIC_CHAPTERS_INFO_BY_STORY_ID = '/chapter/story';
 // User
 export const REGISTER = '/user/register';
 export const GET_USER = '/user/profile';
+export const GET_USER_BY_ID = '/user/profile';
 export const GET_FOLLOWERS_BY_USERID = '/user/followers';
 export const GET_FOLLOWING_BY_USERID = '/user/following';
 export const SEARCH_USER = '/user/search';
