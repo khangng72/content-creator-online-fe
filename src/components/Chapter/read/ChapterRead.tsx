@@ -188,11 +188,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
                   <ChapterOption
                     key={chapter.chapterId}
                     chapter={chapter}
-                    ticked={
-                      chapter.chapterId == currentChapter?.chapterId
-                        ? true
-                        : false
-                    }
+                    ticked={chapter.chapterId == currentChapter?.chapterId}
                   />
                 ))}
               </ul>
