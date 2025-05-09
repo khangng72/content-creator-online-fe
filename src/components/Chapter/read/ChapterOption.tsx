@@ -3,22 +3,27 @@ import { Chapter } from '@/types/Chapter';
 import { formatTimestamp } from '@/utils/FormatTimestamp';
 import { CircleCheck } from 'lucide-react';
 
-const ChapterOption = () => {
+interface ChapterOptionProps {
+  chapter: Chapter;
+  ticked: boolean;
+}
+const ChapterOption = ({ chapter, ticked }: ChapterOptionProps) => {
   return (
-    <Link href="#">
+    <Link href={`/chapter/read/${chapter.chapterId}`}>
       <li className="flex justify-between px-4 py-2 hover:bg-accent hover:cursor-pointer border-b border-b-gay-200">
         <div className="flex flex-col items-start">
-          <h4 className="font-bold">Chapter Title</h4>
+          <h4 className="font-bold">{chapter.chapterTitle}</h4>
           <div>
             <span className="text-sm text-muted-foreground">
-              20204-04-04 12:00:00
+              {formatTimestamp(chapter.createdTime)}
             </span>
           </div>
         </div>
-
-        <div>
-          <CircleCheck className="text-[#8b5cf6]" />
-        </div>
+        {ticked && (
+          <div>
+            <CircleCheck className="text-[#8b5cf6]" />
+          </div>
+        )}
       </li>
     </Link>
   );

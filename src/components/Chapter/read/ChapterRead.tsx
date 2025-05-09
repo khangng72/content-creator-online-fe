@@ -1,5 +1,5 @@
 'use client';
-import ChapterOption from '@/components/MyStory/write/ChapterOption';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -61,6 +61,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import ChapterStatistics from './ChapterStatistics';
+import ChapterOption from './ChapterOption';
 
 interface ChapterReadProps {
   chapterId: string;
