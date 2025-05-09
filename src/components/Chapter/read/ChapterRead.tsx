@@ -152,7 +152,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
     <div className="flex flex-col pt-[54px] md:pt-[64px] mb-[80px] items-center gap-5">
       {!displayTool && (
         <button
-          className="flex gap-1 items-center justify-center bg-rainbow px-2 py-1 text-sm rounded-r-md fixed left-0 opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
+          className="flex gap-1 items-center justify-center bg-rainbow px-2 py-1 text-sm rounded-r-md fixed left-0 opacity-30 hover:opacity-100 transition-all duration-300 ease-in-out text-white"
           onClick={() => setDisplayTool((prev) => !prev)}
         >
           <span className="hidden md:block">Tools</span>
@@ -184,7 +184,15 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
               </div>
               <ul className="max-h-[250px] overflow-auto w-full">
                 {allChapters.map((chapter) => (
-                  <ChapterOption key={chapter.chapterId} chapter={chapter} />
+                  <ChapterOption
+                    key={chapter.chapterId}
+                    chapter={chapter}
+                    ticked={
+                      chapter.chapterId == currentChapter?.chapterId
+                        ? true
+                        : false
+                    }
+                  />
                 ))}
               </ul>
             </PopoverContent>
@@ -321,7 +329,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       <div
         className={cn(
           'flex flex-col items-center gap-3',
-          displayTool ? 'mt-[150px] md:mt-[100px]' : 'mt-[50px]'
+          displayTool ? 'mt-[120px] md:mt-[100px]' : 'mt-[30px]'
         )}
       >
         <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text text-center">
