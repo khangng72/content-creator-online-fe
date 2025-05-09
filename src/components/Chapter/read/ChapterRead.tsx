@@ -40,21 +40,33 @@ import {
   Send,
   Star,
   TableOfContents,
+  ThumbsUp,
   TypeOutline,
   WholeWord,
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { generateApi, GET_CHAPTER_BY_ID } from '@/constants/api';
+import {
+  generateApi,
+  GET_BASIC_CHAPTERS_INFO_BY_STORY_ID,
+  GET_CHAPTER_BY_ID,
+} from '@/constants/api';
 import { Chapter } from '@/types/Chapter';
 import DOMPurify from 'dompurify';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ChapterReadProps {
   chapterId: string;
 }
 const ChapterRead = ({ chapterId }: ChapterReadProps) => {
-  const [chapter, setChapter] = useState<Chapter | null>(null);
+  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
+  const [allChapters, setAllChapters] = useState<Chapter[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -76,7 +88,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       );
 
       if (response.status === 200) {
-        setChapter(response.data);
+        setCurrentChapter(response.data);
       } else {
         setError(true);
       }
@@ -88,9 +100,41 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
     }
   }, [chapterId]);
 
+  const fetchAllChapters = useCallback(async () => {
+    if (!currentChapter) return;
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(
+        generateApi(
+          GET_BASIC_CHAPTERS_INFO_BY_STORY_ID,
+          currentChapter.storyId
+        ),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setAllChapters(response.data.result);
+      } else {
+        setError(true);
+      }
+    } catch (error) {
+      setError(true);
+      console.error('Error fetching all chapters:', error);
+    }
+  }, [currentChapter]);
+
   useEffect(() => {
     fetchChapter();
   }, [fetchChapter]);
+
+  useEffect(() => {
+    if (currentChapter) {
+      fetchAllChapters();
+    }
+  }, [currentChapter, fetchAllChapters]);
 
   if (loading) {
     return <div className="flex justify-center items-center">Loading...</div>;
@@ -122,9 +166,11 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
             <PopoverTrigger asChild>
               <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] lg:w-[30%] xl:w-[20%]">
                 <div className="flex flex-col items-start">
-                  <h1 className="text-lg md:text-xl font-bold">Story Title</h1>
+                  <h1 className="text-lg md:text-xl font-bold">
+                    {currentChapter?.storyTitle}
+                  </h1>
                   <span className="text-sm text-left">
-                    Current Chapter Title
+                    {currentChapter?.chapterTitle}
                   </span>
                 </div>
                 <div>
@@ -137,8 +183,9 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
                 <h3 className="font-bold">Chapter List</h3>
               </div>
               <ul className="max-h-[250px] overflow-auto w-full">
-                <ChapterOption />
-                <ChapterOption />
+                {allChapters.map((chapter) => (
+                  <ChapterOption key={chapter.chapterId} chapter={chapter} />
+                ))}
               </ul>
             </PopoverContent>
           </Popover>
@@ -277,24 +324,37 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
           displayTool ? 'mt-[150px] md:mt-[100px]' : 'mt-[50px]'
         )}
       >
-        <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text">
-          {chapter?.storyTitle}
+        <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text text-center">
+          {currentChapter?.storyTitle}
         </h1>
-        <h2 className="font-bold text-2xl">{chapter?.storyTitle}</h2>
-        <ul className="flex text-xl justify-around min-w-[250px]">
-          <li className="flex gap-1 items-center j">
+        <h2 className="font-bold text-2xl text-center">
+          {currentChapter?.chapterTitle}
+        </h2>
+        <div className="flex justify-around min-w-[200px] text-sm md:text-base">
+          <div className="flex gap-1 items-center">
             <Eye className="w-5 h-5" />
             <span>12</span>
-          </li>
-          <li className="flex gap-1 items-center">
-            <Star className="w-5 h-5" />
-            <span>12</span>
-          </li>
-          <li className="flex gap-1 items-center">
+          </div>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex gap-1 items-center">
+                  <ThumbsUp className="w-5 h-5" />
+                  <span>{currentChapter?.numberOfLikes}</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{currentChapter?.numberOfLikes} liked this chapter</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <div className="flex gap-1 items-center">
             <TableOfContents className="w-5 h-5" />
             <span>12</span>
-          </li>
-        </ul>
+          </div>
+        </div>
 
         <div
           className="flex flex-col p-5 bg-background w-[98vw] lg:w-[80vw] xl:w-[60vw] rounded-xl gap-5"
@@ -304,7 +364,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
             wordSpacing: `${wordSpacing}px`,
           }}
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(chapter?.chapterContent || ''),
+            __html: DOMPurify.sanitize(currentChapter?.chapterContent || ''),
           }}
         ></div>
 

@@ -5,10 +5,11 @@ export interface Chapter {
   chapterContent: string;
 
   chapterNumber: number;
-  chapterCreatedTime: string;
+  createdTime: string;
   numberOfLikes: number;
   numberOfComments: number;
   nextChapterId: string;
 
   storyTitle: string;
+  storyId: string;
 }
