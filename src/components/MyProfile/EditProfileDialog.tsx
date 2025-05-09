@@ -162,7 +162,7 @@ const EditProfileDialog = ({
           </DialogTitle>
           <DialogDescription className="hidden">Edit Profile</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-3 max-h-[75vh] overflow-y-auto">
+        <div className="flex flex-col gap-3 max-h-[75vh] overflow-y-auto scroll-container">
           <div className="w-full flex flex-col sm:flex-row gap-3 text-sm">
             <div className="w-full flex flex-col gap-[2px]">
               <label className="text-sm font-bold" htmlFor="firstName">
