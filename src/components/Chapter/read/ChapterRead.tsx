@@ -60,6 +60,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import ChapterStatistics from './ChapterStatistics';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -338,31 +339,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
         <h2 className="font-bold text-2xl text-center">
           {currentChapter?.chapterTitle}
         </h2>
-        <div className="flex justify-around min-w-[200px] text-sm md:text-base">
-          <div className="flex gap-1 items-center">
-            <Eye className="w-5 h-5" />
-            <span>12</span>
-          </div>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex gap-1 items-center">
-                  <ThumbsUp className="w-5 h-5" />
-                  <span>{currentChapter?.numberOfLikes}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{currentChapter?.numberOfLikes} liked this chapter</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <div className="flex gap-1 items-center">
-            <TableOfContents className="w-5 h-5" />
-            <span>12</span>
-          </div>
-        </div>
+        <ChapterStatistics currentChapter={currentChapter} />
 
         <div
           className="flex flex-col p-5 bg-background w-[98vw] lg:w-[80vw] xl:w-[60vw] rounded-xl gap-5"
