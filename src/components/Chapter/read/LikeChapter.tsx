@@ -1,5 +1,5 @@
 'use client';
-import { ThumbsUp } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import Cookie from 'js-cookie';
 import {
@@ -70,7 +70,7 @@ const LikeChapter = ({ chapterId, fetchChapter }: LikeChapterProps) => {
       onClick={toggleLikeChapter}
     >
       <span>Liked</span>
-      <ThumbsUp />
+      <Heart className="fill-purpleRainbow" />
     </button>
   ) : (
     <button
@@ -78,7 +78,7 @@ const LikeChapter = ({ chapterId, fetchChapter }: LikeChapterProps) => {
       onClick={toggleLikeChapter}
     >
       <span>Like</span>
-      <ThumbsUp />
+      <Heart />
     </button>
   );
 };

@@ -1,7 +1,5 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +15,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
@@ -32,12 +29,9 @@ import {
   ChevronDown,
   CirclePlus,
   CircleX,
-  Ellipsis,
   Facebook,
   GanttChart,
   Instagram,
-  Send,
-  Star,
   TypeOutline,
   WholeWord,
 } from 'lucide-react';
@@ -59,6 +53,8 @@ import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 import LikeChapter from './LikeChapter';
 import ContinueButton from './ContinueButton';
 import Image from 'next/image';
+import CommentBox from './CommentBox';
+import Comment from './Comment';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -236,10 +232,10 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
             <PopoverTrigger asChild>
               <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] lg:w-[30%] xl:w-[20%]">
                 <div className="flex flex-col items-start">
-                  <h1 className="text-lg md:text-xl font-bold">
+                  <h1 className="text-lg md:text-xl font-bold bg-rainbow text-transparent bg-clip-text">
                     {currentChapter?.storyTitle}
                   </h1>
-                  <span className="text-sm text-left">
+                  <span className="text-base text-left font-bold">
                     {currentChapter?.chapterTitle}
                   </span>
                 </div>
@@ -248,7 +244,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
                 </div>
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-96 bg-secondary flex flex-col px-0 py-2 gap-2">
+            <PopoverContent className="w-[92vw] sm:w-[350px] bg-secondary flex flex-col px-0 py-2 gap-2">
               <div className="flex justify-center border-b border-b-muted-foreground py-2 w-full">
                 <h3 className="font-bold">Chapter List</h3>
               </div>
@@ -451,137 +447,11 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
               <Instagram />
             </div>
           </div>
-          <div className="flex w-full gap-2 items-center">
-            <Input className="rounded-full" placeholder="Comment..." />
-            <Button className="bg-purple-400 rounded-full flex justify-center items-center h-[40px] w-[40px]">
-              <Send />
-            </Button>
-          </div>
+          <CommentBox />
 
-          <div className="flex flex-col w-full gap-5 items-center text-[10px] md:text-sm">
-            {/* comment without reply */}
-            <div className="flex w-full items-center justify-between">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div className="rounded-t-xl rounded-br-xl bg-card p-3">
-                    <span className="text-sm">
-                      The Story is great, plot is astonishing
-                    </span>
-                  </div>
-                </div>
-                <div className="flex gap-2 text-sm">
-                  <span>13 hours ago</span>
-                  <span className="font-bold text-purple-500">Reply</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center">
-                <Ellipsis />
-                <Star />
-              </div>
-            </div>
-
-            {/* Comment with reply */}
-            <div className="flex flex-col w-full">
-              {/* parent comment */}
-              <div className="flex w-full items-center justify-between">
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <div className="rounded-t-xl rounded-br-xl bg-card p-3">
-                      <span className="text-sm">
-                        The Story is great, plot is astonishing
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 text-sm">
-                    <span>13 hours ago</span>
-                    <span className="font-bold text-purple-500">Reply</span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <Ellipsis />
-                  <Star />
-                </div>
-              </div>
-
-              {/* reply list */}
-              <div className="ml-2 md:ml-10 mt-5 flex flex-col gap-5">
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage
-                          src="https://avatars.githubusercontent.com/u/40488299?v=4"
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="rounded-t-xl rounded-br-xl bg-card p-3">
-                        <span className="text-sm">
-                          The Story is great, plot is astonishing. Enough for
-                          chilling at night
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 text-sm">
-                      <span>13 hours ago</span>
-                      <span className="font-bold text-purple-500">Reply</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <Ellipsis />
-                    <Star />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage
-                          src="https://avatars.githubusercontent.com/u/40488299?v=4"
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="rounded-t-xl rounded-br-xl bg-card p-3">
-                        <span className="text-sm">
-                          The Story is great, plot is astonishing
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 text-sm">
-                      <span>13 hours ago</span>
-                      <span className="font-bold text-purple-500">Reply</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <Ellipsis />
-                    <Star />
-                  </div>
-                </div>
-
-                <div className="flex w-full gap-2 items-center">
-                  <Input className="rounded-full" placeholder="Comment..." />
-                  <Button className="bg-purple-400 rounded-full flex justify-center items-center h-[40px] w-[40px]">
-                    <Send />
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col w-full gap-6 items-center text-sm">
+            <Comment />
+            <Comment />
           </div>
         </div>
       </div>
