@@ -8,6 +8,7 @@ export interface Post {
   storyTitle: string;
   storyId: string;
 
+  userId: string;
   userFirstName: string;
   userLastName: string;
   userAvatarUrl: string;

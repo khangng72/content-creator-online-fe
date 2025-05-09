@@ -60,7 +60,10 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
           </Avatar>
           <div className="flex flex-col justify-center">
             <h1 className="text-sm font-semibold">
-              <Link href="#" className="hover:underline">
+              <Link
+                href={`/profile/${post.userId}/about`}
+                className="hover:underline"
+              >
                 {post.userFirstName} {post.userLastName}
               </Link>
             </h1>
