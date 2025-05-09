@@ -21,7 +21,7 @@ const ChapterOption = ({ chapter, ticked }: ChapterOptionProps) => {
         </div>
         {ticked && (
           <div>
-            <CircleCheck className="text-[#8b5cf6]" />
+            <CircleCheck className="text-purpleRainbow" />
           </div>
         )}
       </li>

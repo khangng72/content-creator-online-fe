@@ -33,6 +33,10 @@ export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';
 export const GET_LATEST_CHAPTER_PAGED = '/chapter/latest';
 export const GET_BASIC_CHAPTERS_INFO_BY_STORY_ID = '/chapter/story';
 export const GET_CHAPTER_BY_ID = '/chapter';
+export const CHECK_IF_CURRENT_USER_LIKE_CHAPTER =
+  '/chapter/check_if_current_user_liked';
+export const TOGGLE_CURRENT_USER_LIKE_CHAPTER =
+  '/chapter/toggle_current_user_like';
 
 // User
 export const REGISTER = '/user/register';

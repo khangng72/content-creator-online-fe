@@ -55,6 +55,9 @@ import DOMPurify from 'dompurify';
 import ChapterStatistics from './ChapterStatistics';
 import ChapterOption from './ChapterOption';
 import { useDebounce } from 'use-debounce';
+import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
+import LikeChapter from './LikeChapter';
+import ContinueButton from './ContinueButton';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -215,7 +218,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
   }
 
   return (
-    <div className="flex flex-col pt-[54px] md:pt-[64px] mb-[80px] items-center gap-5">
+    <div className="flex flex-col pt-[56px] md:pt-[64px] mb-[80px] items-center gap-5">
       {!displayTool && (
         <button
           className="flex gap-1 items-center justify-center bg-rainbow px-2 py-1 text-sm rounded-r-md fixed left-0 opacity-30 hover:opacity-100 transition-all duration-300 ease-in-out text-white"
@@ -227,7 +230,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       )}
 
       {displayTool && (
-        <div className="w-[98vw] xl:w-[95vw] bg-card border border-accent fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-20 shadow-md">
+        <div className="w-[98vw] xl:w-[95vw] bg-card border border-accent fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-10 shadow-md">
           <Popover>
             <PopoverTrigger asChild>
               <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] lg:w-[30%] xl:w-[20%]">
@@ -392,7 +395,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       <div
         className={cn(
           'flex flex-col items-center gap-3',
-          displayTool ? 'mt-[120px] md:mt-[100px]' : 'mt-[30px]'
+          displayTool ? 'mt-[128px] md:mt-[100px]' : 'mt-[30px]'
         )}
       >
         <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text text-center">
@@ -404,7 +407,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
         <ChapterStatistics currentChapter={currentChapter} />
 
         <div
-          className="flex flex-col p-5 bg-background w-[98vw] lg:w-[80vw] xl:w-[60vw] rounded-xl gap-5"
+          className="flex flex-col py-5 bg-background w-[92vw] sm:w-[90vw] md:w-[80vw] xl:w-[70vw] 2xl:w-[50vw] rounded-xl gap-5"
           style={{
             fontSize: `${textSize}px`,
             lineHeight: `${lineHeight}`,
@@ -415,15 +418,21 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
           }}
         ></div>
 
-        <div className="w-full max-w-[300px] sm:max-w-[500px] md:max-w-[700px] flex flex-col items-center gap-5">
-          <Button className="w-full">Continue</Button>
+        <div className="w-[92vw] sm:w-[90vw] md:w-[80vw] xl:w-[70vw] 2xl:w-[50vw] flex flex-col items-center gap-5">
+          {currentChapter && (
+            <ContinueButton nextChapterId={currentChapter?.nextChapterId} />
+          )}
           <div className="flex justify-between w-full">
-            <div className="w-1/2 flex flex-start gap-4">
-              <div className="flex items-center gap-1">
-                <span>Add</span>
-                <CirclePlus />
-              </div>
-              <Star />
+            <div className="w-1/2 flex flex-start gap-3">
+              {currentChapter && (
+                <AddStoryToList storyId={currentChapter?.storyId}>
+                  <button className="flex items-center gap-1 hover:font-bold">
+                    <span>Add</span>
+                    <CirclePlus />
+                  </button>
+                </AddStoryToList>
+              )}
+              <LikeChapter chapterId={chapterId} fetchChapter={fetchChapter} />
             </div>
             <div className="w-1/2 flex flex-row-reverse gap-2">
               <Facebook />
