@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import About from '@/components/Profile/About';
 import ReadLists from '@/components/Profile/ReadLists';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
-import { generateApi, GET_USER_BY_ID } from '@/constants/api';
+import { generateApi, GET_USER_BY_ID, VERIFY_USER } from '@/constants/api';
 import Cookies from 'js-cookie';
 import { UserData } from '@/types/UserData';
 import StoriesByUser from '../Profile/StoriesByUser';
@@ -40,6 +40,31 @@ export default function MyProfile({ activeTab, userId }: MyProfileProps) {
   const [isFollowingDialogOpen, setIsFollowingDialogOpen] = useState(false);
   const uploadAvatarRef = useRef<HTMLInputElement>(null);
 
+  const router = useRouter();
+
+  const checkIfCurrentUser = useCallback(async () => {
+    console.log('Checking if current user...');
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.get(generateApi(VERIFY_USER, userId), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.status === 200) {
+        if (response.data) {
+          console.log('Navigate to my profile page...');
+          router.push(`/myprofile/${activeTab}`);
+        }
+      } else {
+        console.error('Failed to verify user');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error checking current user:', error);
+    }
+  }, [userId, activeTab, router]);
+
   const fetchUserData = useCallback(async () => {
     const token = Cookies.get('token');
     const response = await axios.get(generateApi(GET_USER_BY_ID, userId), {
@@ -56,6 +81,10 @@ export default function MyProfile({ activeTab, userId }: MyProfileProps) {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+
+  useEffect(() => {
+    checkIfCurrentUser();
+  }, [userId, checkIfCurrentUser]);
 
   return (
     <div className="py-[63px] flex-col justify-center items-center">
