@@ -227,18 +227,20 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
             {chapters && chapters.length > 0 ? (
               <ul className="flex flex-col gap-2">
                 {chapters.map((chapter) => (
-                  <li
+                  <Link
                     key={chapter.chapterId}
-                    className="flex flex-col lg:flex-row lg:items-center justify-between bg-background py-3 px-6 w-full rounded-md hover:opacity-80 cursor-pointer"
+                    href={`/chapter/read/${chapter.chapterId}`}
                   >
-                    <div className="flex gap-2 items-center">
-                      <Scroll className="w-5 h-5" />
-                      <span>{chapter.chapterTitle}</span>
-                    </div>
-                    <span className="text-muted-foreground text-sm">
-                      {formatTimestamp(chapter.createdTime)}
-                    </span>
-                  </li>
+                    <li className="flex flex-col lg:flex-row lg:items-center justify-between bg-background py-3 px-6 w-full rounded-md hover:opacity-80 cursor-pointer">
+                      <div className="flex gap-2 items-center">
+                        <Scroll className="w-5 h-5" />
+                        <span>{chapter.chapterTitle}</span>
+                      </div>
+                      <span className="text-muted-foreground text-sm">
+                        {formatTimestamp(chapter.createdTime)}
+                      </span>
+                    </li>
+                  </Link>
                 ))}
               </ul>
             ) : (
