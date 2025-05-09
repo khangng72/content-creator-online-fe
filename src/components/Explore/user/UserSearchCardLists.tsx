@@ -1,6 +1,6 @@
 'use client';
 import Cookies from 'js-cookie';
-import { BookIcon, UserPlus, Users } from 'lucide-react';
+import { BookIcon, Users } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import { Logger } from '@/utils/Logger';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { UserData } from '@/types/UserData';
 import { useInView } from 'react-intersection-observer';
+import { Link } from '@/i18n/routing';
 
 interface UserSearchCardListsProps {
   searchQuery: string;
@@ -76,7 +77,7 @@ const UserSearchCardLists = ({ searchQuery }: UserSearchCardListsProps) => {
   return (
     <div
       className="grid gap-5 justify-center my-6
-            grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-[98vw] xl:w-[80vw] mx-auto"
+            grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 w-[98vw] xl:w-[80vw] mx-auto"
     >
       {users.map((user, index) => {
         return (
@@ -93,9 +94,12 @@ const UserSearchCardLists = ({ searchQuery }: UserSearchCardListsProps) => {
             </div>
             <div className="flex justify-between items-center w-full">
               <div className="flex flex-col">
-                <span className="text-xl font-bold">
+                <Link
+                  className="text-xl font-bold hover:underline"
+                  href={`/profile/${user.id}/about`}
+                >
                   {user.firstName} {user.lastName}
-                </span>
+                </Link>
                 <ul className="flex gap-3">
                   <li className="flex gap-1 items-center">
                     <BookIcon className="w-4 h-4 text-muted-foreground" />
@@ -111,10 +115,12 @@ const UserSearchCardLists = ({ searchQuery }: UserSearchCardListsProps) => {
                   </li>
                 </ul>
               </div>
-              <button className="flex gap-1 px-3 py-1 rounded-md bg-rainbow hover:opacity-90">
-                <UserPlus className="w-5 h-5" />
-                <span>Follow</span>
-              </button>
+              <Link
+                className="hidden sm:flex gap-1 px-3 py-1 rounded-md bg-rainbow hover:opacity-90"
+                href={`/profile/${user.id}/about`}
+              >
+                <span>View Profile</span>
+              </Link>
             </div>
           </div>
         );
