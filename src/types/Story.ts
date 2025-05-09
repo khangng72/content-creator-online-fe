@@ -6,6 +6,7 @@ export interface BasicStoryInfo {
   storyDescription: string;
   coverImageUri: string;
   userPost: string;
+  userId: string;
   numberOfViews: number;
   numberOfChapters: number;
   averageRating: number;

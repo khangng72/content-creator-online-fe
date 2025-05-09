@@ -30,7 +30,10 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
             {story.storyTitle}
           </h2>
         </Link>
-        <Link href="#" className="text-muted-foreground hover:underline">
+        <Link
+          href={`/profile/${story.userId}/about`}
+          className="text-muted-foreground hover:underline"
+        >
           by {story.userPost}
         </Link>
         <div className="flex gap-2 justify-center items-center">
