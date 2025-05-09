@@ -8,8 +8,7 @@ const ReadChapterPage = async ({
 }) => {
   const { chapter_id } = await params;
 
-  console.log('Chapter ID:', chapter_id);
-  return <ChapterRead />;
+  return <ChapterRead chapterId={chapter_id} />;
 };
 
 export default ReadChapterPage;

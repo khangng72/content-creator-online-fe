@@ -1,5 +1,4 @@
 'use client';
-import { get_book } from '@/app/api/api';
 import ChapterOption from '@/components/MyStory/write/ChapterOption';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -44,15 +43,69 @@ import {
   TypeOutline,
   WholeWord,
 } from 'lucide-react';
-import React, { useState } from 'react';
-const ChapterRead = () => {
-  const book = get_book().book;
+import React, { useCallback, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { generateApi, GET_CHAPTER_BY_ID } from '@/constants/api';
+import { Chapter } from '@/types/Chapter';
+import DOMPurify from 'dompurify';
+
+interface ChapterReadProps {
+  chapterId: string;
+}
+const ChapterRead = ({ chapterId }: ChapterReadProps) => {
+  const [chapter, setChapter] = useState<Chapter | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const [textSize, setTextSize] = useState(19);
   const [lineHeight, setLineHeight] = useState(1.8);
   const [wordSpacing, setWordSpacing] = useState(3);
   const [displayTool, setDisplayTool] = useState(true);
+
+  const fetchChapter = useCallback(async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(
+        generateApi(GET_CHAPTER_BY_ID, chapterId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setChapter(response.data);
+      } else {
+        setError(true);
+      }
+    } catch (error) {
+      setError(true);
+      console.error('Error fetching chapter:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [chapterId]);
+
+  useEffect(() => {
+    fetchChapter();
+  }, [fetchChapter]);
+
+  if (loading) {
+    return <div className="flex justify-center items-center">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center">
+        <h1 className="text-red-500">Error fetching chapter</h1>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col pt-[64px] mb-[80px] items-center gap-5">
+    <div className="flex flex-col pt-[54px] md:pt-[64px] mb-[80px] items-center gap-5">
       {!displayTool && (
         <button
           className="flex gap-1 items-center justify-center bg-rainbow px-2 py-1 text-sm rounded-r-md fixed left-0 opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
@@ -64,7 +117,7 @@ const ChapterRead = () => {
       )}
 
       {displayTool && (
-        <div className="w-full bg-card border-[0.5px] border-muted-foreground fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-10">
+        <div className="w-[98vw] xl:w-[95vw] bg-card border border-accent fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-20 shadow-md">
           <Popover>
             <PopoverTrigger asChild>
               <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] lg:w-[30%] xl:w-[20%]">
@@ -95,7 +148,7 @@ const ChapterRead = () => {
               <DialogTrigger asChild>
                 <button className="bg-secondary flex gap-1 items-center justify-center px-2 py-1 text-xs rounded-md active:scale-95">
                   <span>Save</span>
-                  <Bookmark className="w-4 h-4" />
+                  <Bookmark className="hidden sm:block w-4 h-4" />
                 </button>
               </DialogTrigger>
               <DialogContent>
@@ -114,7 +167,7 @@ const ChapterRead = () => {
               <DrawerTrigger asChild>
                 <button className="bg-secondary flex gap-1 items-center justify-center px-2 py-1 text-xs rounded-md active:scale-95">
                   <span>Word Spacing</span>
-                  <WholeWord className="w-4 h-4" />
+                  <WholeWord className="hidden sm:block w-4 h-4" />
                 </button>
               </DrawerTrigger>
               <DrawerContent>
@@ -150,7 +203,7 @@ const ChapterRead = () => {
               <DrawerTrigger asChild>
                 <button className="bg-secondary flex gap-1 items-center justify-center px-2 py-1 text-xs rounded-md active:scale-95">
                   <span>Line height</span>
-                  <GanttChart className="w-4 h-4" />
+                  <GanttChart className="hidden sm:block w-4 h-4" />
                 </button>
               </DrawerTrigger>
               <DrawerContent>
@@ -181,7 +234,7 @@ const ChapterRead = () => {
               <DrawerTrigger asChild>
                 <button className="bg-secondary flex gap-1 items-center justify-center px-2 py-1 text-xs rounded-md active:scale-95">
                   <span>Text Size</span>
-                  <TypeOutline className="w-4 h-4" />
+                  <TypeOutline className="hidden sm:block w-4 h-4" />
                 </button>
               </DrawerTrigger>
               <DrawerContent>
@@ -225,21 +278,21 @@ const ChapterRead = () => {
         )}
       >
         <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text">
-          {book.title}
+          {chapter?.storyTitle}
         </h1>
-        <h2 className="font-bold text-2xl">{book.content[0].chapter_title}</h2>
+        <h2 className="font-bold text-2xl">{chapter?.storyTitle}</h2>
         <ul className="flex text-xl justify-around min-w-[250px]">
           <li className="flex gap-1 items-center j">
             <Eye className="w-5 h-5" />
-            <span>{book.rating}</span>
+            <span>12</span>
           </li>
           <li className="flex gap-1 items-center">
             <Star className="w-5 h-5" />
-            <span>{book.rating}</span>
+            <span>12</span>
           </li>
           <li className="flex gap-1 items-center">
             <TableOfContents className="w-5 h-5" />
-            <span>{book.content.length}</span>
+            <span>12</span>
           </li>
         </ul>
 
@@ -250,10 +303,10 @@ const ChapterRead = () => {
             lineHeight: `${lineHeight}`,
             wordSpacing: `${wordSpacing}px`,
           }}
-        >
-          <p>{book.content[0].chapter_content}</p>
-          <p>{book.content[1].chapter_content}</p>
-        </div>
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(chapter?.chapterContent || ''),
+          }}
+        ></div>
 
         <div className="w-full max-w-[300px] sm:max-w-[500px] md:max-w-[700px] flex flex-col items-center gap-5">
           <Button className="w-full">Continue</Button>
