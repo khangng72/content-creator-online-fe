@@ -121,7 +121,7 @@ export default function MyProfile({ activeTab, userId }: MyProfileProps) {
             ? `${userData.firstName} ${userData.lastName}`
             : 'Loading...'}
         </h1>
-        <FollowFeature userId={userId} />
+        <FollowFeature userId={userId} fetchUserData={fetchUserData} />
         <ul className="grid grid-cols-3 w-[300px] sm:w-[400px] mt-2 bg-card rounded-md py-1 text-sm sm:text-md">
           <li className="hover:font-bold hover:cursor-pointer">
             <Link
