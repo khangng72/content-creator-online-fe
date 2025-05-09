@@ -184,13 +184,14 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
                 <h3 className="font-bold">Chapter List</h3>
               </div>
               <ul className="max-h-[250px] overflow-auto w-full">
-                {allChapters.map((chapter) => (
-                  <ChapterOption
-                    key={chapter.chapterId}
-                    chapter={chapter}
-                    ticked={chapter.chapterId == currentChapter?.chapterId}
-                  />
-                ))}
+                {allChapters &&
+                  allChapters.map((chapter) => (
+                    <ChapterOption
+                      key={chapter.chapterId}
+                      chapter={chapter}
+                      ticked={chapter.chapterId == currentChapter?.chapterId}
+                    />
+                  ))}
               </ul>
             </PopoverContent>
           </Popover>
