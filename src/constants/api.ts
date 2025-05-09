@@ -46,6 +46,7 @@ export const VERIFY_USER = '/user/verify';
 export const CHECK_IF_CURRENT_USER_FOLLOW_GIVEN_ID =
   '/user/check_if_have_followed';
 export const TOGGLE_FOLLOW_USER = '/user/toggleFollow';
+export const GET_CURRENT_USER_READ_PREFERENCE = '/user/read_preference';
 
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';

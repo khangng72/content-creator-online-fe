@@ -33,14 +33,11 @@ import {
   CirclePlus,
   CircleX,
   Ellipsis,
-  Eye,
   Facebook,
   GanttChart,
   Instagram,
   Send,
   Star,
-  TableOfContents,
-  ThumbsUp,
   TypeOutline,
   WholeWord,
 } from 'lucide-react';
@@ -51,17 +48,13 @@ import {
   generateApi,
   GET_BASIC_CHAPTERS_INFO_BY_STORY_ID,
   GET_CHAPTER_BY_ID,
+  GET_CURRENT_USER_READ_PREFERENCE,
 } from '@/constants/api';
 import { Chapter } from '@/types/Chapter';
 import DOMPurify from 'dompurify';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import ChapterStatistics from './ChapterStatistics';
 import ChapterOption from './ChapterOption';
+import { useDebounce } from 'use-debounce';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -69,6 +62,7 @@ interface ChapterReadProps {
 const ChapterRead = ({ chapterId }: ChapterReadProps) => {
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [allChapters, setAllChapters] = useState<Chapter[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -76,6 +70,10 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
   const [lineHeight, setLineHeight] = useState(1.8);
   const [wordSpacing, setWordSpacing] = useState(3);
   const [displayTool, setDisplayTool] = useState(true);
+
+  const [lineHeightDebounce] = useDebounce(lineHeight, 2000);
+  const [wordSpacingDebounce] = useDebounce(wordSpacing, 2000);
+  const [textSizeDebounce] = useDebounce(textSize, 2000);
 
   const fetchChapter = useCallback(async () => {
     const token = Cookies.get('token');
@@ -128,6 +126,57 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
     }
   }, [currentChapter]);
 
+  const fetchReadPreference = useCallback(async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(
+        generateApi(GET_CURRENT_USER_READ_PREFERENCE),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setTextSize(response.data.defaultReadingTextSize);
+        setLineHeight(response.data.defaultReadingLineHeight);
+        setWordSpacing(response.data.defaultReadingWordSpacing);
+      } else {
+        console.error('Error fetching read preference:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching read preference:', error);
+    }
+  }, []);
+
+  const updateReadPreference = useCallback(async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.put(
+        generateApi(GET_CURRENT_USER_READ_PREFERENCE),
+        {
+          defaultReadingTextSize: textSizeDebounce,
+          defaultReadingLineHeight: lineHeightDebounce,
+          defaultReadingWordSpacing: wordSpacingDebounce,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log('Read preference updated successfully');
+      } else {
+        console.error('Error updating read preference:', response.data);
+      }
+    } catch (error) {
+      console.error('Error updating read preference:', error);
+    }
+  }, [textSizeDebounce, lineHeightDebounce, wordSpacingDebounce]);
+
   useEffect(() => {
     fetchChapter();
   }, [fetchChapter]);
@@ -137,6 +186,21 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       fetchAllChapters();
     }
   }, [currentChapter, fetchAllChapters]);
+
+  useEffect(() => {
+    fetchReadPreference();
+  }, [fetchReadPreference]);
+
+  useEffect(() => {
+    if (textSizeDebounce && lineHeightDebounce && wordSpacingDebounce) {
+      updateReadPreference();
+    }
+  }, [
+    textSizeDebounce,
+    lineHeightDebounce,
+    wordSpacingDebounce,
+    updateReadPreference,
+  ]);
 
   if (loading) {
     return <div className="flex justify-center items-center">Loading...</div>;
