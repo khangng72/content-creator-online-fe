@@ -54,7 +54,8 @@ import LikeChapter from './LikeChapter';
 import ContinueButton from './ContinueButton';
 import Image from 'next/image';
 import CommentBox from './CommentBox';
-import Comment from './Comment';
+
+import CommentList from './CommentList';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -449,10 +450,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
           </div>
           <CommentBox />
 
-          <div className="flex flex-col w-full gap-6 items-center text-sm">
-            <Comment />
-            <Comment />
-          </div>
+          <CommentList chapterId={chapterId} />
         </div>
       </div>
     </div>
