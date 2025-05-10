@@ -55,6 +55,7 @@ export const GET_CURRENT_USER_READ_PREFERENCE = '/user/read_preference';
 // Comment
 export const GET_COMMENT_PAGED = '/comment/chapter';
 export const POST_COMMENT = '/comment/chapter';
+export const GET_REPLIES = '/comment/replies';
 
 // Reading List
 export const GET_READING_LIST_BY_CURRENT_USER = '/read_list/current_user';

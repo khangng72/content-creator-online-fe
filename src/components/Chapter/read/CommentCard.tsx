@@ -1,10 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heart } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Reply from './Reply';
 import { Comment } from '@/types/Comment';
 import { timeAgo } from '@/utils/timeAgo';
 import { Link } from '@/i18n/routing';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { generateApi, GET_REPLIES } from '@/constants/api';
 
 interface CommentCardProps {
   comment: Comment;
@@ -12,6 +15,39 @@ interface CommentCardProps {
 
 const CommentCard = ({ comment }: CommentCardProps) => {
   const [showReply, setShowReply] = useState(true);
+  const [replies, setReplies] = useState<Comment[]>([]);
+
+  const fetchReplies = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.get(
+        generateApi(GET_REPLIES, comment.commentId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setReplies(response.data.result);
+      } else {
+        console.error('Error fetching replies:', response.statusText);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error fetching replies:', error.message);
+      } else {
+        console.error('Unexpected error occurred while fetching replies');
+      }
+    }
+  }, [comment.commentId]);
+
+  useEffect(() => {
+    fetchReplies();
+  }, [fetchReplies]);
+
   return (
     <div className="w-full flex items-start justify-between border-t border-accent pt-4">
       {/* user things */}
@@ -55,8 +91,15 @@ const CommentCard = ({ comment }: CommentCardProps) => {
           </div>
           {showReply && (
             <div className="block space-y-2">
-              <Reply />
-              <Reply />
+              {replies.length > 0 ? (
+                replies.map((reply) => (
+                  <Reply key={reply.commentId} comment={reply} />
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  No replies yet.
+                </div>
+              )}
             </div>
           )}
         </div>

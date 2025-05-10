@@ -65,7 +65,7 @@ const CommentPart = ({ chapterId }: CommentPartProps) => {
   };
 
   const comments: Comment[] = data?.pages.flatMap((page) => page) || [];
-  console.log('addedComment', addedComment);
+
   return (
     <>
       <CommentBox chapterId={chapterId} setAddedComment={setAddedComment} />
