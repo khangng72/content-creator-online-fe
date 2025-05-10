@@ -146,7 +146,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
 
         <div className="flex flex-col items-center justify-center gap-1">
           <Heart className="w-5 h-5 text-purpleRainbow fill-purpleRainbow" />
-          <span>220</span>
+          <span>{comment.numberOfLikes}</span>
         </div>
       </div>
 
