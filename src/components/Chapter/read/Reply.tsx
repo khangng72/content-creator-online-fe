@@ -10,7 +10,7 @@ const Reply = () => {
   return (
     <div className="w-full flex items-start justify-between">
       {/* user things */}
-      <div className="flex gap-2 max-w-[85%]">
+      <div className="flex gap-2 max-w-full">
         {/* avatar */}
         <div>
           <Avatar className="">
@@ -23,15 +23,14 @@ const Reply = () => {
             <span className="text-base font-bold">Username</span>
             <div>{mockComment}</div>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 justify-between">
             <span className="text-muted-foreground">20205-04-03</span>
+            <div className="flex items-center justify-center gap-1 text-xs">
+              <Heart className="w-4 h-4 text-purpleRainbow fill-purpleRainbow" />
+              <span className="text-muted-foreground">220</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center gap-1">
-        <Heart className="w-5 h-5 text-purpleRainbow fill-purpleRainbow" />
-        <span>220</span>
       </div>
     </div>
   );

@@ -25,6 +25,9 @@ const Comment = () => {
           </div>
           <div className="flex gap-2 items-center">
             <span className="text-muted-foreground">20205-04-03</span>
+            <span className="font-bold text-muted-foreground">
+              View Replies
+            </span>
             <span className="font-bold text-purpleRainbow">Reply</span>
           </div>
           <Reply />

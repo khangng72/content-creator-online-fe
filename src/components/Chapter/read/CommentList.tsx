@@ -11,7 +11,7 @@ const CommentList = ({ chapterId }: CommentListProps) => {
     <div className="flex flex-col w-full gap-6 items-center text-sm">
       <Comment />
       <Comment />
-      <button className="w-full sm:w-[50%] border-2 border-foreground py-2 text-center text-base rounded-md hover:bg-accent font-bold">
+      <button className="w-full border-2 border-foreground py-2 text-center text-base rounded-md hover:bg-accent font-bold">
         View more comments
       </button>
     </div>
