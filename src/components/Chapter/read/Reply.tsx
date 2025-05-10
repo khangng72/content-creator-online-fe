@@ -10,7 +10,7 @@ const Reply = () => {
   return (
     <div className="w-full flex items-start justify-between">
       {/* user things */}
-      <div className="flex gap-2 max-w-[90%]">
+      <div className="flex gap-2 max-w-[85%]">
         {/* avatar */}
         <div>
           <Avatar className="">
