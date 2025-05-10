@@ -53,9 +53,8 @@ import AddStoryToList from '@/components/common/AddStoryToList/AddStoryToList';
 import LikeChapter from './LikeChapter';
 import ContinueButton from './ContinueButton';
 import Image from 'next/image';
-import CommentBox from './CommentBox';
 
-import CommentList from './CommentList';
+import CommentPart from './CommentPart';
 
 interface ChapterReadProps {
   chapterId: string;
@@ -411,6 +410,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
               width={600}
               height={400}
               className="rounded-md w-[300px] h-[200px] md:w-[450px] md:h-[300px]"
+              priority
             />
           )}
         </div>
@@ -448,9 +448,8 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
               <Instagram />
             </div>
           </div>
-          <CommentBox />
 
-          <CommentList chapterId={chapterId} />
+          <CommentPart chapterId={chapterId} />
         </div>
       </div>
     </div>

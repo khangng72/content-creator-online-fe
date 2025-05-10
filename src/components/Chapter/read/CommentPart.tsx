@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -7,12 +7,15 @@ import { generateApi, GET_COMMENT_PAGED } from '@/constants/api';
 import Cookies from 'js-cookie';
 import { Comment } from '@/types/Comment';
 import CommentCard from './CommentCard';
+import CommentBox from './CommentBox';
 
-interface CommentListProps {
+interface CommentPartProps {
   chapterId: string;
 }
 
-const CommentList = ({ chapterId }: CommentListProps) => {
+const CommentPart = ({ chapterId }: CommentPartProps) => {
+  const [addedComment, setAddedComment] = useState<Comment[]>([]);
+
   const fetchComments = async ({ pageParam }: { pageParam: number }) => {
     const token = Cookies.get('token');
     const headers = {
@@ -62,24 +65,31 @@ const CommentList = ({ chapterId }: CommentListProps) => {
   };
 
   const comments: Comment[] = data?.pages.flatMap((page) => page) || [];
-
+  console.log('addedComment', addedComment);
   return (
-    <div className="flex flex-col w-full gap-6 items-center text-sm">
-      {comments.map((comment) => (
-        <CommentCard key={comment.commentId} comment={comment} />
-      ))}
-      {hasNextPage && (
-        <button
-          className="w-full py-2 text-center text-base rounded-md bg-accent font-bold hover:cursor-pointer active:scale-95 transition-all duration-300 ease-in-out"
-          type="button"
-          onClick={handleLoadMore}
-          disabled={isFetchingNextPage}
-        >
-          View more comments
-        </button>
-      )}
-    </div>
+    <>
+      <CommentBox chapterId={chapterId} setAddedComment={setAddedComment} />
+      <div className="flex flex-col w-full gap-6 items-center text-sm">
+        {addedComment.length > 0 &&
+          addedComment.map((comment) => (
+            <CommentCard key={comment.commentId} comment={comment} />
+          ))}
+        {comments.map((comment) => (
+          <CommentCard key={comment.commentId} comment={comment} />
+        ))}
+        {hasNextPage && (
+          <button
+            className="w-full py-2 text-center text-base rounded-md bg-accent font-bold hover:cursor-pointer active:scale-95 transition-all duration-300 ease-in-out"
+            type="button"
+            onClick={handleLoadMore}
+            disabled={isFetchingNextPage}
+          >
+            View more comments
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 
-export default CommentList;
+export default CommentPart;
