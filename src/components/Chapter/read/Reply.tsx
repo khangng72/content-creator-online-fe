@@ -3,6 +3,7 @@ import { Link } from '@/i18n/routing';
 import { Comment } from '@/types/Comment';
 import { timeAgo } from '@/utils/timeAgo';
 import { Heart } from 'lucide-react';
+import { forwardRef } from 'react';
 
 import React from 'react';
 
@@ -10,9 +11,9 @@ interface ReplyProps {
   comment: Comment;
 }
 
-const Reply = ({ comment }: ReplyProps) => {
+const Reply = forwardRef<HTMLDivElement, ReplyProps>(({ comment }, ref) => {
   return (
-    <div className="w-full flex items-start justify-between">
+    <div className="w-full flex items-start justify-between" ref={ref}>
       {/* user things */}
       <div className="flex gap-2 max-w-full">
         {/* avatar */}
@@ -33,7 +34,7 @@ const Reply = ({ comment }: ReplyProps) => {
             >
               {comment.userFirstName} {comment.userLastName}
             </Link>
-            <div>{comment.comment_content}</div>
+            <div className="whitespace-pre-wrap">{comment.comment_content}</div>
           </div>
           <div className="flex gap-2 justify-between">
             <span className="text-muted-foreground">
@@ -48,6 +49,6 @@ const Reply = ({ comment }: ReplyProps) => {
       </div>
     </div>
   );
-};
-
+});
+Reply.displayName = 'Reply';
 export default Reply;
