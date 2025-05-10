@@ -231,9 +231,9 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
         <div className="w-[98vw] xl:w-[95vw] bg-card border border-accent fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-10 shadow-md">
           <Popover>
             <PopoverTrigger asChild>
-              <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] lg:w-[30%] xl:w-[20%]">
+              <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] xl:w-[20%]">
                 <div className="flex flex-col items-start">
-                  <h1 className="text-lg md:text-xl font-bold bg-rainbow text-transparent bg-clip-text">
+                  <h1 className="text-lg lg:text-xl font-bold bg-rainbow text-transparent bg-clip-text text-left">
                     {currentChapter?.storyTitle}
                   </h1>
                   <span className="text-base text-left font-bold">
@@ -393,7 +393,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
       <div
         className={cn(
           'flex flex-col items-center gap-3',
-          displayTool ? 'mt-[128px] md:mt-[100px]' : 'mt-[30px]'
+          displayTool ? 'mt-[140px] md:mt-[115px]' : 'mt-[30px]'
         )}
       >
         <h1 className="font-bold text-3xl bg-rainbow text-transparent bg-clip-text text-center">
