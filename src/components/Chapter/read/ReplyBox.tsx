@@ -10,12 +10,14 @@ interface ReplyBoxProps {
   parentCommentId: string;
   setAddedReplies: React.Dispatch<React.SetStateAction<Comment[]>>;
   latestReplyRef: RefObject<HTMLDivElement>;
+  setShowReply: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ReplyBox = ({
   parentCommentId,
   setAddedReplies,
   latestReplyRef,
+  setShowReply,
 }: ReplyBoxProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState('');
@@ -63,6 +65,7 @@ const ReplyBox = ({
           textareaRef.current.style.height = 'auto';
         }
         setAddedReplies((prevReplies) => [response.data, ...prevReplies]);
+        setShowReply(true);
         scrollToLatestReply();
       } else {
         console.error('Failed to post reply:', response.statusText);

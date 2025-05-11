@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart } from 'lucide-react';
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Reply from './Reply';
 import { Comment } from '@/types/Comment';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import { generateApi, GET_REPLIES } from '@/constants/api';
 
 import ReplyBox from './ReplyBox';
+import LikeComment from './LikeComment';
 
 interface CommentCardProps {
   comment: Comment;
@@ -123,9 +124,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
                     <Reply
                       key={addedReply.commentId}
                       comment={addedReply}
-                      ref={
-                        index == addedReplies.length - 1 ? latestReplyRef : null
-                      }
+                      ref={index == 0 ? latestReplyRef : null}
                     />
                   ))}
 
@@ -145,8 +144,10 @@ const CommentCard = ({ comment }: CommentCardProps) => {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-1">
-          <Heart className="w-5 h-5 text-purpleRainbow fill-purpleRainbow" />
-          <span>{comment.numberOfLikes}</span>
+          <LikeComment />
+          <span className="text-muted-foreground text-sm">
+            {comment.numberOfLikes}
+          </span>
         </div>
       </div>
 
@@ -156,6 +157,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             parentCommentId={comment.commentId}
             setAddedReplies={setAddedReplies}
             latestReplyRef={latestReplyRef}
+            setShowReply={setShowReply}
           />
         </div>
       )}
