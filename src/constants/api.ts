@@ -27,6 +27,7 @@ export const GET_LATEST_STORY_BY_USERID = '/story/post/latest';
 export const GET_STORY_BY_GENREID = '/story/genre';
 export const SEARCH_STORY = '/story/search';
 export const GET_BASIC_INFO_STORY = '/story/basicInfo';
+export const GET_CURRENT_READS = '/story/currentReading';
 
 // Chapter
 export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';
