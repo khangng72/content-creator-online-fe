@@ -1,13 +1,6 @@
 'use client';
 
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
   Drawer,
   DrawerContent,
   DrawerDescription,
@@ -22,7 +15,7 @@ import {
 } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { DialogDescription } from '@radix-ui/react-dialog';
+
 import {
   Bolt,
   Bookmark,
@@ -295,23 +288,14 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
           </Popover>
 
           <div className="grid grid-cols-4 gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
+            {currentChapter && (
+              <AddStoryToList storyId={currentChapter?.storyId}>
                 <button className="bg-secondary flex gap-1 items-center justify-center px-2 py-1 text-xs rounded-md active:scale-95">
                   <span>Save</span>
                   <Bookmark className="hidden sm:block w-4 h-4" />
                 </button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Save to</DialogTitle>
-                  <DialogDescription className="hidden">
-                    Save story to a read list
-                  </DialogDescription>
-                </DialogHeader>
-                content
-              </DialogContent>
-            </Dialog>
+              </AddStoryToList>
+            )}
 
             {/* word spacing */}
             <Drawer>
