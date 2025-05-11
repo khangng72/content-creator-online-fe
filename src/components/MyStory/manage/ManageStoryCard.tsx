@@ -154,9 +154,12 @@ const ManageStoryCard = ({ story, fetchStories }: ManageStoryCardProps) => {
         </div>
       </div>
       <div className="flex flex-col gap-2 items-end">
-        <button className="w-fit sm:w-[100px] px-4 py-1 bg-rainbow rounded-md text-xs sm:text-base">
+        <Link
+          href={`/mystory/manage/story-detail/${story.storyId}`}
+          className="w-fit sm:w-[100px] px-4 py-1 bg-rainbow rounded-md text-xs sm:text-base text-center active:scale-95 transition-all duration-200 ease-in-out"
+        >
           Edit
-        </button>
+        </Link>
         <Popover>
           <PopoverTrigger asChild>
             <button className="p-1 border-2 border-accent text-muted-foreground rounded-md hover:bg-accent">

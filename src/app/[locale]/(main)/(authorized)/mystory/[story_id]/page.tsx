@@ -1,8 +1,8 @@
-import MyStory from "@/components/StoryManagement/StoryDetail";
-import React from "react";
+import MyStory from '@/components/Legacy_StoryManagement/StoryDetail';
+import React from 'react';
 
 const StoryDetail = () => {
-    return <MyStory/>
+  return <MyStory />;
 };
 
 export default StoryDetail;

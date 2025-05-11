@@ -16,13 +16,18 @@ const GenreSelect = ({
   loading,
   loadGenreError,
 }: GenreSelectProps) => {
+  const checkIfGenreSelected = (genre: Genre) => {
+    return selectedGenres.some(
+      (selectedGenre) => selectedGenre.genreId == genre.genreId
+    );
+  };
   const toggleGenre = (genre: Genre) => {
-    if (!selectedGenres.includes(genre)) {
+    if (!checkIfGenreSelected(genre)) {
       const updatedSelectedGenres = [...selectedGenres, genre];
       setSelectedGenres(updatedSelectedGenres);
     } else {
       const updatedSelectedGenres = selectedGenres.filter(
-        (selectedGenre) => selectedGenre !== genre
+        (selectedGenre) => selectedGenre.genreId !== genre.genreId
       );
       setSelectedGenres(updatedSelectedGenres);
     }
@@ -49,15 +54,13 @@ const GenreSelect = ({
               <label
                 className={cn(
                   'rounded-md px-2 py-2 hover:cursor-pointer',
-                  selectedGenres.includes(genre)
-                    ? 'bg-rainbow'
-                    : 'bg-background'
+                  checkIfGenreSelected(genre) ? 'bg-rainbow' : 'bg-background'
                 )}
                 key={genre.genreName}
               >
                 <input
                   type="checkbox"
-                  checked={selectedGenres.includes(genre)}
+                  checked={checkIfGenreSelected(genre)}
                   onChange={() => toggleGenre(genre)}
                   className="hidden"
                 />
