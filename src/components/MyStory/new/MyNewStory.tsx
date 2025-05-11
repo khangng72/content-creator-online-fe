@@ -185,6 +185,59 @@ const MyNewStory = () => {
     getAllGenre();
   }, []);
 
+  function b64JsonToFile(b64: string, fileName: string): File {
+    const byteString = atob(b64); // decode base64
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new File([ia], fileName, { type: 'image/png' });
+  }
+  
+  const handleGenerate = async () => {
+    if (!storyTitle) {
+      setError('Please enter a story title before generating an image.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const originalPrompt = `Generate a story cover. A dark empty road with graves and incense on both sides. The time is afternoon. The title is in Vietnamese: ${storyTitle}.`;
+
+      const response = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            "User-Agent": "Chrome",
+          },
+          body: JSON.stringify({
+            prompt: originalPrompt,
+            n: 1,
+            size: "1024x1536",
+            model: "gpt-image-1",
+          }),
+        }
+      );
+
+      const data = await response.json();
+      const base64Img = data.data[0].b64_json;
+      // const base64Img = "9xZGlnaXRhbFNvdXJjZVR5cGV4Rmh0dHA6Ly9jdi5pcHRjLm9yZy9uZXdzY29kZXMvZGlnaXRhbHNvdXJjZXR5cGUvdHJhaW5lZEFsZ29yaXRobWljTWVkaWGiZmFjdGlvbm5jMnBhLmNvbnZlcnRlZG1zb2Z0d2FyZUFnZW50v2RuYW1lak9wZW5BSSBBUEn"
+      const file = b64JsonToFile(base64Img, `${storyTitle.replace(/\s+/g, "_")}_cover.png`);
+
+      setPreviewImage(URL.createObjectURL(file));
+      setUploadFile(file);
+
+    } catch (error) {
+      console.error("Error generating image:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex flex-col items-center mb-[50px] pt-[100px] h-screen">
       <div className="h-10 rounded-md bg-rainbow px-3">
@@ -204,6 +257,13 @@ const MyNewStory = () => {
                 width={200}
                 className="bg-card rounded-md h-[320px] w-[400px]"
               />
+              <div className="loading">
+                {loading && (
+                  <div className="flex items-center justify-center mt-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={deletePreviewImage}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-400"
@@ -241,7 +301,8 @@ const MyNewStory = () => {
                 <TooltipTrigger asChild>
                   <button
                     className="flex px-3 py-1 bg-rainbow opacity-80 active:scale-95 rounded-md relative"
-                    disabled
+                    disabled={loading}
+                    onClick={()=>{handleGenerate()}}
                   >
                     <span>Generate With AI</span>
                     <Sparkles
