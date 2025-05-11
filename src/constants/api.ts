@@ -76,3 +76,6 @@ export const CLONE_READ_LIST = '/read_list/clone';
 // User Story Rating
 export const CREATE_USER_STORY_RATING = '/rate_story';
 export const GET_USER_STORY_RATING = '/rate_story/current_user';
+
+// User read story
+export const TRACK_USER_READ_STORY = '/user-read-story';

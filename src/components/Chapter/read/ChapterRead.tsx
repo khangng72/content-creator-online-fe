@@ -43,6 +43,7 @@ import {
   GET_BASIC_CHAPTERS_INFO_BY_STORY_ID,
   GET_CHAPTER_BY_ID,
   GET_CURRENT_USER_READ_PREFERENCE,
+  TRACK_USER_READ_STORY,
 } from '@/constants/api';
 import { Chapter } from '@/types/Chapter';
 import DOMPurify from 'dompurify';
@@ -126,6 +127,32 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
     }
   }, [currentChapter]);
 
+  const trackCurrentReadChapter = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const data = {
+        storyId: currentChapter?.storyId,
+        chapterId: currentChapter?.chapterId,
+      };
+      const response = await axios.post(
+        generateApi(TRACK_USER_READ_STORY),
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        console.error('Error tracking current read chapter:', response.data);
+      }
+    } catch (error) {
+      console.error('Error tracking current read chapter:', error);
+    }
+  }, [currentChapter]);
+
   const fetchReadPreference = useCallback(async () => {
     const token = Cookies.get('token');
     try {
@@ -202,6 +229,12 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
     updateReadPreference,
   ]);
 
+  useEffect(() => {
+    if (currentChapter) {
+      trackCurrentReadChapter();
+    }
+  }, [currentChapter, trackCurrentReadChapter]);
+
   if (loading) {
     return <div className="flex justify-center items-center">Loading...</div>;
   }
@@ -230,7 +263,7 @@ const ChapterRead = ({ chapterId }: ChapterReadProps) => {
         <div className="w-[98vw] xl:w-[95vw] bg-card border border-accent fixed rounded-md py-2 px-3 flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center z-10 shadow-md">
           <Popover>
             <PopoverTrigger asChild>
-              <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%] xl:w-[20%]">
+              <button className="flex items-center justify-between gap-1 bg-secondary rounded-md px-2 py-1 hover:bg-background md:w-[40%]">
                 <div className="flex flex-col items-start">
                   <h1 className="text-lg lg:text-xl font-bold bg-rainbow text-transparent bg-clip-text text-left">
                     {currentChapter?.storyTitle}
