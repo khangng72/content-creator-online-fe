@@ -1,8 +1,9 @@
-import ManageUserStoryList from "@/components/StoryManagement/StoryManagement";
-import React from "react";
+import ManageMyStory from '@/components/MyStory/manage/ManageMyStory';
 
-const UserStoryList = () => {
-  return <ManageUserStoryList/>
+import React from 'react';
+
+const ManageStoryPage = () => {
+  return <ManageMyStory />;
 };
 
-export default UserStoryList;
+export default ManageStoryPage;
