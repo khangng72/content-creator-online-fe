@@ -1,15 +1,116 @@
 import StarRating from '@/components/Explore/StarRating';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import StoriImage from '@/components/ui/StoriImage';
 import { Link } from '@/i18n/routing';
 import { BasicStoryInfo } from '@/types/Story';
-import { Ellipsis, Eye, TableOfContents } from 'lucide-react';
-import React from 'react';
+import {
+  CircleAlert,
+  Ellipsis,
+  Eye,
+  TableOfContents,
+  Trash,
+} from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import {
+  DELETE_STORY_BY_ID,
+  generateApi,
+  GET_PUBLISHED_INFO,
+} from '@/constants/api';
+import { useToast } from '@/hooks/use-toast';
+
+import UnpublishStoryBtn from './Unpublished';
 
 interface ManageStoryCardProps {
   story: BasicStoryInfo;
+  fetchPublishedStories: () => Promise<void>;
 }
 
-const ManageStoryCard = ({ story }: ManageStoryCardProps) => {
+interface PublishedInfo {
+  storyId: string;
+  published: number;
+  draft: number;
+}
+
+const ManageStoryCard = ({
+  story,
+  fetchPublishedStories,
+}: ManageStoryCardProps) => {
+  const { toast } = useToast();
+
+  const [open, setOpen] = useState(false);
+  const [publishedInfo, setPublishedInfo] = useState<PublishedInfo | null>(
+    null
+  );
+
+  const handleDeleteStory = async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.delete(
+        generateApi(DELETE_STORY_BY_ID, story.storyId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log('Story deleted successfully');
+        toast({
+          title: 'Story deleted successfully',
+          description: 'Your story has been deleted.',
+        });
+        setOpen(false);
+        fetchPublishedStories();
+      } else {
+        console.error('Failed to delete story');
+      }
+    } catch (error) {
+      console.error('Error deleting story:', error);
+    }
+  };
+
+  const fetchPublishedInfo = useCallback(async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(
+        generateApi(GET_PUBLISHED_INFO, story.storyId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setPublishedInfo(response.data);
+      } else {
+        console.error('Failed to fetch published info');
+      }
+    } catch (error) {
+      console.error('Error fetching published info:', error);
+    }
+  }, [story.storyId]);
+
+  useEffect(() => {
+    fetchPublishedInfo();
+  }, [fetchPublishedInfo]);
+
   return (
     <div className="px-5 py-4 border-b border-accent flex items-start justify-between">
       <div className="flex gap-3 max-w-[80%]">
@@ -28,10 +129,12 @@ const ManageStoryCard = ({ story }: ManageStoryCardProps) => {
           </Link>
           <div className="text-xs sm:text-sm text-muted-foreground mt-1">
             <span className="text-purpleRainbow font-semibold">
-              3 published
+              {publishedInfo?.published} published
             </span>
             {' - '}
-            <span className="text-muted-foreground font-semibold">2 Draft</span>
+            <span className="text-muted-foreground font-semibold">
+              {publishedInfo?.draft} Draft
+            </span>
           </div>
           <StarRating rating={story.averageRating} size={14} />
           <div className="flex gap-3 text-muted-foreground text-xs sm:text-sm">
@@ -50,9 +153,50 @@ const ManageStoryCard = ({ story }: ManageStoryCardProps) => {
         <button className="w-fit sm:w-[100px] px-4 py-1 bg-rainbow rounded-md text-xs sm:text-base">
           Edit
         </button>
-        <button className="p-1 border-2 border-accent text-muted-foreground rounded-md">
-          <Ellipsis className="w-5 h-5" />
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="p-1 border-2 border-accent text-muted-foreground rounded-md hover:bg-accent">
+              <Ellipsis className="w-5 h-5" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-[120px] bg-card border border-accent shadow-md rounded-md p-3 text-xs sm:text-sm text-muted-foreground space-y-3"
+            align="end"
+          >
+            {publishedInfo && publishedInfo?.published > 0 && (
+              <UnpublishStoryBtn
+                storyId={story.storyId}
+                fetchPublishedStories={fetchPublishedStories}
+              />
+            )}
+            <AlertDialog open={open} onOpenChange={setOpen}>
+              <AlertDialogTrigger asChild>
+                <button className="flex gap-2 hover:underline items-center">
+                  <Trash className="w-4 h-4" />
+                  <span>Delete</span>
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex gap-1 items-center">
+                    <CircleAlert className="w-5 h-5 fill-red-500" />
+                    <span>Are you absolutely sure?</span>
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your story and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <Button onClick={() => setOpen(false)}>Cancel</Button>
+                  <Button variant="destructive" onClick={handleDeleteStory}>
+                    Accept
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

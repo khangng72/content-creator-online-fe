@@ -61,7 +61,11 @@ const PublishedStories = () => {
       </div>
       {stories.length > 0 &&
         stories.map((story) => (
-          <ManageStoryCard key={story.storyId} story={story} />
+          <ManageStoryCard
+            key={story.storyId}
+            story={story}
+            fetchPublishedStories={fetchPublishedStories}
+          />
         ))}
     </div>
   );

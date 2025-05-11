@@ -29,6 +29,11 @@ export const SEARCH_STORY = '/story/search';
 export const GET_BASIC_INFO_STORY = '/story/basicInfo';
 export const GET_CURRENT_READS = '/story/currentReading';
 export const GET_PUBLISHED_STORY = '/story/published-stories';
+export const DELETE_STORY_BY_ID = '/story';
+export const GET_PUBLISHED_INFO = '/story/published-info';
+export const UNPUBLISH_STORY = '/story/unpublish';
+export const GET_ALL_STORIES_BY_CURRENT_USER =
+  '/story/current-user/all-stories';
 
 // Chapter
 export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';
