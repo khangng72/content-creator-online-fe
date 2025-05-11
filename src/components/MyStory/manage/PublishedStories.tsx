@@ -64,7 +64,7 @@ const PublishedStories = () => {
           <ManageStoryCard
             key={story.storyId}
             story={story}
-            fetchPublishedStories={fetchPublishedStories}
+            fetchStories={fetchPublishedStories}
           />
         ))}
     </div>

@@ -34,12 +34,13 @@ import {
 } from '@/constants/api';
 import { useToast } from '@/hooks/use-toast';
 
-import UnpublishStoryBtn from './Unpublished';
+import UnpublishStoryBtn from './UnpublishStoryBtn';
 import { timeAgo } from '@/utils/timeAgo';
+import PublishStoryBtn from './PublishStoryBtn';
 
 interface ManageStoryCardProps {
   story: BasicStoryInfo;
-  fetchPublishedStories: () => Promise<void>;
+  fetchStories: () => Promise<void>;
 }
 
 interface PublishedInfo {
@@ -48,10 +49,7 @@ interface PublishedInfo {
   draft: number;
 }
 
-const ManageStoryCard = ({
-  story,
-  fetchPublishedStories,
-}: ManageStoryCardProps) => {
+const ManageStoryCard = ({ story, fetchStories }: ManageStoryCardProps) => {
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
@@ -78,7 +76,7 @@ const ManageStoryCard = ({
           description: 'Your story has been deleted.',
         });
         setOpen(false);
-        fetchPublishedStories();
+        fetchStories();
       } else {
         console.error('Failed to delete story');
       }
@@ -166,13 +164,22 @@ const ManageStoryCard = ({
             </button>
           </PopoverTrigger>
           <PopoverContent
-            className="w-[120px] bg-card border border-accent shadow-md rounded-md p-3 text-xs sm:text-sm text-muted-foreground space-y-3"
+            className="w-[130px] bg-card border border-accent shadow-md rounded-md p-3 text-xs sm:text-sm text-muted-foreground space-y-3"
             align="end"
           >
             {publishedInfo && publishedInfo?.published > 0 && (
               <UnpublishStoryBtn
                 storyId={story.storyId}
-                fetchPublishedStories={fetchPublishedStories}
+                fetchPublishedStories={fetchStories}
+                fetchPublishedInfo={fetchPublishedInfo}
+              />
+            )}
+
+            {publishedInfo && publishedInfo?.published === 0 && (
+              <PublishStoryBtn
+                storyId={story.storyId}
+                fetchStories={fetchStories}
+                fetchPublishedInfo={fetchPublishedInfo}
               />
             )}
             <AlertDialog open={open} onOpenChange={setOpen}>

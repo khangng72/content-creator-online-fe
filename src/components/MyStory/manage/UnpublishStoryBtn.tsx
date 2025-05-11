@@ -19,11 +19,13 @@ import { generateApi, UNPUBLISH_STORY } from '@/constants/api';
 interface UnpublishStoryBtnProps {
   storyId: string;
   fetchPublishedStories: () => Promise<void>;
+  fetchPublishedInfo: () => Promise<void>;
 }
 
 const UnpublishStoryBtn = ({
   storyId,
   fetchPublishedStories,
+  fetchPublishedInfo,
 }: UnpublishStoryBtnProps) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
@@ -47,6 +49,8 @@ const UnpublishStoryBtn = ({
           description: 'Story unpublished successfully.',
         });
         fetchPublishedStories();
+        fetchPublishedInfo();
+        setOpen(false);
       } else {
         toast({
           title: 'Error',
