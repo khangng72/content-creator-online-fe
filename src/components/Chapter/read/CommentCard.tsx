@@ -21,6 +21,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   const [replies, setReplies] = useState<Comment[]>([]);
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [addedReplies, setAddedReplies] = useState<Comment[]>([]);
+  const [numberOfLikes, setNumberOfLikes] = useState(comment.numberOfLikes);
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
   const latestReplyRef = useRef<HTMLDivElement>(null);
@@ -144,10 +145,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-1">
-          <LikeComment />
-          <span className="text-muted-foreground text-sm">
-            {comment.numberOfLikes}
-          </span>
+          <LikeComment comment={comment} setNumberOfLikes={setNumberOfLikes} />
+          <span className="text-muted-foreground text-sm">{numberOfLikes}</span>
         </div>
       </div>
 

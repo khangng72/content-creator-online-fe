@@ -2,16 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from '@/i18n/routing';
 import { Comment } from '@/types/Comment';
 import { timeAgo } from '@/utils/timeAgo';
-import { Heart } from 'lucide-react';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 
 import React from 'react';
+import LikeComment from './LikeComment';
 
 interface ReplyProps {
   comment: Comment;
 }
 
 const Reply = forwardRef<HTMLDivElement, ReplyProps>(({ comment }, ref) => {
+  const [numberOfLikes, setNumberOfLikes] = useState(comment.numberOfLikes);
+
   return (
     <div className="w-full flex items-start justify-between" ref={ref}>
       {/* user things */}
@@ -41,8 +43,12 @@ const Reply = forwardRef<HTMLDivElement, ReplyProps>(({ comment }, ref) => {
               {timeAgo(comment.createdTime)}
             </span>
             <div className="flex items-center justify-center gap-1 text-xs">
-              <Heart className="w-4 h-4 text-purpleRainbow fill-purpleRainbow" />
-              <span className="text-muted-foreground">220</span>
+              <LikeComment
+                comment={comment}
+                setNumberOfLikes={setNumberOfLikes}
+                className="w-5 h-5"
+              />
+              <span className="text-muted-foreground">{numberOfLikes}</span>
             </div>
           </div>
         </div>

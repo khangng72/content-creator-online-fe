@@ -57,6 +57,8 @@ export const GET_COMMENT_PAGED = '/comment/chapter';
 export const POST_COMMENT = '/comment/chapter';
 export const GET_REPLIES = '/comment/replies';
 export const POST_REPLY = '/comment/reply';
+export const CHECK_IF_USER_LIKED_COMMENT = '/comment/isLiked';
+export const TOGGLE_LIKE_COMMENT = '/comment/like';
 
 // Reading List
 export const GET_READING_LIST_BY_CURRENT_USER = '/read_list/current_user';
