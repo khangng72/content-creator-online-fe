@@ -19,10 +19,6 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'covers.openlibrary.org',
             },
-            {
-                protocol: 'https',
-                hostname: 'oaidalleapiprodscus.blob.core.windows.net',
-            },
         ],
     },
 };
