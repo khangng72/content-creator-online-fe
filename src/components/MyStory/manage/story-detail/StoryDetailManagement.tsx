@@ -71,13 +71,23 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row w-full justify-center items-center md:items-start gap-2 md:gap-0">
-        <div className="w-full md:w-[20%] flex justify-center items-center">
-          <StoriImage
-            source="/BookCover/sample_cover.jpeg"
-            storyTitle="ss"
-            className="w-[160px] h-[240px] md:w-[100px] md:h-[150px] lg:w-[160px] lg:h-[240px] 2xl:w-[200px] 2xl:h-[300px]"
-          />
+      <div className="flex flex-col md:flex-row w-full justify-center items-center md:items-start gap-2">
+        <div className="w-full md:w-[30%] flex flex-col justify-center items-center">
+          {storyInfo && (
+            <StoriImage
+              source={storyInfo?.coverImageUri}
+              storyTitle={storyInfo?.storyTitle}
+              className="w-[180px] h-[270px] 2xl:w-[240px] 2xl:h-[360px]"
+            />
+          )}
+          <div className="flex gap-2 mt-3">
+            <button className="py-1 px-2 bg-card rounded-md active:scale-95 transition-all duration-200 ease-in-out">
+              Upload File
+            </button>
+            <button className="bg-rainbow py-1 px-2 rounded-md active:scale-95 transition-all duration-200 ease-in-out">
+              Generate With AI
+            </button>
+          </div>
         </div>
         <div className="w-full md:w-[70%] bg-card rounded-md pb-3">
           <div className="flex justify-center md:justify-start border-b border-accent mb-3">

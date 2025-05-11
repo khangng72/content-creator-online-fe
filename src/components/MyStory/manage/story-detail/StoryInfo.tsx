@@ -91,6 +91,8 @@ const StoryInfo = ({ story }: StoryInfoProps) => {
           rows={7}
           className="border border-accent rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purpleRainbow resize-none"
           placeholder="Enter story title"
+          value={storyDescription}
+          onChange={(e) => setStoryDescription(e.target.value)}
         />
       </div>
 
