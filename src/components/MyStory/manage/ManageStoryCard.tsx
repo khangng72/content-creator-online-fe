@@ -35,6 +35,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 
 import UnpublishStoryBtn from './Unpublished';
+import { timeAgo } from '@/utils/timeAgo';
 
 interface ManageStoryCardProps {
   story: BasicStoryInfo;
@@ -113,7 +114,7 @@ const ManageStoryCard = ({
 
   return (
     <div className="px-5 py-4 border-b border-accent flex items-start justify-between">
-      <div className="flex gap-3 max-w-[80%]">
+      <div className="flex gap-3 max-w-[90%]">
         <StoriImage
           source={story.coverImageUri}
           storyTitle={story.storyTitle}
@@ -123,7 +124,7 @@ const ManageStoryCard = ({
         <div className="flex flex-col gap-1">
           <Link
             href="#"
-            className="font-bold text-sm sm:text-base md:text-lg hover:underline"
+            className="font-bold text-sm sm:text-base md:text-lg hover:underline max-w-[95%]"
           >
             {story.storyTitle}
           </Link>
@@ -135,6 +136,11 @@ const ManageStoryCard = ({
             <span className="text-muted-foreground font-semibold">
               {publishedInfo?.draft} Draft
             </span>
+          </div>
+          <div className="text-muted-foreground text-xs sm:text-sm flex flex-col md:flex-row gap-1">
+            <span>Created {timeAgo(story.createdTime)}</span>
+            <span className="hidden md:inline"> - </span>
+            <span>Updated {timeAgo(story.updatedTime)}</span>
           </div>
           <StarRating rating={story.averageRating} size={14} />
           <div className="flex gap-3 text-muted-foreground text-xs sm:text-sm">

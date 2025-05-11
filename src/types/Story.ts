@@ -10,5 +10,7 @@ export interface BasicStoryInfo {
   numberOfViews: number;
   numberOfChapters: number;
   averageRating: number;
+  updatedTime: string;
+  createdTime: string;
   genres: Genre[];
 }
