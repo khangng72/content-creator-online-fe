@@ -83,6 +83,7 @@ const EditChapterTitle = ({
       onInput={handleInput}
       value={text}
       onChange={(e) => setText(e.target.value)}
+      rows={1}
     />
   );
 };

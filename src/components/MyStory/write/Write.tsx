@@ -47,6 +47,7 @@ import {
 import { Chapter } from '@/types/Chapter';
 import EditChapterTitle from './EditChapterTitle';
 import { useDebounce } from 'use-debounce';
+import FunctionalBtn from './FunctionalBtn';
 
 interface WriteProps {
   storyId: string;
@@ -279,7 +280,7 @@ const Write = ({ storyId, chapterId }: WriteProps) => {
                     return (
                       <ChapterOption
                         key={currentChapter.chapterId}
-                        chapter={chapter}
+                        chapter={currentChapter}
                         checked={true}
                       />
                     );
@@ -296,19 +297,11 @@ const Write = ({ storyId, chapterId }: WriteProps) => {
             </Popover>
 
             {/* functional button */}
-            <div className="grid grid-cols-3 gap-2">
-              <button className="bg-rainbow py-1 px-3 text-sm rounded-md active:scale-95">
-                Publish
-              </button>
-
-              <button className="bg-foreground text-background py-1 px-3 text-sm rounded-md active:scale-95">
-                Save
-              </button>
-
-              <button className="bg-foreground text-background py-1 px-3 text-sm rounded-md active:scale-95">
-                Preview
-              </button>
-            </div>
+            <FunctionalBtn
+              chapterId={chapterId}
+              fetchCurrentChapter={fetchCurrentChapter}
+              updateChapterContent={updateChapterContent}
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 items-center">

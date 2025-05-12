@@ -50,6 +50,8 @@ export const GET_CHAPTERS_BY_STORY_ID_AUTHOR_MODE = '/chapter/all-by-story';
 export const DELETE_CHAPTER_BY_ID = '/chapter';
 export const UPDATE_CHAPTER_TITLE = '/chapter/update-chapter-title';
 export const UPDATE_CHAPTER_CONTENT = '/chapter/update-chapter-content';
+export const CHECK_IF_CHAPTER_IS_PUBLISHED = '/chapter/check-if-published';
+export const TOGGLE_CHAPTER_PUBLISH = '/chapter/toggle-publish';
 
 // User
 export const REGISTER = '/user/register';
