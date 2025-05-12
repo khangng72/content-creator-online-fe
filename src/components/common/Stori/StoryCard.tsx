@@ -17,7 +17,7 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
     return (
       <div
         key={story.storyId}
-        className="flex flex-col justify-center items-center bg-card rounded-md p-4 relative"
+        className="flex flex-col justify-start items-center bg-card rounded-md p-4 relative"
         ref={ref}
       >
         <StoriImage
@@ -56,7 +56,7 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
           className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(
-              story.storyDescription.slice(0, 255) + '</p>'
+              story.storyDescription.slice(0, 200) + '</p>'
             ),
           }}
         ></div>

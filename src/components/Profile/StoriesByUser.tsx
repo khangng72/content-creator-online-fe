@@ -61,7 +61,7 @@ const StoriesByUser = ({ userData }: StoriesByUserProps) => {
         />
       </div>
 
-      <div className="grid gap-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 px-[20px] xl:px-[50px] 2xl:px-[100px]">
+      <div className="grid gap-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 px-[20px] xl:px-[50px] 2xl:px-[100px]">
         {filteredStories &&
           filteredStories.map((story) => (
             <StoryCard key={story.storyId} story={story} />
