@@ -26,6 +26,7 @@ import { useDebounce } from 'use-debounce';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { delay } from '@/utils/Delay';
 import { useRouter } from '@/i18n/routing';
+import { b64JsonToFile } from '@/utils/b64JsonToFile';
 
 const MyNewStory = () => {
   const [storyTitle, setStoryTitle] = useState('Your Story Title');
@@ -182,16 +183,6 @@ const MyNewStory = () => {
     getAllGenre();
   }, []);
 
-  function b64JsonToFile(b64: string, fileName: string): File {
-    const byteString = atob(b64); // decode base64
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new File([ia], fileName, { type: 'image/png' });
-  }
-  
   const handleGenerate = async () => {
     if (!storyTitle || storyTitle.trim() === '') {
       setError('Please enter a story title before generating an image.');
@@ -201,39 +192,28 @@ const MyNewStory = () => {
     try {
       const titlePrompt = `Generate a story cover. The title is: ${storyTitle}. `;
 
-      const response = await fetch(
-        "https://api.openai.com/v1/images/generations",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            "User-Agent": "Chrome",
-          },
-          body: JSON.stringify({
-            prompt: titlePrompt + customPrompt,
-            n: 1,
-            size: "1024x1536",
-            model: "gpt-image-1",
-          }),
-        }
-      );
+      const response = await axios.post('/api/ai/generate-image', {
+        prompt: titlePrompt + customPrompt,
+        model: 'gpt-image-1',
+        size: '1024x1536',
+      });
 
-      const data = await response.json();
-      const base64Img = data.data[0].b64_json;
-      const file = b64JsonToFile(base64Img, `${storyTitle.replace(/\s+/g, "_")}_cover.png`);
+      const base64Img = response.data.b64_json;
+      const file = b64JsonToFile(
+        base64Img,
+        `${storyTitle.replace(/\s+/g, '_')}_cover.png`
+      );
 
       setPreviewImage(URL.createObjectURL(file));
       setUploadFile(file);
-
     } catch (error) {
-      console.error("Error generating image:", error);
-      setError("Something went wrong. Please try again.");
+      console.error('Error generating image:', error);
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
       setIsDialogOpen(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center mb-[50px] pt-[100px] h-screen">
@@ -252,7 +232,7 @@ const MyNewStory = () => {
                 alt="CoverImage"
                 height={300}
                 width={200}
-                className="bg-card rounded-md h-[320px] w-[400px]"
+                className="bg-card rounded-md w-[300px] h-[450px] "
               />
               <button
                 onClick={deletePreviewImage}
@@ -263,7 +243,7 @@ const MyNewStory = () => {
             </div>
           ) : (
             <button
-              className="bg-card rounded-md h-[320px] w-[400px] flex items-center justify-center"
+              className="bg-card rounded-md w-[300px] h-[450px]  flex items-center justify-center"
               onClick={triggerUploadFile}
             >
               <ImageIcon size={32} className="text-muted-foreground" />
@@ -288,7 +268,7 @@ const MyNewStory = () => {
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <button
-                  className="flex px-3 py-1 bg-rainbow opacity-80 active:scale-95 rounded-md relative"
+                  className="flex px-3 py-1 bg-rainbow active:scale-95 rounded-md relative"
                   disabled={loading}
                   onClick={() => setIsDialogOpen(true)}
                 >
@@ -314,7 +294,9 @@ const MyNewStory = () => {
                   ></textarea>
                   <button
                     className="bg-rainbow text-white py-2 px-4 rounded active:scale-95"
-                    onClick={() => { handleGenerate() }}
+                    onClick={() => {
+                      handleGenerate();
+                    }}
                   >
                     {loading ? 'Generating...' : 'Generate'}
                   </button>
