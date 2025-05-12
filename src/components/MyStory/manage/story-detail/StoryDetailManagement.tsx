@@ -116,7 +116,7 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
   }, [fetchStoryInfo]);
 
   return (
-    <div className="pt-[100px] flex-col w-[95vw] md:w-[90vw] lg:w-[85vw] xl:w-[70vw]  m-auto pb-2">
+    <div className="pt-[100px] flex-col w-[95vw] md:w-[90vw] lg:w-[85vw] xl:w-[70vw]  m-auto pb-5">
       <div className="w-full justify-between items-end p-3 flex">
         <Link
           href={`/mystory/manage`}
