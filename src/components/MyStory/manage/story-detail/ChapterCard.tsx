@@ -125,7 +125,7 @@ const ChapterCard = ({ chapter, fetchChapters }: ChapterCardProps) => {
             </button>
           </PopoverTrigger>
           <PopoverContent
-            className="w-48 text-sm flex flex-col gap-3 items-start"
+            className="w-48 text-sm flex flex-col gap-3 items-start bg-card border border-accent shadow-md"
             align="end"
           >
             <AlertDialog>
@@ -152,7 +152,10 @@ const ChapterCard = ({ chapter, fetchChapters }: ChapterCardProps) => {
                 </DialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            <Link href="#" className="hover:underline flex gap-1 items-center">
+            <Link
+              href={`/mystory/${chapter.storyId}/write/${chapter.chapterId}`}
+              className="hover:underline flex gap-1 items-center"
+            >
               <PenBoxIcon className="w-4 h-4" />
               <span>Continue Writing</span>
             </Link>
