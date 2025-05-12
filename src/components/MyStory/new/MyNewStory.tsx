@@ -22,12 +22,6 @@ import {
   UPDATE_STORY_GENRE,
 } from '@/constants/api';
 import { ImageIcon, Sparkles } from 'lucide-react';
-import {
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Tooltip } from '@radix-ui/react-tooltip';
 import { useDebounce } from 'use-debounce';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { delay } from '@/utils/Delay';
@@ -51,6 +45,9 @@ const MyNewStory = () => {
   const [isCreatingStory, setIsCreatingStory] = useState(false);
 
   const [uploadFile, setUploadFile] = useState<File | null>(null);
+
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const triggerUploadFile = () => {
     fileInputRef?.current?.click();
@@ -196,13 +193,13 @@ const MyNewStory = () => {
   }
   
   const handleGenerate = async () => {
-    if (!storyTitle) {
+    if (!storyTitle || storyTitle.trim() === '') {
       setError('Please enter a story title before generating an image.');
       return;
     }
     setLoading(true);
     try {
-      const originalPrompt = `Generate a story cover. A dark empty road with graves and incense on both sides. The time is afternoon. The title is in Vietnamese: ${storyTitle}.`;
+      const titlePrompt = `Generate a story cover. The title is: ${storyTitle}. `;
 
       const response = await fetch(
         "https://api.openai.com/v1/images/generations",
@@ -214,7 +211,7 @@ const MyNewStory = () => {
             "User-Agent": "Chrome",
           },
           body: JSON.stringify({
-            prompt: originalPrompt,
+            prompt: titlePrompt + customPrompt,
             n: 1,
             size: "1024x1536",
             model: "gpt-image-1",
@@ -224,7 +221,6 @@ const MyNewStory = () => {
 
       const data = await response.json();
       const base64Img = data.data[0].b64_json;
-      // const base64Img = "9xZGlnaXRhbFNvdXJjZVR5cGV4Rmh0dHA6Ly9jdi5pcHRjLm9yZy9uZXdzY29kZXMvZGlnaXRhbHNvdXJjZXR5cGUvdHJhaW5lZEFsZ29yaXRobWljTWVkaWGiZmFjdGlvbm5jMnBhLmNvbnZlcnRlZG1zb2Z0d2FyZUFnZW50v2RuYW1lak9wZW5BSSBBUEn"
       const file = b64JsonToFile(base64Img, `${storyTitle.replace(/\s+/g, "_")}_cover.png`);
 
       setPreviewImage(URL.createObjectURL(file));
@@ -235,6 +231,7 @@ const MyNewStory = () => {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+      setIsDialogOpen(false);
     }
   }
 
@@ -257,13 +254,6 @@ const MyNewStory = () => {
                 width={200}
                 className="bg-card rounded-md h-[320px] w-[400px]"
               />
-              <div className="loading">
-                {loading && (
-                  <div className="flex items-center justify-center mt-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                )}
-              </div>
               <button
                 onClick={deletePreviewImage}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-400"
@@ -295,28 +285,42 @@ const MyNewStory = () => {
               accept="image/*"
               onChange={handleFileChange}
             />
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <button
+                  className="flex px-3 py-1 bg-rainbow opacity-80 active:scale-95 rounded-md relative"
+                  disabled={loading}
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  <span>Generate With AI</span>
+                  <Sparkles
+                    fill="yellow"
+                    color="yellow"
+                    className="absolute -top-2 -right-3"
+                  />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-card md:min-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>Generate Story Cover</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                  <textarea
+                    className="border border-gray-300 rounded p-2 w-full"
+                    rows={5}
+                    placeholder="Enter your custom prompt here..."
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                  ></textarea>
                   <button
-                    className="flex px-3 py-1 bg-rainbow opacity-80 active:scale-95 rounded-md relative"
-                    disabled={loading}
-                    onClick={()=>{handleGenerate()}}
+                    className="bg-rainbow text-white py-2 px-4 rounded active:scale-95"
+                    onClick={() => { handleGenerate() }}
                   >
-                    <span>Generate With AI</span>
-                    <Sparkles
-                      fill="yellow"
-                      color="yellow"
-                      className="absolute -top-2 -right-3"
-                    />
+                    {loading ? 'Generating...' : 'Generate'}
                   </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Generate your cover with our AI</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <div className="bg-card w-full xl:w-[80%] px-8 py-4 rounded-md flex flex-col items-start gap-4">
