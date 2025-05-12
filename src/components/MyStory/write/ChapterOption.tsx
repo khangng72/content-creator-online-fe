@@ -1,6 +1,4 @@
 import { Link } from '@/i18n/routing';
-import { Chapter } from '@/types/Chapter';
-import { formatTimestamp } from '@/utils/FormatTimestamp';
 import { CircleCheck } from 'lucide-react';
 
 const ChapterOption = () => {

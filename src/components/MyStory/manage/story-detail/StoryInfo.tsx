@@ -20,9 +20,14 @@ import { toast } from '@/hooks/use-toast';
 interface StoryInfoProps {
   story: BasicStoryInfo;
   fetchStoryInfo: () => Promise<void>;
+  handleUploadFile: () => Promise<string | undefined>;
 }
 
-const StoryInfo = ({ story, fetchStoryInfo }: StoryInfoProps) => {
+const StoryInfo = ({
+  story,
+  fetchStoryInfo,
+  handleUploadFile,
+}: StoryInfoProps) => {
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
   const [genreList, setGenreList] = useState<Genre[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,12 +62,14 @@ const StoryInfo = ({ story, fetchStoryInfo }: StoryInfoProps) => {
     const token = Cookies.get('token');
 
     try {
+      const coverImageUri = await handleUploadFile();
       const response = await axios.put(
         generateApi(UPDATE_STORY, story.storyId),
         {
           storyTitle,
           storyDescription,
           genres: selectedGenres,
+          coverImageUri,
         },
         {
           headers: {

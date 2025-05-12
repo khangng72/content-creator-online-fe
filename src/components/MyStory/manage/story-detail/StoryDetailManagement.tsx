@@ -3,7 +3,13 @@
 import StoriImage from '@/components/ui/StoriImage';
 import { Link } from '@/i18n/routing';
 import { ChevronLeft } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import StoryInfo from './StoryInfo';
 import ContentTable from './ContentTable';
 import { BasicStoryInfo } from '@/types/Story';
@@ -22,8 +28,38 @@ interface StoryDetailManagementProps {
 
 const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
   const [storyInfo, setStoryInfo] = useState<BasicStoryInfo | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [activeTab, setActiveTab] = useState(tabList[0].id);
+
+  const triggerUploadFile = () => {
+    fileInputRef?.current?.click();
+  };
+
+  const handleUploadFile = async () => {
+    if (uploadFile && storyInfo?.coverImageUri !== previewImage) {
+      const formFile = new FormData();
+      formFile.append('file', uploadFile as File);
+      const token = Cookies.get('token');
+
+      const uploadFileResult = await axios
+        .post('/api/upload', formFile, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .catch((error) => {
+          console.log('Error', error);
+        });
+
+      return uploadFileResult?.data.path;
+    }
+
+    return null;
+  };
 
   const fetchStoryInfo = useCallback(async () => {
     const token = Cookies.get('token');
@@ -38,6 +74,7 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
       );
       if (response.status === 200) {
         setStoryInfo(response.data);
+        setPreviewImage(response.data.coverImageUri);
       } else {
         console.error('Failed to fetch story info');
       }
@@ -45,6 +82,34 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
       console.error('Error fetching story info:', error);
     }
   }, [storyId]);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage);
+      }
+
+      setUploadFile(file);
+
+      const objectURL = URL.createObjectURL(file);
+      setPreviewImage(objectURL);
+    }
+  };
+
+  const resetPreviewImage = () => {
+    if (previewImage !== storyInfo?.coverImageUri && previewImage) {
+      URL.revokeObjectURL(previewImage);
+    }
+    if (storyInfo?.coverImageUri) {
+      setPreviewImage(storyInfo?.coverImageUri);
+    } else {
+      setPreviewImage(null);
+    }
+
+    setUploadFile(null);
+  };
 
   useEffect(() => {
     fetchStoryInfo();
@@ -75,17 +140,37 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
         <div className="w-full md:w-[30%] flex flex-col justify-center items-center">
           {storyInfo && (
             <StoriImage
-              source={storyInfo?.coverImageUri}
+              source={previewImage}
               storyTitle={storyInfo?.storyTitle}
               className="w-[180px] h-[270px] 2xl:w-[240px] 2xl:h-[360px]"
             />
           )}
           <div className="flex gap-2 mt-3">
-            <button className="py-1 px-2 bg-card rounded-md active:scale-95 transition-all duration-200 ease-in-out">
+            <button
+              className="py-1 px-2 bg-card rounded-md active:scale-95 transition-all duration-200 ease-in-out"
+              onClick={triggerUploadFile}
+            >
               Upload File
             </button>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+
             <button className="bg-rainbow py-1 px-2 rounded-md active:scale-95 transition-all duration-200 ease-in-out">
               Generate With AI
+            </button>
+          </div>
+          <div className="mt-2">
+            <button
+              className="px-3 py-1 rounded-md bg-card active:scale-95 transition-all duration-200 ease-in-out"
+              onClick={resetPreviewImage}
+            >
+              Reset
             </button>
           </div>
         </div>
@@ -107,7 +192,11 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
           </div>
 
           {activeTab == 'info' && storyInfo && (
-            <StoryInfo story={storyInfo} fetchStoryInfo={fetchStoryInfo} />
+            <StoryInfo
+              story={storyInfo}
+              fetchStoryInfo={fetchStoryInfo}
+              handleUploadFile={handleUploadFile}
+            />
           )}
           {activeTab == 'content' && <ContentTable />}
         </div>
