@@ -22,16 +22,11 @@ import {
   UPDATE_STORY_GENRE,
 } from '@/constants/api';
 import { ImageIcon, Sparkles } from 'lucide-react';
-import {
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Tooltip } from '@radix-ui/react-tooltip';
 import { useDebounce } from 'use-debounce';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { delay } from '@/utils/Delay';
 import { useRouter } from '@/i18n/routing';
+import { b64JsonToFile } from '@/utils/b64JsonToFile';
 
 const MyNewStory = () => {
   const [storyTitle, setStoryTitle] = useState('Your Story Title');
@@ -51,6 +46,9 @@ const MyNewStory = () => {
   const [isCreatingStory, setIsCreatingStory] = useState(false);
 
   const [uploadFile, setUploadFile] = useState<File | null>(null);
+
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const triggerUploadFile = () => {
     fileInputRef?.current?.click();
@@ -185,6 +183,38 @@ const MyNewStory = () => {
     getAllGenre();
   }, []);
 
+  const handleGenerate = async () => {
+    if (!storyTitle || storyTitle.trim() === '') {
+      setError('Please enter a story title before generating an image.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const titlePrompt = `Generate a story cover. The title is: ${storyTitle}. `;
+
+      const response = await axios.post('/api/ai/generate-image', {
+        prompt: titlePrompt + customPrompt,
+        model: 'gpt-image-1',
+        size: '1024x1536',
+      });
+
+      const base64Img = response.data.b64_json;
+      const file = b64JsonToFile(
+        base64Img,
+        `${storyTitle.replace(/\s+/g, '_')}_cover.png`
+      );
+
+      setPreviewImage(URL.createObjectURL(file));
+      setUploadFile(file);
+    } catch (error) {
+      console.error('Error generating image:', error);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+      setIsDialogOpen(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center mb-[50px] pt-[100px] h-screen">
       <div className="h-10 rounded-md bg-rainbow px-3">
@@ -202,7 +232,7 @@ const MyNewStory = () => {
                 alt="CoverImage"
                 height={300}
                 width={200}
-                className="bg-card rounded-md h-[320px] w-[400px]"
+                className="bg-card rounded-md w-[300px] h-[450px] "
               />
               <button
                 onClick={deletePreviewImage}
@@ -213,7 +243,7 @@ const MyNewStory = () => {
             </div>
           ) : (
             <button
-              className="bg-card rounded-md h-[320px] w-[400px] flex items-center justify-center"
+              className="bg-card rounded-md w-[300px] h-[450px]  flex items-center justify-center"
               onClick={triggerUploadFile}
             >
               <ImageIcon size={32} className="text-muted-foreground" />
@@ -235,27 +265,44 @@ const MyNewStory = () => {
               accept="image/*"
               onChange={handleFileChange}
             />
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <button
+                  className="flex px-3 py-1 bg-rainbow active:scale-95 rounded-md relative"
+                  disabled={loading}
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  <span>Generate With AI</span>
+                  <Sparkles
+                    fill="yellow"
+                    color="yellow"
+                    className="absolute -top-2 -right-3"
+                  />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-card md:min-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>Generate Story Cover</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                  <textarea
+                    className="border border-gray-300 rounded p-2 w-full"
+                    rows={5}
+                    placeholder="Enter your custom prompt here..."
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                  ></textarea>
                   <button
-                    className="flex px-3 py-1 bg-rainbow opacity-80 active:scale-95 rounded-md relative"
-                    disabled
+                    className="bg-rainbow text-white py-2 px-4 rounded active:scale-95"
+                    onClick={() => {
+                      handleGenerate();
+                    }}
                   >
-                    <span>Generate With AI</span>
-                    <Sparkles
-                      fill="yellow"
-                      color="yellow"
-                      className="absolute -top-2 -right-3"
-                    />
+                    {loading ? 'Generating...' : 'Generate'}
                   </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Generate your cover with our AI</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <div className="bg-card w-full xl:w-[80%] px-8 py-4 rounded-md flex flex-col items-start gap-4">
