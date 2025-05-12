@@ -7,10 +7,12 @@ export interface Chapter {
 
   chapterNumber: number;
   createdTime: string;
+  updatedTime: string;
   numberOfLikes: number;
   numberOfComments: number;
   nextChapterId: string;
 
   storyTitle: string;
   storyId: string;
+  isPublished: boolean;
 }

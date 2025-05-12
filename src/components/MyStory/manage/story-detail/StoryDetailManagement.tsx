@@ -198,7 +198,7 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
               handleUploadFile={handleUploadFile}
             />
           )}
-          {activeTab == 'content' && <ContentTable />}
+          {activeTab == 'content' && <ContentTable storyId={storyId} />}
         </div>
       </div>
     </div>

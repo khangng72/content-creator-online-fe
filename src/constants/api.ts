@@ -46,6 +46,8 @@ export const CHECK_IF_CURRENT_USER_LIKE_CHAPTER =
   '/chapter/check_if_current_user_liked';
 export const TOGGLE_CURRENT_USER_LIKE_CHAPTER =
   '/chapter/toggle_current_user_like';
+export const GET_CHAPTERS_BY_STORY_ID_AUTHOR_MODE = '/chapter/all-by-story';
+export const DELETE_CHAPTER_BY_ID = '/chapter';
 
 // User
 export const REGISTER = '/user/register';
