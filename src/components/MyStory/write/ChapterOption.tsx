@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/routing';
 import { Chapter } from '@/types/Chapter';
 import { formatTimestamp } from '@/utils/FormatTimestamp';
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, Rocket, StickyNote } from 'lucide-react';
 
 interface ChapterOptionProps {
   chapter: Chapter;
@@ -21,6 +21,20 @@ const ChapterOption = ({ chapter, checked }: ChapterOptionProps) => {
             <span className="text-sm text-muted-foreground">
               {formatTimestamp(chapter.updatedTime)}
             </span>
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            {chapter.isPublished ? (
+              <div className="flex gap-1 text-purpleRainbow items-center font-semibold">
+                <Rocket className="w-4 h-4" />
+                <span>Published</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 items-center font-semibold">
+                <StickyNote className="w-4 h-4" />
+                <span>Draft</span>
+              </div>
+            )}
           </div>
         </div>
 
