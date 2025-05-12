@@ -35,6 +35,7 @@ export const UNPUBLISH_STORY = '/story/unpublish';
 export const PUBLISH_STORY = '/story/publish';
 export const GET_ALL_STORIES_BY_CURRENT_USER =
   '/story/current-user/all-stories';
+export const UPDATE_STORY = '/story/update';
 
 // Chapter
 export const CREATE_NEW_CHAPTER_STORY = '/chapter/new';

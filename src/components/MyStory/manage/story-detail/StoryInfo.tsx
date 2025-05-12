@@ -8,24 +8,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GenreSelect from '../../new/GenreSelect';
 import { Genre } from '@/types/Genre';
 import axios from 'axios';
-import {
-  generateApi,
-  GET_ALL_GENRES,
-  GET_BASIC_INFO_STORY,
-} from '@/constants/api';
+import { generateApi, GET_ALL_GENRES, UPDATE_STORY } from '@/constants/api';
 import Cookies from 'js-cookie';
 import { BasicStoryInfo } from '@/types/Story';
-import { set } from 'zod';
+import { toast } from '@/hooks/use-toast';
 
 interface StoryInfoProps {
   story: BasicStoryInfo;
+  fetchStoryInfo: () => Promise<void>;
 }
 
-const StoryInfo = ({ story }: StoryInfoProps) => {
+const StoryInfo = ({ story, fetchStoryInfo }: StoryInfoProps) => {
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
   const [genreList, setGenreList] = useState<Genre[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,6 +50,50 @@ const StoryInfo = ({ story }: StoryInfoProps) => {
         });
     } catch (error) {
       console.error('Error fetching genres:', error);
+    }
+  };
+
+  const handleUpdateStory = async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.put(
+        generateApi(UPDATE_STORY, story.storyId),
+        {
+          storyTitle,
+          storyDescription,
+          genres: selectedGenres,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log('Story updated successfully:', response.data);
+        toast({
+          title: 'Success',
+          description: 'Story updated successfully',
+          variant: 'default',
+        });
+        fetchStoryInfo();
+      } else {
+        console.error('Failed to update story:', response.data);
+        toast({
+          title: 'Error',
+          description: 'Failed to update story',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating story:', error);
+      toast({
+        title: 'Error',
+        description: 'Error updating story',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -161,7 +202,10 @@ const StoryInfo = ({ story }: StoryInfoProps) => {
       </div>
 
       <div className="w-full flex justify-end">
-        <button className="w-[100px] py-2 text-sm rounded-md bg-rainbow active:scale-95">
+        <button
+          className="w-[100px] py-2 text-sm rounded-md bg-rainbow active:scale-95"
+          onClick={handleUpdateStory}
+        >
           Save
         </button>
       </div>

@@ -106,7 +106,9 @@ const StoryDetailManagement = ({ storyId }: StoryDetailManagementProps) => {
             ))}
           </div>
 
-          {activeTab == 'info' && storyInfo && <StoryInfo story={storyInfo} />}
+          {activeTab == 'info' && storyInfo && (
+            <StoryInfo story={storyInfo} fetchStoryInfo={fetchStoryInfo} />
+          )}
           {activeTab == 'content' && <ContentTable />}
         </div>
       </div>
