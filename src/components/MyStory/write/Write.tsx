@@ -48,6 +48,7 @@ import { Chapter } from '@/types/Chapter';
 import EditChapterTitle from './EditChapterTitle';
 import { useDebounce } from 'use-debounce';
 import FunctionalBtn from './FunctionalBtn';
+import UploadImage from './UploadImage';
 
 interface WriteProps {
   storyId: string;
@@ -437,6 +438,15 @@ const Write = ({ storyId, chapterId }: WriteProps) => {
             chapterId={currentChapter?.chapterId}
             fetchCurrentChapter={fetchCurrentChapter}
             setSaving={setSaving}
+          />
+        )}
+
+        {currentChapter && (
+          <UploadImage
+            chapterId={currentChapter?.chapterId}
+            chapterTitle={currentChapter?.chapterTitle}
+            chapterImageUri={currentChapter?.chapterImageUri}
+            fetchChapter={fetchCurrentChapter}
           />
         )}
 

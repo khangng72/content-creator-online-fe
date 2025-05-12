@@ -20,9 +20,7 @@ const StoriImage = ({ source, storyTitle, className }: StoriImageProps) => {
           )}
         >
           <span className="font-bold">{storyTitle}</span>
-          <span className="text-muted-foreground mt-2">
-            Cover image coming soon
-          </span>
+          <span className="text-muted-foreground mt-2">Image coming soon</span>
         </div>
       </div>
     );
