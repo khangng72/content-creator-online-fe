@@ -33,6 +33,7 @@ import Cookies from 'js-cookie';
 import { generateApi, GET_STORY_BY_ID } from '@/constants/api';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
+import { Link } from '@/i18n/routing';
 
 interface ImmersiveReaderProps {
   story_id: string;
@@ -92,7 +93,6 @@ const ImmersiveReader = ({ story_id }: ImmersiveReaderProps) => {
         chapterImageUri: chapter.chapterImageUri,
       }));
 
-      console.log('Story Data:', storyData);
       setStory({
         storyId: storyData.storyId,
         storyTitle: storyData.storyTitle,
@@ -134,6 +134,8 @@ const ImmersiveReader = ({ story_id }: ImmersiveReaderProps) => {
       setCurrentChapter(currentChapter - 1);
     }
   };
+
+  console.log('story', story);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -185,9 +187,15 @@ const ImmersiveReader = ({ story_id }: ImmersiveReaderProps) => {
             />
           </Button>
 
-          <Button variant="ghost" size="icon">
-            <Minimize2 className="h-5 w-5" />
-          </Button>
+          {story.chapters && story.chapters.length > 0 && (
+            <Button variant="ghost" size="icon">
+              <Link
+                href={`/chapter/read/${story.chapters[currentChapter].chapterId}`}
+              >
+                <Minimize2 className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
 
           <Sheet>
             <SheetTrigger asChild>
