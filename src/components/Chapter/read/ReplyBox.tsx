@@ -11,6 +11,7 @@ interface ReplyBoxProps {
   setAddedReplies: React.Dispatch<React.SetStateAction<Comment[]>>;
   latestReplyRef: RefObject<HTMLDivElement>;
   setShowReply: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 }
 
 const ReplyBox = ({
@@ -18,6 +19,7 @@ const ReplyBox = ({
   setAddedReplies,
   latestReplyRef,
   setShowReply,
+  className,
 }: ReplyBoxProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState('');
@@ -83,7 +85,10 @@ const ReplyBox = ({
     <div className="flex w-full gap-2 items-center relative">
       <textarea
         ref={textareaRef}
-        className="w-full rounded-xl pl-3 pr-7 py-2 border border-accent overflow-hidden bg-card focus:outline-accent resize-none text-sm"
+        className={
+          `w-full rounded-xl pl-3 pr-7 py-2 border border-accent overflow-hidden focus:outline-accent resize-none text-sm` +
+          (className ? ` ${className}` : 'bg-card')
+        }
         maxLength={500}
         onInput={handleInput}
         rows={2}

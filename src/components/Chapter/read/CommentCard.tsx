@@ -1,6 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Reply from './Reply';
 import { Comment } from '@/types/Comment';
 import { timeAgo } from '@/utils/timeAgo';
@@ -14,154 +20,173 @@ import LikeComment from './LikeComment';
 
 interface CommentCardProps {
   comment: Comment;
+  className?: string;
 }
 
-const CommentCard = ({ comment }: CommentCardProps) => {
-  const [showReply, setShowReply] = useState(true);
-  const [replies, setReplies] = useState<Comment[]>([]);
-  const [showReplyBox, setShowReplyBox] = useState(false);
-  const [addedReplies, setAddedReplies] = useState<Comment[]>([]);
-  const [numberOfLikes, setNumberOfLikes] = useState(comment.numberOfLikes);
+const CommentCard = forwardRef<HTMLDivElement, CommentCardProps>(
+  ({ comment, className }, ref) => {
+    const [showReply, setShowReply] = useState(true);
+    const [replies, setReplies] = useState<Comment[]>([]);
+    const [showReplyBox, setShowReplyBox] = useState(false);
+    const [addedReplies, setAddedReplies] = useState<Comment[]>([]);
+    const [numberOfLikes, setNumberOfLikes] = useState(comment.numberOfLikes);
 
-  const replyBoxRef = useRef<HTMLDivElement>(null);
-  const latestReplyRef = useRef<HTMLDivElement>(null);
+    const replyBoxRef = useRef<HTMLDivElement>(null);
+    const latestReplyRef = useRef<HTMLDivElement>(null);
 
-  const fetchReplies = useCallback(async () => {
-    const token = Cookies.get('token');
+    const fetchReplies = useCallback(async () => {
+      const token = Cookies.get('token');
 
-    try {
-      const response = await axios.get(
-        generateApi(GET_REPLIES, comment.commentId),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      try {
+        const response = await axios.get(
+          generateApi(GET_REPLIES, comment.commentId),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setReplies(response.data.result);
+        } else {
+          console.error('Error fetching replies:', response.statusText);
         }
-      );
-
-      if (response.status === 200) {
-        setReplies(response.data.result);
-      } else {
-        console.error('Error fetching replies:', response.statusText);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('Error fetching replies:', error.message);
+        } else {
+          console.error('Unexpected error occurred while fetching replies');
+        }
       }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error fetching replies:', error.message);
-      } else {
-        console.error('Unexpected error occurred while fetching replies');
-      }
-    }
-  }, [comment.commentId]);
+    }, [comment.commentId]);
 
-  const openReplyBox = () => {
-    setShowReplyBox(true);
+    const openReplyBox = () => {
+      setShowReplyBox(true);
 
-    setTimeout(() => {
-      if (replyBoxRef.current) {
-        replyBoxRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, 50);
-  };
+      setTimeout(() => {
+        if (replyBoxRef.current) {
+          replyBoxRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+      }, 50);
+    };
 
-  useEffect(() => {
-    fetchReplies();
-  }, [fetchReplies]);
+    useEffect(() => {
+      fetchReplies();
+    }, [fetchReplies]);
 
-  return (
-    <div className="w-full flex flex-col gap-3">
-      <div className="w-full flex items-start justify-between border-t border-accent pt-4">
-        {/* user things */}
-        <div className="flex gap-2 max-w-[90%]">
-          {/* avatar */}
-          <div>
-            <Avatar className="">
-              <AvatarImage
-                src={comment.userAvatarUrl}
-                alt={`${comment.userFirstName} avatar`}
-              />
-              <AvatarFallback>
-                {comment.userFirstName.charAt(0)}{' '}
-                {comment.userLastName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+    return (
+      <div className="w-full flex flex-col gap-3" ref={ref}>
+        <div className="w-full flex items-start justify-between border-t border-accent pt-4">
+          {/* user things */}
+          <div className="flex gap-2 max-w-[90%]">
+            {/* avatar */}
+            <div>
+              <Avatar className="">
+                <AvatarImage
+                  src={comment.userAvatarUrl}
+                  alt={`${comment.userFirstName} avatar`}
+                />
+                <AvatarFallback>
+                  {comment.userFirstName.charAt(0)}{' '}
+                  {comment.userLastName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="block space-y-2">
+              <div
+                className={`flex flex-col ${
+                  className ? className : 'bg-card'
+                } rounded-xl p-3 w-fit`}
+              >
+                <Link
+                  href={`/profile/${comment.userId}/about`}
+                  className="text-base font-bold hover:underline"
+                >
+                  {comment.userFirstName} {comment.userLastName}
+                </Link>
+                <div className="whitespace-pre-wrap">
+                  {comment.comment_content}
+                </div>
+              </div>
+              <div className="flex gap-2 items-center text-xs sm:text-sm">
+                <span className="text-muted-foreground">
+                  {timeAgo(comment.createdTime)}
+                </span>
+                <button
+                  className="font-bold text-muted-foreground hover:underline"
+                  type="button"
+                  onClick={() => setShowReply((prev) => !prev)}
+                >
+                  {showReply ? 'Hide Replies' : 'View Replies'}
+                </button>
+                <button
+                  className="font-bold text-purpleRainbow hover:underline"
+                  onClick={openReplyBox}
+                >
+                  Reply
+                </button>
+              </div>
+              {showReply && (
+                <div className="block space-y-2">
+                  {addedReplies.length > 0 &&
+                    addedReplies.map((addedReply, index) => (
+                      <Reply
+                        key={addedReply.commentId}
+                        comment={addedReply}
+                        ref={index == 0 ? latestReplyRef : null}
+                        className={className}
+                      />
+                    ))}
+
+                  {replies.length > 0 &&
+                    replies.map((reply) => (
+                      <Reply
+                        key={reply.commentId}
+                        comment={reply}
+                        className={className}
+                      />
+                    ))}
+
+                  {replies.length == 0 && addedReplies.length == 0 && (
+                    <div className="text-sm text-muted-foreground">
+                      No replies yet.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="block space-y-2">
-            <div className="flex flex-col bg-card rounded-xl p-3 w-fit">
-              <Link
-                href={`/profile/${comment.userId}/about`}
-                className="text-base font-bold hover:underline"
-              >
-                {comment.userFirstName} {comment.userLastName}
-              </Link>
-              <div className="whitespace-pre-wrap">
-                {comment.comment_content}
-              </div>
-            </div>
-            <div className="flex gap-2 items-center text-xs sm:text-sm">
-              <span className="text-muted-foreground">
-                {timeAgo(comment.createdTime)}
-              </span>
-              <button
-                className="font-bold text-muted-foreground hover:underline"
-                type="button"
-                onClick={() => setShowReply((prev) => !prev)}
-              >
-                {showReply ? 'Hide Replies' : 'View Replies'}
-              </button>
-              <button
-                className="font-bold text-purpleRainbow hover:underline"
-                onClick={openReplyBox}
-              >
-                Reply
-              </button>
-            </div>
-            {showReply && (
-              <div className="block space-y-2">
-                {addedReplies.length > 0 &&
-                  addedReplies.map((addedReply, index) => (
-                    <Reply
-                      key={addedReply.commentId}
-                      comment={addedReply}
-                      ref={index == 0 ? latestReplyRef : null}
-                    />
-                  ))}
 
-                {replies.length > 0 &&
-                  replies.map((reply) => (
-                    <Reply key={reply.commentId} comment={reply} />
-                  ))}
-
-                {replies.length == 0 && addedReplies.length == 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    No replies yet.
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="flex flex-col items-center justify-center gap-1">
+            <LikeComment
+              comment={comment}
+              setNumberOfLikes={setNumberOfLikes}
+            />
+            <span className="text-muted-foreground text-sm">
+              {numberOfLikes}
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-1">
-          <LikeComment comment={comment} setNumberOfLikes={setNumberOfLikes} />
-          <span className="text-muted-foreground text-sm">{numberOfLikes}</span>
-        </div>
+        {showReplyBox && (
+          <div className="w-full pl-11" ref={replyBoxRef}>
+            <ReplyBox
+              parentCommentId={comment.commentId}
+              setAddedReplies={setAddedReplies}
+              latestReplyRef={latestReplyRef}
+              setShowReply={setShowReply}
+            />
+          </div>
+        )}
       </div>
+    );
+  }
+);
 
-      {showReplyBox && (
-        <div className="w-full pl-11" ref={replyBoxRef}>
-          <ReplyBox
-            parentCommentId={comment.commentId}
-            setAddedReplies={setAddedReplies}
-            latestReplyRef={latestReplyRef}
-            setShowReply={setShowReply}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
+CommentCard.displayName = 'CommentCard';
 
 export default CommentCard;

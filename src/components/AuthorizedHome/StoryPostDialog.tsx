@@ -27,7 +27,6 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
-import CommentSec from './CommentSec';
 import { Post } from '@/types/Post';
 import { formatTimestamp } from '@/utils/FormatTimestamp';
 import Cookies from 'js-cookie';
@@ -40,6 +39,7 @@ import { Comment } from '@/types/Comment';
 import CommentSecSkeleton from './CommentSecSkeleton';
 import CommentInput from './CommentInput';
 import DOMPurify from 'dompurify';
+import CommentCard from '../Chapter/read/CommentCard';
 
 interface StoryPostDialogProps {
   post: Post;
@@ -116,7 +116,13 @@ const StoryPostDialog = ({
 
   const comments = data?.pages.map((page) =>
     page.map((comment: Comment) => {
-      return <CommentSec key={comment.commentId} comment={comment} />;
+      return (
+        <CommentCard
+          key={comment.commentId}
+          comment={comment}
+          className="bg-secondary"
+        />
+      );
     })
   );
 
@@ -272,10 +278,11 @@ const StoryPostDialog = ({
             <div className="mt-4 flex flex-col gap-7 pb-5 w-full">
               {/* New comment added by user will be shown first. */}
               {addedComment.map((comment, index) => (
-                <CommentSec
+                <CommentCard
                   key={comment.commentId}
                   comment={comment}
-                  lastRef={
+                  className="bg-secondary"
+                  ref={
                     index === addedComment.length - 1
                       ? latestAddedCommentRef
                       : null
