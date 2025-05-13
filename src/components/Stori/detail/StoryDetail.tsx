@@ -174,13 +174,15 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
               </Link>
             </div>
             <div className="flex gap-[3px] scale-90 md:scale-100 w-full justify-center md:justify-start">
-              <Link
-                href={`/chapter/read/${chapters[0].chapterId}`}
-                className="flex gap-2 items-center bg-background justify-center rounded-l-md py-2 w-[200px] hover:opacity-80"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>Start reading</span>
-              </Link>
+              {chapters && chapters.length > 1 && (
+                <Link
+                  href={`/chapter/read/${chapters[0].chapterId}`}
+                  className="flex gap-2 items-center bg-background justify-center rounded-l-md py-2 w-[200px] hover:opacity-80"
+                >
+                  <BookOpen className="w-5 h-5" />
+                  <span>Start reading</span>
+                </Link>
+              )}
               <AddStoryToList storyId={storyId}>
                 <button className="flex gap-3 items-center bg-background justify-center rounded-r-md py-2 px-5 hover:opacity-80">
                   <PlusIcon className="w-6 h-6" />
