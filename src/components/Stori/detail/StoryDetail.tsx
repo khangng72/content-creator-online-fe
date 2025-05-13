@@ -174,7 +174,7 @@ const StoryDetail = ({ storyId }: StoryDetailProps) => {
               </Link>
             </div>
             <div className="flex gap-[3px] scale-90 md:scale-100 w-full justify-center md:justify-start">
-              {chapters && chapters.length > 1 && (
+              {chapters && chapters.length > 0 && (
                 <Link
                   href={`/chapter/read/${chapters[0].chapterId}`}
                   className="flex gap-2 items-center bg-background justify-center rounded-l-md py-2 w-[200px] hover:opacity-80"
