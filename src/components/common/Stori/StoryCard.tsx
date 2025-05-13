@@ -52,14 +52,16 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
         </div>
         <StarRating rating={story.averageRating} size={20} />
 
-        <div
-          className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(
-              story.storyDescription.slice(0, 200) + '</p>'
-            ),
-          }}
-        ></div>
+        {story.storyDescription && (
+          <div
+            className="mt-3 w-[90%] text-justify text-muted-foreground bg-secondary px-4 py-2 text-sm rounded-tl-3xl rounded-br-3xl"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                story.storyDescription.slice(0, 200) + '</p>'
+              ),
+            }}
+          ></div>
+        )}
 
         {addToList && (
           <AddStoryToList storyId={story.storyId}>
