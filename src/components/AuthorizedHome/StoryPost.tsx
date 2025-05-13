@@ -1,5 +1,5 @@
 'use client';
-import { Ref, useState } from 'react';
+import { Ref, useCallback, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 import { Link } from '@/i18n/routing';
@@ -9,8 +9,15 @@ import StarsDialog from './StarsDialog';
 import StoryPostDialog from './StoryPostDialog';
 import { Post } from '@/types/Post';
 import DOMPurify from 'dompurify';
+import Cookies from 'js-cookie';
 
 import { formatTimestamp } from '@/utils/FormatTimestamp';
+import axios from 'axios';
+import {
+  CHECK_IF_CURRENT_USER_LIKE_CHAPTER,
+  generateApi,
+  TOGGLE_CURRENT_USER_LIKE_CHAPTER,
+} from '@/constants/api';
 
 interface StoryPostProps {
   innerRef?: Ref<HTMLDivElement>;
@@ -41,8 +48,88 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
 
   const displayedText = DOMPurify.sanitize(rawText);
 
-  const [starred, setStarred] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [numberOfLikes, setNumberOfLikes] = useState<number>(0);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const fetchNumberOfLikes = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.get(
+        generateApi(`/chapter/${post.chapterId}/likes`),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setNumberOfLikes(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error fetching likes:', error.message);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  }, [post.chapterId]);
+
+  const checkIfCurrentUserLiked = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.get(
+        generateApi(CHECK_IF_CURRENT_USER_LIKE_CHAPTER, post.chapterId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsLiked(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error checking like status:', error.message);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  }, [post.chapterId]);
+
+  const toggleLike = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.post(
+        generateApi(TOGGLE_CURRENT_USER_LIKE_CHAPTER, post.chapterId),
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchNumberOfLikes();
+        checkIfCurrentUserLiked();
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error toggling like:', error.message);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  }, [post.chapterId, fetchNumberOfLikes, checkIfCurrentUserLiked]);
+
+  useEffect(() => {
+    fetchNumberOfLikes();
+  }, [fetchNumberOfLikes]);
+
+  useEffect(() => {
+    checkIfCurrentUserLiked();
+  }, [checkIfCurrentUserLiked]);
 
   return (
     <div
@@ -129,7 +216,7 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
                 className="flex items-center gap-2 bg-secondary rounded-md px-2 py-1 active:scale-95"
                 type="button"
               >
-                <span className="text-muted-foreground">21</span>
+                <span className="text-muted-foreground">{numberOfLikes}</span>
                 <Heart
                   className="text-purpleRainbow fill-purpleRainbow"
                   size={16}
@@ -149,9 +236,9 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
           <button
             className="flex justify-center items-center py-1 hover:bg-secondary w-full rounded-md hover:cursor-pointer gap-1"
             type="button"
-            onClick={() => setStarred(!starred)}
+            onClick={toggleLike}
           >
-            {starred ? (
+            {isLiked ? (
               <>
                 <Heart
                   className="text-purpleRainbow fill-purpleRainbow"
