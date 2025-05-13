@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Genre } from "./genre";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Check } from "lucide-react";
-import axios from "axios";
-import { generateApi, GET_ALL_GENRES } from "@/constants/api";
+import { useState, useEffect } from 'react';
+import { Genre } from './genre';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Check } from 'lucide-react';
+import axios from 'axios';
+import { generateApi, GET_ALL_GENRES } from '@/constants/api';
 
 interface GenreSelectionPageProps {
   onComplete: (genres: number[]) => void;
@@ -44,10 +44,10 @@ export default function GenreSelectionPage({
       if (response.data.status === 200) {
         setGenres(response.data.result);
       } else {
-        throw new Error("Failed to fetch genres");
+        throw new Error('Failed to fetch genres');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch genres");
+      setError(err instanceof Error ? err.message : 'Failed to fetch genres');
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function GenreSelectionPage({
       onComplete(selectedGenres);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to save genre preferences"
+        err instanceof Error ? err.message : 'Failed to save genre preferences'
       );
     }
   };
@@ -100,7 +100,7 @@ export default function GenreSelectionPage({
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-h-[70vh] overflow-y-auto scroll-container">
       <h1 className="text-3xl font-bold mb-8 text-center">
         Select Your Favorite Genres
       </h1>
@@ -127,8 +127,8 @@ export default function GenreSelectionPage({
                 overflow-hidden
                 ${
                   isSelected
-                    ? "border-white scale-105 shadow-lg"
-                    : "border-transparent hover:border-white/30 hover:scale-102"
+                    ? 'border-white scale-105 shadow-lg'
+                    : 'border-transparent hover:border-white/30 hover:scale-102'
                 }
             `}
             >
@@ -140,8 +140,8 @@ export default function GenreSelectionPage({
                 duration-300
                 ${
                   isSelected
-                    ? "bg-black/20"
-                    : "bg-black/0 group-hover:bg-black/10"
+                    ? 'bg-black/20'
+                    : 'bg-black/0 group-hover:bg-black/10'
                 }
               `}
               />
@@ -156,7 +156,7 @@ export default function GenreSelectionPage({
                 p-0.5
                 transition-all 
                 duration-300
-                ${isSelected ? "opacity-100 scale-100" : "opacity-0 scale-50"}
+                ${isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
               `}
               >
                 <Check className="w-4 h-4 text-primary" />
@@ -172,8 +172,8 @@ export default function GenreSelectionPage({
                 duration-300
                 ${
                   isSelected
-                    ? "transform translate-y-0"
-                    : "group-hover:transform group-hover:-translate-y-1"
+                    ? 'transform translate-y-0'
+                    : 'group-hover:transform group-hover:-translate-y-1'
                 }
               `}
               >
@@ -194,8 +194,8 @@ export default function GenreSelectionPage({
                 duration-300
                 ${
                   isSelected
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-4'
                 }
               `}
               >
@@ -208,7 +208,7 @@ export default function GenreSelectionPage({
 
       <div className="mt-8 flex flex-col items-center gap-2">
         <p className="text-sm text-muted-foreground">
-          {selectedGenres.length} genre{selectedGenres.length !== 1 ? "s" : ""}{" "}
+          {selectedGenres.length} genre{selectedGenres.length !== 1 ? 's' : ''}{' '}
           selected
         </p>
         <div className="flex gap-4">
@@ -233,7 +233,7 @@ export default function GenreSelectionPage({
               text-white
               transition-all
               duration-300
-              ${selectedGenres.length > 0 ? "scale-105" : "scale-100"}
+              ${selectedGenres.length > 0 ? 'scale-105' : 'scale-100'}
             `}
           >
             Continue

@@ -1,51 +1,51 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useRouter } from "@/i18n/routing";
-import Link from "next/link";
-import axios from "axios";
-import { REGISTER } from "@/constants/api";
-import { generateApi } from "@/constants/api";
-import GenreSelectionPage from "@/components/Gerne/GenreSelectionPage";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { useRouter } from '@/i18n/routing';
+import Link from 'next/link';
+import axios from 'axios';
+import { REGISTER } from '@/constants/api';
+import { generateApi } from '@/constants/api';
+import GenreSelectionPage from '@/components/Gerne/GenreSelectionPage';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 const FormSchema = z.object({
   first_name: z
     .string()
-    .min(2, { message: "First name must be at least 2 characters." }),
+    .min(2, { message: 'First name must be at least 2 characters.' }),
   last_name: z
     .string()
-    .min(2, { message: "Last name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email" }),
+    .min(2, { message: 'Last name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Invalid email' }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters long." })
+    .min(8, { message: 'Password must be at least 8 characters long.' })
     .regex(/[A-Z]/, {
-      message: "Password must include at least one uppercase letter.",
+      message: 'Password must include at least one uppercase letter.',
     })
     .regex(/[a-z]/, {
-      message: "Password must include at least one lowercase letter.",
+      message: 'Password must include at least one lowercase letter.',
     })
-    .regex(/[0-9]/, { message: "Password must include at least one number." })
+    .regex(/[0-9]/, { message: 'Password must include at least one number.' })
     .regex(/[@$!%*?&#]/, {
-      message: "Password must include at least one special character.",
+      message: 'Password must include at least one special character.',
     }),
   gender: z.string(),
   nationality: z.string(),
@@ -65,13 +65,13 @@ export default function Register() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      password: "",
-      gender: "",
-      nationality: "",
-      birthday: "",
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      gender: '',
+      nationality: '',
+      birthday: '',
     },
   });
 
@@ -88,7 +88,7 @@ export default function Register() {
       setShowGenrePopup(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setErrorMessage(error.message || "An error occurred.");
+      setErrorMessage(error.message || 'An error occurred.');
     } finally {
       setIsSubmitting(false);
     }
@@ -109,31 +109,20 @@ export default function Register() {
         genreIds: genres || [],
       });
 
-      console.log("Request body:", {
-        email: formData.email,
-        password: formData.password,
-        firstName: formData.first_name,
-        lastName: formData.last_name,
-        gender: formData.gender,
-        nationality: formData.nationality,
-        birthday: formData.birthday,
-        genreIds: genres || [],
-      });
-
-      setSuccessMessage("User registered successfully!");
-      console.log("Response:", response.data);
+      setSuccessMessage('User registered successfully!');
+      console.log('Response:', response.data);
 
       setTimeout(() => {
         setShowGenrePopup(false);
-        router.push("onboarding/genres");
+        router.push('/auth/login');
       }, 2000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error("Error details:", error.response?.data);
-        setErrorMessage(error.response?.data?.message || "An error occurred.");
+        console.error('Error details:', error.response?.data);
+        setErrorMessage(error.response?.data?.message || 'An error occurred.');
       } else {
-        console.error("Unexpected error:", error);
-        setErrorMessage("An unexpected error occurred.");
+        console.error('Unexpected error:', error);
+        setErrorMessage('An unexpected error occurred.');
       }
     }
   };
@@ -273,11 +262,11 @@ export default function Register() {
             )}
 
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Validating..." : "Continue"}
+              {isSubmitting ? 'Validating...' : 'Continue'}
             </Button>
 
             <div className="text-center mt-4">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link href="/login" className="text-primary hover:underline">
                 Login here
               </Link>
