@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { useDebounce } from "use-debounce";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import default_avatar from "$/public/default-avatar.jpeg";
-import { generateApi, POST_COMMENT } from "@/constants/api";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { Comment } from "@/types/Comment";
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
+
+import { generateApi, POST_COMMENT } from '@/constants/api';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { Comment } from '@/types/Comment';
 
 interface CommentInputProps {
   chapterId: string;
@@ -17,7 +16,7 @@ const CommentInput = ({
   setAddedComment,
   setTotalComment,
 }: CommentInputProps) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [comment] = useDebounce(text, 1000);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,14 +27,14 @@ const CommentInput = ({
     if (!comment) {
       return;
     }
-    const token = Cookies.get("token");
+    const token = Cookies.get('token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
 
-    setText("");
+    setText('');
 
-    console.log("Submitted comment:", comment);
+    console.log('Submitted comment:', comment);
 
     try {
       const response = await axios.post(
@@ -45,7 +44,7 @@ const CommentInput = ({
         },
         { headers }
       );
-      console.log("Comment created:", response.data);
+      console.log('Comment created:', response.data);
       if (setAddedComment) {
         setAddedComment((prev) => [...prev, response.data.result]);
       }
@@ -54,18 +53,12 @@ const CommentInput = ({
         setTotalComment((prev) => prev + 1);
       }
     } catch (error) {
-      console.error("Error creating comment:", error);
+      console.error('Error creating comment:', error);
     }
   };
 
   return (
     <div className="border-t border-background pt-5 px-4 flex w-full gap-2 items-start">
-      {/* User Avatar */}
-      <Avatar className="w-[35px] h-[35px]">
-        <AvatarImage src={default_avatar.src} alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-
       {/* Comment Input */}
       <textarea
         className="w-full bg-secondary rounded-md px-3 py-1 text-sm resize-none"

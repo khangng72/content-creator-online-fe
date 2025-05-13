@@ -1,11 +1,14 @@
-import React, { Ref, useCallback, useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import default_avatar from "$/public/default-avatar.jpeg";
-import { StarIcon } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import StarsDialog from "./StarsDialog";
-import Reply from "./Reply";
-import { Comment } from "@/types/Comment";
+import React, { Ref, useCallback, useEffect, useRef, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+
+import { Heart } from 'lucide-react';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import StarsDialog from './StarsDialog';
+import Reply from './Reply';
+import { Comment } from '@/types/Comment';
+import axios from 'axios';
+import { generateApi, GET_REPLIES } from '@/constants/api';
+import Cookies from 'js-cookie';
 
 interface CommentSecProps {
   comment: Comment;
@@ -15,16 +18,45 @@ interface CommentSecProps {
 const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
   const [showReply, setShowReply] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
+
+  const [replies, setReplies] = useState<Comment[]>([]);
   const replyBoxRef = useRef<HTMLTextAreaElement>(null);
   const replyButtonRef = useRef<HTMLButtonElement>(null);
+
+  const fetchReplies = useCallback(async () => {
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.get(
+        generateApi(GET_REPLIES, comment.commentId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setReplies(response.data.result);
+      } else {
+        console.error('Error fetching replies:', response.statusText);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error fetching replies:', error.message);
+      } else {
+        console.error('Unexpected error occurred while fetching replies');
+      }
+    }
+  }, [comment.commentId]);
 
   const handleClickReply = useCallback(() => {
     setShowReplyBox(true);
     if (showReplyBox && replyBoxRef.current) {
       // Scroll into view
       replyBoxRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+        behavior: 'smooth',
+        block: 'center',
       });
       // Focus the textarea
       replyBoxRef.current.focus();
@@ -35,20 +67,24 @@ const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
     if (showReplyBox && replyBoxRef.current) {
       // Scroll into view
       replyBoxRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+        behavior: 'smooth',
+        block: 'center',
       });
       // Focus the textarea
       replyBoxRef.current.focus();
     }
   }, [showReplyBox]);
 
+  useEffect(() => {
+    fetchReplies();
+  }, [fetchReplies]);
+
   return (
     <div className="block" ref={lastRef}>
       {/* Anchor comment */}
       <div className="flex items-start gap-2 w-full ">
         <Avatar className="w-[35px] h-[35px]">
-          <AvatarImage src={default_avatar.src} alt="@shadcn" />
+          <AvatarImage src={comment.userAvatarUrl} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-col w-[80%] items-start">
@@ -64,7 +100,7 @@ const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
           <div className="flex justify-between gap-4">
             <div className="text-sm text-muted-foreground flex gap-3">
               <button className="hover:underline" type="button">
-                Star
+                Like
               </button>
               <button
                 className="hover:underline"
@@ -82,11 +118,7 @@ const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
                   type="button"
                 >
                   <span className="text-sm text-muted-foreground">20</span>
-                  <StarIcon
-                    className="h-4 w-4"
-                    fill="#facc15"
-                    stroke="#facc15"
-                  />
+                  <Heart className="text-purpleRainbow fill-purpleRainbow h-4 w-4" />
                 </button>
               </DialogTrigger>
               <StarsDialog />
@@ -99,20 +131,28 @@ const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
               type="button"
               onClick={() => setShowReply((s) => !s)}
             >
-              {showReply ? "Hide replies" : "Show replies"}
+              {showReply ? 'Hide replies' : 'Show replies'}
             </button>
 
             {/* Reply list */}
             {showReply && (
-              <div className="mt-3 flex flex-col ml-3">
-                <Reply />
+              <div className="mt-3 flex flex-col ml-3 gap-4">
+                {replies.length > 0 ? (
+                  replies.map((reply) => (
+                    <Reply key={reply.commentId} comment={reply} />
+                  ))
+                ) : (
+                  <span className="text-sm text-muted-foreground">
+                    No replies yet
+                  </span>
+                )}
               </div>
             )}
 
             {showReplyBox && (
               <div className="mt-4 ml-3 flex w-full gap-2 items-start">
                 <Avatar className="w-[30px] h-[30px]">
-                  <AvatarImage src={default_avatar.src} alt="@shadcn" />
+                  <AvatarImage src={comment.userAvatarUrl} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -129,7 +169,7 @@ const CommentSec = ({ comment, lastRef }: CommentSecProps) => {
                   }}
                   onInput={(e) => {
                     const target = e.target as HTMLTextAreaElement;
-                    target.style.height = "auto";
+                    target.style.height = 'auto';
                     target.style.height = `${target.scrollHeight}px`;
                   }}
                 ></textarea>

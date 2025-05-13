@@ -3,7 +3,7 @@ import { Ref, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 import { Link } from '@/i18n/routing';
-import { CircleEllipsis, Link2, MessageCircle, StarIcon } from 'lucide-react';
+import { CircleEllipsis, Heart, Link2, MessageCircle } from 'lucide-react';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import StarsDialog from './StarsDialog';
 import StoryPostDialog from './StoryPostDialog';
@@ -130,7 +130,10 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
                 type="button"
               >
                 <span className="text-muted-foreground">21</span>
-                <StarIcon fill="#facc15" stroke="#facc15" size={16} />
+                <Heart
+                  className="text-purpleRainbow fill-purpleRainbow"
+                  size={16}
+                />
               </button>
             </DialogTrigger>
 
@@ -150,13 +153,16 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
           >
             {starred ? (
               <>
-                <StarIcon fill="#facc15" stroke="#facc15" size={15} />
-                <span className="text-[#facc15]">Star</span>
+                <Heart
+                  className="text-purpleRainbow fill-purpleRainbow"
+                  size={15}
+                />
+                <span className="text-purpleRainbow">Like</span>
               </>
             ) : (
               <>
-                <StarIcon size={15} />
-                <span>Star</span>
+                <Heart size={15} />
+                <span>Like</span>
               </>
             )}
           </button>

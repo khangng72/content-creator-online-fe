@@ -14,12 +14,11 @@ import { Link } from '@/i18n/routing';
 import {
   ChevronDown,
   CircleEllipsis,
+  Heart,
   Link2,
   MessageCircle,
-  StarIcon,
 } from 'lucide-react';
 
-import default_avatar from '$/public/default-avatar.jpeg';
 import StarsDialog from './StarsDialog';
 
 import {
@@ -137,7 +136,7 @@ const StoryPostDialog = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar className="w-[35px] h-[35px]">
-              <AvatarImage src={default_avatar.src} alt="@shadcn" />
+              <AvatarImage src={post.userAvatarUrl} alt="user avatar" />
               <AvatarFallback>
                 {post.userFirstName.charAt(0)}
                 {post.userLastName.charAt(0)}
@@ -191,7 +190,10 @@ const StoryPostDialog = ({
                   type="button"
                 >
                   <span className="text-muted-foreground">21</span>
-                  <StarIcon fill="#facc15" stroke="#facc15" size={16} />
+                  <Heart
+                    className="text-purpleRainbow fill-purpleRainbow"
+                    size={16}
+                  />
                 </button>
               </DialogTrigger>
 
@@ -210,13 +212,16 @@ const StoryPostDialog = ({
             >
               {starred ? (
                 <>
-                  <StarIcon fill="#facc15" stroke="#facc15" size={15} />
-                  <span className="text-[#facc15]">Star</span>
+                  <Heart
+                    className="text-purpleRainbow fill-purpleRainbow"
+                    size={15}
+                  />
+                  <span className="text-purpleRainbow">Like</span>
                 </>
               ) : (
                 <>
-                  <StarIcon size={15} />
-                  <span>Star</span>
+                  <Heart size={15} />
+                  <span>Like</span>
                 </>
               )}
             </button>

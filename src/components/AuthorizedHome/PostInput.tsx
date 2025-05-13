@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useRef } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useEffect, useState, useRef } from 'react';
 
 import {
   Dialog,
@@ -10,22 +9,21 @@ import {
   DialogTrigger,
   DialogDescription,
   DialogClose,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-import GenreMultiSelect from "./GenreMultiSelect";
-import default_avatar from "$/public/default-avatar.jpeg";
-import BasicInfoInput from "./BasicInfoInput";
+import GenreMultiSelect from './GenreMultiSelect';
+import BasicInfoInput from './BasicInfoInput';
 import {
   CREATE_NEW_CHAPTER_STORY,
   CREATE_STORY,
   generateApi,
   GET_ALL_GENRES,
   UPDATE_STORY_GENRE,
-} from "@/constants/api";
-import axios from "axios";
-import Cookies from "js-cookie";
+} from '@/constants/api';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 
 type Genre = {
   genreId: number;
@@ -35,13 +33,13 @@ type Genre = {
 const PostInput = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    storyTitle: "",
-    chapterName: "",
-    chapterContent: "",
+    storyTitle: '',
+    chapterName: '',
+    chapterContent: '',
   });
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [textVal, setTextVal] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [textVal, setTextVal] = useState('');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
@@ -55,7 +53,7 @@ const PostInput = () => {
   const [loadGenreError, setLoadGenreError] = useState(null);
 
   const getAllGenre = async () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get('token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -74,24 +72,25 @@ const PostInput = () => {
 
   const handlePostStory = async () => {
     const formFile = new FormData();
-    formFile.append("file", uploadFile as File);
-    const token = Cookies.get("token");
+    formFile.append('file', uploadFile as File);
+    const token = Cookies.get('token');
 
     const uploadFileResult = await axios
-      .post("/api/upload", formFile, {
+      .post('/api/upload', formFile, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
 
     const createStoryRequest = {
       storyTitle: formData.storyTitle,
       releaseDate: new Date(),
       coverImageUri: uploadFileResult?.data.path,
+      releaseStatus: true,
     };
 
     const createStoryResult = await axios
@@ -101,7 +100,7 @@ const PostInput = () => {
         },
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
 
     if (!createStoryResult) {
@@ -125,12 +124,13 @@ const PostInput = () => {
         }
       )
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
 
     const createNewChapterRequest = {
       chapterTitle: formData.chapterName,
       chapterContent: formData.chapterContent,
+      isPublished: true,
     };
 
     await axios
@@ -144,25 +144,25 @@ const PostInput = () => {
         }
       )
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
 
     toast({
       duration: 2000,
-      title: "Post new story successfully",
+      title: 'Post new story successfully',
     });
 
     setBasicStep(true);
     setGenreStep(false);
     setSelectedGenres([]);
     setFormData({
-      storyTitle: "",
-      chapterName: "",
-      chapterContent: "",
+      storyTitle: '',
+      chapterName: '',
+      chapterContent: '',
     });
-    setTextVal("");
+    setTextVal('');
     setPreviewImage(null);
-    setErrorMessage("");
+    setErrorMessage('');
     setGenreList(null);
     setLoading(true);
     setLoadGenreError(null);
@@ -182,13 +182,9 @@ const PostInput = () => {
       <DialogTrigger asChild>
         <button
           className="w-full bg-card flex justify-between px-5 py-2 rounded-md items-center hover: cursor-text"
-          onClick={() => setErrorMessage("")}
+          onClick={() => setErrorMessage('')}
         >
           <div className="flex space-x-3 items-center">
-            <Avatar className="w-[35px] h-[35px]">
-              <AvatarImage src={default_avatar.src} alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
             <span className="text-muted-foreground  text-sm">
               Tell your story... Khang
             </span>

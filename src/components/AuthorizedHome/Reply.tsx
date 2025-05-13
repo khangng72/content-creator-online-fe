@@ -1,14 +1,18 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import default_avatar from "$/public/default-avatar.jpeg";
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Comment } from '@/types/Comment';
 
-const mock_reply = "reply to this comment";
+const mock_reply = 'reply to this comment';
 
-const Reply = () => {
+interface ReplyProps {
+  comment: Comment;
+}
+
+const Reply = ({ comment }: ReplyProps) => {
   return (
     <div className="flex items-start gap-2">
       <Avatar className="w-[30px] h-[30px]">
-        <AvatarImage src={default_avatar.src} alt="@shadcn" />
+        <AvatarImage src={comment.userAvatarUrl} alt="@shadcn" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="px-3 py-1 bg-secondary rounded-md space-y-1">
