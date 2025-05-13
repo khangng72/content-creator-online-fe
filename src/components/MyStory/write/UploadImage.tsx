@@ -53,11 +53,14 @@ const UploadImage = ({
 
   const handleSaveImage = async () => {
     const token = Cookies.get('token');
-    console.log(uploadFile);
 
     if (!uploadFile) {
       return;
     }
+
+    // if (chapterImageUri) {
+    //   deleteFile(chapterImageUri);
+    // }
 
     const formFile = new FormData();
     formFile.append('file', uploadFile as File);
@@ -117,7 +120,7 @@ const UploadImage = ({
         <StoriImage
           source={chapterImageUri}
           storyTitle={chapterTitle}
-          className="w-[300px] h-[200px]"
+          className="w-[300px] h-[200px] md:w-[450px] md:h-[300px]"
         />
       )}
       <Dialog open={open} onOpenChange={setOpen}>
@@ -167,8 +170,11 @@ const UploadImage = ({
               </button>
             </div>
 
-            <button className="bg-purpleRainbow text-white px-3 py-1 rounded-md flex items-center active:scale-95">
-              <Save className="w-4 h-4 mr-1" onClick={handleSaveImage} />
+            <button
+              className="bg-purpleRainbow text-white px-3 py-1 rounded-md flex items-center active:scale-95"
+              onClick={handleSaveImage}
+            >
+              <Save className="w-4 h-4 mr-1" />
               <span>Save</span>
             </button>
           </div>
