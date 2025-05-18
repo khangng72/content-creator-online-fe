@@ -36,6 +36,11 @@ const UploadImage = ({
     fileInputRef?.current?.click();
   };
 
+  const toggleDialog = () => {
+    setOpen((prev) => !prev);
+    setPreviewImage(chapterImageUri);
+  };
+
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
@@ -57,10 +62,6 @@ const UploadImage = ({
     if (!uploadFile) {
       return;
     }
-
-    // if (chapterImageUri) {
-    //   deleteFile(chapterImageUri);
-    // }
 
     const formFile = new FormData();
     formFile.append('file', uploadFile as File);
@@ -123,7 +124,7 @@ const UploadImage = ({
           className="w-[300px] h-[200px] md:w-[450px] md:h-[300px]"
         />
       )}
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={toggleDialog}>
         <DialogTrigger>
           <div>
             <ImageIcon className="w-8 h-8 text-muted-foreground" />
