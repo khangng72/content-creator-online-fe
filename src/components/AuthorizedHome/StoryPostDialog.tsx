@@ -46,6 +46,9 @@ interface StoryPostDialogProps {
   openDialog: boolean;
   setTotalComment: React.Dispatch<React.SetStateAction<number>>;
   totalComment: number;
+  isLiked: boolean;
+  toggleLike: () => Promise<void>;
+  numberOfLikes: number;
 }
 
 const StoryPostDialog = ({
@@ -53,8 +56,10 @@ const StoryPostDialog = ({
   openDialog,
   setTotalComment,
   totalComment,
+  isLiked,
+  toggleLike,
+  numberOfLikes,
 }: StoryPostDialogProps) => {
-  const [starred, setStarred] = useState(false);
   const [addedComment, setAddedComment] = useState<Comment[]>([]);
 
   const latestAddedCommentRef = useRef<HTMLDivElement | null>(null);
@@ -195,7 +200,7 @@ const StoryPostDialog = ({
                   className="flex items-center gap-2 bg-secondary rounded-md px-2 py-1 active:scale-95"
                   type="button"
                 >
-                  <span className="text-muted-foreground">21</span>
+                  <span className="text-muted-foreground">{numberOfLikes}</span>
                   <Heart
                     className="text-purpleRainbow fill-purpleRainbow"
                     size={16}
@@ -214,20 +219,20 @@ const StoryPostDialog = ({
             <button
               className="flex justify-center items-center py-1 hover:bg-secondary w-full rounded-md hover:cursor-pointer gap-1"
               type="button"
-              onClick={() => setStarred(!starred)}
+              onClick={toggleLike}
             >
-              {starred ? (
+              {isLiked ? (
                 <>
                   <Heart
                     className="text-purpleRainbow fill-purpleRainbow"
                     size={15}
                   />
-                  <span className="text-purpleRainbow">Like</span>
+                  <span className="text-purpleRainbow">Love</span>
                 </>
               ) : (
                 <>
                   <Heart size={15} />
-                  <span>Like</span>
+                  <span>Love</span>
                 </>
               )}
             </button>

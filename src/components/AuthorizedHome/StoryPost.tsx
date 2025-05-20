@@ -244,7 +244,7 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
                   className="text-purpleRainbow fill-purpleRainbow"
                   size={15}
                 />
-                <span className="text-purpleRainbow">Like</span>
+                <span className="text-purpleRainbow">Love</span>
               </>
             ) : (
               <>
@@ -265,6 +265,9 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
               openDialog={openDialog}
               setTotalComment={setTotalComment}
               totalComment={totalComment}
+              isLiked={isLiked}
+              toggleLike={toggleLike}
+              numberOfLikes={numberOfLikes}
             />
           </Dialog>
           <div className="flex justify-center items-center py-1 hover:bg-secondary w-full rounded-md hover:cursor-pointer gap-1">
