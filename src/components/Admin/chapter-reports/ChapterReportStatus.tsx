@@ -5,7 +5,6 @@ interface ChapterReportStatusProps {
   status: string;
 }
 const ChapterReportStatus = ({ status }: ChapterReportStatusProps) => {
-  console.log('status', status);
   if (status === 'resolved') {
     return (
       <div className="bg-green-600 px-3 py-1 rounded-md font-semibold flex gap-1 items-center justify-center text-sm">

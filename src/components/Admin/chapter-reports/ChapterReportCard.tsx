@@ -24,7 +24,9 @@ const ChapterReportCard = ({ status = 'resolved' }: ChapterReportCardProps) => {
       </div>
       <div className="flex flex-col sm:flex-row gap-2">
         <ChapterReportStatus status={status} />
-        <button className="px-3 py-1 bg-purpleRainbow rounded-md">View</button>
+        <button className="px-3 py-1 bg-purpleRainbow rounded-md hover:opacity-90">
+          View
+        </button>
       </div>
     </div>
   );
