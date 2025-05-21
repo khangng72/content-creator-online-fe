@@ -15,4 +15,5 @@ export interface Chapter {
   storyTitle: string;
   storyId: string;
   isPublished: boolean;
+  isBanned: boolean;
 }
