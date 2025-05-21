@@ -298,11 +298,17 @@ const Write = ({ storyId, chapterId }: WriteProps) => {
             </Popover>
 
             {/* functional button */}
-            <FunctionalBtn
-              chapterId={chapterId}
-              fetchCurrentChapter={fetchCurrentChapter}
-              updateChapterContent={updateChapterContent}
-            />
+            {!currentChapter?.isBanned ? (
+              <FunctionalBtn
+                chapterId={chapterId}
+                fetchCurrentChapter={fetchCurrentChapter}
+                updateChapterContent={updateChapterContent}
+              />
+            ) : (
+              <div className="text-red-500 font-bold text-sm">
+                This chapter against our policy, please contact us for more
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 items-center">

@@ -172,9 +172,6 @@ const ChapterReportCard = ({ report }: ChapterReportCardProps) => {
 
             {report.resolveState == 'unresolved' && (
               <div className="flex gap-2">
-                <button className="bg-accent px-3 py-1 rounded-md active:scale-95">
-                  Later
-                </button>
                 <button
                   className="bg-red-500 px-3 py-1 rounded-md active:scale-95"
                   onClick={() => {
