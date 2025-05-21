@@ -58,7 +58,7 @@ const ReportFeature = ({
         generateApi(CREATE_REPORT),
         {
           chapterId: chapterId, // Replace with actual chapter ID
-          reason: reason + ', ' + moreDetails,
+          reason: reason + (moreDetails ? `: ${moreDetails}` : ''),
         },
         {
           headers: {

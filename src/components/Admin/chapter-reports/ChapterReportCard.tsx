@@ -162,6 +162,14 @@ const ChapterReportCard = ({ report }: ChapterReportCardProps) => {
               ></div>
             </div>
 
+            <div>
+              <span className="font-bold text-purpleRainbow">
+                Report Reason
+              </span>
+
+              <div className="text-sm">{report.reason}</div>
+            </div>
+
             {report.resolveState == 'unresolved' && (
               <div className="flex gap-2">
                 <button className="bg-accent px-3 py-1 rounded-md active:scale-95">
