@@ -3,7 +3,7 @@ import { Ref, useCallback, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 import { Link } from '@/i18n/routing';
-import { CircleEllipsis, Heart, Link2, MessageCircle } from 'lucide-react';
+import { Heart, Link2, MessageCircle } from 'lucide-react';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import StarsDialog from './StarsDialog';
 import StoryPostDialog from './StoryPostDialog';
@@ -18,6 +18,7 @@ import {
   generateApi,
   TOGGLE_CURRENT_USER_LIKE_CHAPTER,
 } from '@/constants/api';
+import Feature from '../common/Post/Feature';
 
 interface StoryPostProps {
   innerRef?: Ref<HTMLDivElement>;
@@ -160,12 +161,7 @@ const StoryPost = ({ innerRef, post }: StoryPostProps) => {
           </div>
         </div>
 
-        <div>
-          <CircleEllipsis
-            className="text-muted-foreground cursor-pointer hover:text-primary transition-colors duration-200 ease-in-out"
-            size={22}
-          />
-        </div>
+        <Feature storyId={post.storyId} chapterId={post.chapterId} />
       </div>
 
       <div className="w-full block">
