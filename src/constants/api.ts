@@ -98,3 +98,4 @@ export const TRACK_USER_READ_STORY = '/user-read-story';
 
 // Report
 export const CREATE_REPORT = '/api/report/chapters';
+export const CHECK_IF_USER_REPORTED = '/api/report/check-if-user-reported';

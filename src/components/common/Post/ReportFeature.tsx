@@ -17,6 +17,7 @@ import axios from 'axios';
 interface ReportFeatureProps {
   children: React.ReactNode;
   chapterId: string;
+  checkIfUserReported: () => Promise<void>;
 }
 
 const policies = [
@@ -29,7 +30,11 @@ const policies = [
   'Content that is reactionary against the Socialist Republic of Vietnam',
 ];
 
-const ReportFeature = ({ children, chapterId }: ReportFeatureProps) => {
+const ReportFeature = ({
+  children,
+  chapterId,
+  checkIfUserReported,
+}: ReportFeatureProps) => {
   const [selectedPolicyId, setSelectedPolicyId] = useState<number | null>(null);
   const [moreDetails, setMoreDetails] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -70,6 +75,7 @@ const ReportFeature = ({ children, chapterId }: ReportFeatureProps) => {
         });
         setSelectedPolicyId(null);
         setMoreDetails('');
+        checkIfUserReported();
       } else {
         toast({
           title: 'Failed to report the chapter.',
