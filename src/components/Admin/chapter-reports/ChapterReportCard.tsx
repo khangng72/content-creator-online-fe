@@ -31,9 +31,6 @@ interface ChapterReportCardProps {
 
 const ChapterReportCard = ({ report }: ChapterReportCardProps) => {
   const [chapter, setChapter] = useState<Chapter | null>(null);
-  const [status, setStatus] = useState<'unresolved' | 'resolved'>(
-    report.resolveState as 'unresolved' | 'resolved'
-  );
 
   const fetchChapter = useCallback(async () => {
     const token = Cookies.get('token');
@@ -81,7 +78,6 @@ const ChapterReportCard = ({ report }: ChapterReportCardProps) => {
       );
 
       if (response.status === 200) {
-        setStatus('resolved');
         toast({
           title: 'Resolve report successfully',
           description: 'The chapter report has been resolved',
@@ -120,7 +116,7 @@ const ChapterReportCard = ({ report }: ChapterReportCardProps) => {
         </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-2">
-        <ChapterReportStatus status={status} />
+        <ChapterReportStatus status={report.resolveState} />
 
         <Dialog>
           <DialogTrigger>
